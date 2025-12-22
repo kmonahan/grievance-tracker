@@ -1,10 +1,10 @@
 from steps.model import Step
 
 
-class TestStatus:
+class TestSteps:
     def test_to_json(self):
-        status = Step(id=1, name="Test")
-        assert status.to_dict() == {'id': 1, 'name': 'Test'}
+        step = Step(id=1, name="Test")
+        assert step.to_dict() == {'id': 1, 'name': 'Test'}
 
     def test_get_all(self, client):
         res = client.get("/steps")

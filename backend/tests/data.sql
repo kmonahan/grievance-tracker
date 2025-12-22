@@ -11,4 +11,13 @@ INSERT INTO step (name)
 VALUES
     ('Step #1'),
     ('Step #2'),
-    ('Step #3')
+    ('Step #3');
+
+INSERT INTO category (name)
+VALUES
+    ('Pay/PTO'),
+    ('Failure to Bargain'),
+    ('Health & Safety'),
+    ('Scheduling & Overtime'),
+    ('Union Busting'),
+    ('Other');
