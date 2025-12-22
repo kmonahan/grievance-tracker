@@ -13,11 +13,14 @@ def create_app(config_class=Config):
 
     # Register database tables
     from status.model import Status
+    from steps.model import Step
     with app.app_context():
         db.create_all()
 
     # Register blueprints
     from status import bp as status_bp
     app.register_blueprint(status_bp, url_prefix='/status')
+    from steps import bp as steps_bp
+    app.register_blueprint(steps_bp, url_prefix='/steps')
 
     return app
