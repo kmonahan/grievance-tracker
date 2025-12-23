@@ -17,6 +17,7 @@ def create_app(config_class=Config):
     from categories.model import Category
     from users.model import User
     from grievances.model import Grievance
+    from escalations.model import Escalation
     with app.app_context():
         db.create_all()
 
