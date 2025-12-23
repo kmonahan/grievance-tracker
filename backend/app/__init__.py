@@ -15,6 +15,7 @@ def create_app(config_class=Config):
     from status.model import Status
     from steps.model import Step
     from categories.model import Category
+    from grievances.model import Grievance
     with app.app_context():
         db.create_all()
 
@@ -25,5 +26,7 @@ def create_app(config_class=Config):
     app.register_blueprint(steps_bp, url_prefix='/steps')
     from categories import bp as categories_bp
     app.register_blueprint(categories_bp, url_prefix='/categories')
+    from grievances import bp as grievances_bp
+    app.register_blueprint(grievances_bp, url_prefix='/grievances')
 
     return app
