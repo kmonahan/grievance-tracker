@@ -7,11 +7,11 @@ VALUES
     ('Resolved'),
     ('Denied');
 
-INSERT INTO step (name)
+INSERT INTO step (name, day_type, num_days)
 VALUES
-    ('Step #1'),
-    ('Step #2'),
-    ('Step #3');
+    ('Step #1', 'WORKING', 10),
+    ('Step #2', 'WORKING', 20),
+    ('Step #3', 'WORKING', 6);
 
 INSERT INTO category (name)
 VALUES
