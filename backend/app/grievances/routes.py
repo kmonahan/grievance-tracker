@@ -1,11 +1,13 @@
+from datetime import date, timedelta
+
 from flask import jsonify
 
 from app import db
 from categories.model import Category
+from escalations.model import Escalation
 from grievances import bp
 from grievances.CreateGrievanceForm import CreateGrievanceForm
 from grievances.model import Grievance
-from status.model import Status
 from users.model import User
 
 
@@ -29,6 +31,13 @@ def create():
             status_id=1
         )
         db.session.add(grievance)
+        escalation = Escalation(
+            step_id=1,
+            grievance=grievance,
+            date=date.today(),
+            date_due=date.today() + timedelta(days=10),
+        )
+        db.session.add(escalation)
         db.session.commit()
         return jsonify(grievance.to_dict()), 201
     return jsonify({'errors': form.errors}), 400

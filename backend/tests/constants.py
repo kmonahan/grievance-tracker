@@ -32,5 +32,13 @@ TEST_CREATED_GRIEVANCE = {
     'category': 'Health & Safety',
     'point_person': 'John Doe',
     'status': 'Waiting to File',
-    'escalations': []
+    'escalations': [
+        {
+            'id': 2,
+            'date': '2025-12-20',
+            'step': 'Step #1',
+            'date_due': '2025-12-30',
+            'hearing_date': None
+        }
+    ]
 }

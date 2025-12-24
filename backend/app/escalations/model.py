@@ -16,7 +16,7 @@ class Escalation(db.Model):
         return {
             'id': self.id,
             'date': self.date.strftime("%Y-%m-%d"),
-            'date_due': self.date_due.strftime("%Y-%m-%d"),
-            'hearing_date': self.hearing_date.strftime("%Y-%m-%d"),
+            'date_due': self.date_due.strftime("%Y-%m-%d") if self.date_due else None,
+            'hearing_date': self.hearing_date.strftime("%Y-%m-%d") if self.hearing_date else None,
             'step': self.step.name if self.step is not None else None,
         }
