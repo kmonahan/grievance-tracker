@@ -2,7 +2,7 @@ from freezegun import freeze_time
 
 from grievances.model import Grievance
 from status.model import Status
-from tests.constants import TEST_GRIEVANCE_LIST, TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE
+from tests.constants import TEST_GRIEVANCE_LIST, TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE
 from users.model import User
 
 
@@ -60,3 +60,17 @@ class TestGrievances:
             'category_id': ['Not a valid choice.'],
             'point_person_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.']
         }}
+
+    def test_update_grievance(self, client, app):
+        data = {
+            'name': 'Test name is edited',
+            'description': 'Test description is edited.',
+            'category_id': 1,
+            'point_person_id': 1,
+        }
+        res = client.patch("/grievances/edit/1", data=data)
+        with app.app_context():
+            grievance_from_db = Grievance.query.filter_by(name=data['name']).first()
+            assert grievance_from_db.id == 1
+        assert res.status_code == 200
+        assert res.json == {**TEST_GRIEVANCE, 'name': data['name'], 'description': data['description']}

@@ -17,11 +17,16 @@ def get_all():
     return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
 
 
-@bp.route('/add', methods=['POST'])
-def create():
+def _prepare_form_choices() -> CreateGrievanceForm:
     form = CreateGrievanceForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query]
     form.point_person_id.choices = [(p.id, p.name) for p in User.query]
+    return form
+
+
+@bp.route('/add', methods=['POST'])
+def create():
+    form = _prepare_form_choices()
     if form.validate_on_submit():
         grievance = Grievance(
             name=form.name.data,
@@ -40,4 +45,18 @@ def create():
         db.session.add(escalation)
         db.session.commit()
         return jsonify(grievance.to_dict()), 201
+    return jsonify({'errors': form.errors}), 400
+
+
+@bp.route('/edit/<int:grievance_id>', methods=['PATCH'])
+def update(grievance_id):
+    form = _prepare_form_choices()
+    if form.validate_on_submit():
+        grievance = Grievance.query.get_or_404(grievance_id)
+        grievance.name=form.name.data
+        grievance.description=form.description.data
+        grievance.category_id=form.category_id.data
+        grievance.point_person_id=form.point_person_id.data
+        db.session.commit()
+        return jsonify(grievance.to_dict())
     return jsonify({'errors': form.errors}), 400
