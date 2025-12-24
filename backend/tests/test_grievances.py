@@ -74,3 +74,11 @@ class TestGrievances:
             assert grievance_from_db.id == 1
         assert res.status_code == 200
         assert res.json == {**TEST_GRIEVANCE, 'name': data['name'], 'description': data['description']}
+
+    def test_delete_grievance(self, client, app):
+        res = client.delete("/grievances/delete/1")
+        with app.app_context():
+            grievance_from_db = Grievance.query.filter_by(id=1).first()
+            assert grievance_from_db is None
+        assert res.status_code == 200
+        assert res.json == {'ok': True}

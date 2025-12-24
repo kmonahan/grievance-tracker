@@ -60,3 +60,10 @@ def update(grievance_id):
         db.session.commit()
         return jsonify(grievance.to_dict())
     return jsonify({'errors': form.errors}), 400
+
+@bp.route('/delete/<int:grievance_id>', methods=['DELETE'])
+def delete(grievance_id):
+    grievance = Grievance.query.get_or_404(grievance_id)
+    db.session.delete(grievance)
+    db.session.commit()
+    return jsonify({'ok': True})
