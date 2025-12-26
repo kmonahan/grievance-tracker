@@ -33,4 +33,9 @@ VALUES
 
 INSERT into escalation (date, date_due, hearing_date, step_id, grievance_id)
 VALUES
-    ('2025-12-20', '2025-12-30', '2025-12-25', 1, 1);
+    ('2025-12-19', '2026-01-02', '2025-12-31', 1, 1);
+
+INSERT into holidays(date, name)
+VALUES
+    ('2026-01-01', "New Year's Day"),
+    ('2026-01-19', "Martin Luther King Jr. Day")

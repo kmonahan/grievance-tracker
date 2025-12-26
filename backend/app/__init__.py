@@ -18,6 +18,7 @@ def create_app(config_class=Config):
     from users.model import User
     from grievances.model import Grievance
     from escalations.model import Escalation
+    from holidays.model import Holiday
     with app.app_context():
         db.create_all()
 
@@ -32,5 +33,9 @@ def create_app(config_class=Config):
     app.register_blueprint(grievances_bp, url_prefix='/grievances')
     from users import bp as users_bp
     app.register_blueprint(users_bp, url_prefix='/users')
+    from holidays import bp as holidays_bp
+    app.register_blueprint(holidays_bp, url_prefix='/holidays')
+    from escalations import bp as escalations_bp
+    app.register_blueprint(escalations_bp, url_prefix='/escalate')
 
     return app

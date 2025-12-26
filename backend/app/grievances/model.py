@@ -1,4 +1,3 @@
-from escalations.model import Escalation
 from extensions import db
 
 class Grievance(db.Model):
@@ -11,7 +10,7 @@ class Grievance(db.Model):
     status = db.relationship('Status', back_populates='grievances')
     point_person_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=False, nullable=True)
     point_person = db.relationship('User', back_populates='grievances')
-    escalations = db.relationship(Escalation.__name__, back_populates='grievance', cascade='all, delete')
+    escalations = db.relationship('Escalation', back_populates='grievance', cascade='all, delete')
 
     def to_dict(self):
         grievance_dict = {column.name: getattr(self, column.name) for column in self.__table__.columns}

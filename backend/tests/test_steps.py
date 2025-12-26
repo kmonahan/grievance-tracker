@@ -1,10 +1,8 @@
+import datetime
+
 from steps.DayTypes import DayTypes
-from status.model import Status
+from escalations.calculate_date_due import DateDue
 from steps.model import Step
-from categories.model import Category
-from users.model import User
-from grievances.model import Grievance
-from escalations.model import Escalation
 
 
 class TestSteps:
@@ -34,3 +32,18 @@ class TestSteps:
                 'num_days': 6,
                 'day_type': DayTypes.WORKING.value,
             }]
+
+    def test_calculate_date_due_calendar(self, app):
+        with app.app_context():
+            calculator = DateDue()
+        assert calculator.calculate_date_due(datetime.datetime(2025, 10, 10), 10, DayTypes.CALENDAR) == datetime.datetime(2025, 10, 20)
+
+    def test_calculate_date_due_working(self, app):
+        with app.app_context():
+            calculator = DateDue()
+        assert calculator.calculate_date_due(datetime.datetime(2025, 10, 10), 10, DayTypes.WORKING) == datetime.datetime(2025, 10, 23)
+
+    def test_calculate_date_due_holiday(self, app):
+        with app.app_context():
+            calculator = DateDue()
+        assert calculator.calculate_date_due(datetime.datetime(2025, 12, 30), 28, DayTypes.WORKING) == datetime.datetime(2026, 2, 9)

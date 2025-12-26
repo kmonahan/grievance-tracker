@@ -1,10 +1,8 @@
-from datetime import date, timedelta
-
 from flask import jsonify
 
 from app import db
 from categories.model import Category
-from escalations.model import Escalation
+from grievances.escalate_grievance import escalate_grievance
 from grievances import bp
 from grievances.CreateGrievanceForm import CreateGrievanceForm
 from grievances.model import Grievance
@@ -36,14 +34,8 @@ def create():
             status_id=1
         )
         db.session.add(grievance)
-        escalation = Escalation(
-            step_id=1,
-            grievance=grievance,
-            date=date.today(),
-            date_due=date.today() + timedelta(days=10),
-        )
-        db.session.add(escalation)
         db.session.commit()
+        escalate_grievance(grievance_id=grievance.id, step_id=1)
         return jsonify(grievance.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
 
@@ -53,13 +45,14 @@ def update(grievance_id):
     form = _prepare_form_choices()
     if form.validate_on_submit():
         grievance = Grievance.query.get_or_404(grievance_id)
-        grievance.name=form.name.data
-        grievance.description=form.description.data
-        grievance.category_id=form.category_id.data
-        grievance.point_person_id=form.point_person_id.data
+        grievance.name = form.name.data
+        grievance.description = form.description.data
+        grievance.category_id = form.category_id.data
+        grievance.point_person_id = form.point_person_id.data
         db.session.commit()
         return jsonify(grievance.to_dict())
     return jsonify({'errors': form.errors}), 400
+
 
 @bp.route('/delete/<int:grievance_id>', methods=['DELETE'])
 def delete(grievance_id):

@@ -1,6 +1,4 @@
 from extensions import db
-from steps.model import Step
-
 
 class Escalation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,7 +6,7 @@ class Escalation(db.Model):
     date_due = db.Column(db.Date, nullable=True)
     hearing_date = db.Column(db.Date, nullable=True)
     step_id = db.Column(db.Integer, db.ForeignKey('step.id'), nullable=False)
-    step = db.relationship(Step.__name__, back_populates='escalations', lazy=True)
+    step = db.relationship('Step', back_populates='escalations', lazy=True)
     grievance_id = db.Column(db.Integer, db.ForeignKey('grievance.id'), nullable=False)
     grievance = db.relationship('Grievance', back_populates='escalations', lazy=True)
 

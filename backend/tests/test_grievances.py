@@ -1,8 +1,10 @@
+import datetime
+
 from freezegun import freeze_time
 
 from grievances.model import Grievance
 from status.model import Status
-from tests.constants import TEST_GRIEVANCE_LIST, TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE
+from tests.constants import TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE, TEST_GRIEVANCE_LIST
 from users.model import User
 
 
@@ -28,7 +30,7 @@ class TestGrievances:
         assert res.status_code == 200
         assert res.json['grievances'] == TEST_GRIEVANCE_LIST
 
-    @freeze_time("2025-12-20")
+    @freeze_time(datetime.datetime(2025, 12, 19))
     def test_create_grievance(self, client, app):
         data = TEST_CREATED_GRIEVANCE_PARTIAL
         res = client.post("/grievances/add", data=data)

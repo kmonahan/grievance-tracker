@@ -7,10 +7,10 @@ TEST_GRIEVANCE = {
     'point_person': 'Jane Smith',
     'escalations': [{
         'id': 1,
-        'date': '2025-12-20',
+        'date': '2025-12-19',
         'step': 'Step #1',
-        'date_due': '2025-12-30',
-        'hearing_date': '2025-12-25'
+        'date_due': '2026-01-02',
+        'hearing_date': '2025-12-31'
     }]
 }
 
@@ -35,9 +35,9 @@ TEST_CREATED_GRIEVANCE = {
     'escalations': [
         {
             'id': 2,
-            'date': '2025-12-20',
+            'date': '2025-12-19',
             'step': 'Step #1',
-            'date_due': '2025-12-30',
+            'date_due': '2026-01-02',
             'hearing_date': None
         }
     ]
