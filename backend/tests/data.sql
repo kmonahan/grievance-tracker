@@ -1,6 +1,7 @@
 INSERT INTO stage (step, status, num_days, day_type)
 VALUES
-    ('ONE', 'WAITING_TO_SCHEDULE', 10, 'WORKING');
+    ('ONE', 'WAITING_TO_SCHEDULE', 10, 'WORKING'),
+    ('ONE', 'WAITING_TO_FILE', 20, 'WORKING');
 
 INSERT INTO category (name)
 VALUES

@@ -4,6 +4,9 @@ from freezegun import freeze_time
 
 from grievances.model import Grievance
 from tests.constants import TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE, TEST_GRIEVANCE_LIST
+
+from stages.Statuses import Statuses
+from stages.Steps import Steps
 from users.model import User
 
 
@@ -81,3 +84,32 @@ class TestGrievances:
             assert grievance_from_db is None
         assert res.status_code == 200
         assert res.json == {'ok': True}
+
+    @freeze_time(datetime.datetime(2026, 1, 2))
+    def test_advance_grievance(self, client):
+        res = client.post("/grievances/escalate/1", json={
+            'status': Statuses.WAITING_TO_FILE.name,
+            'step': Steps.ONE.name
+        })
+        assert res.status_code == 200
+        assert res.json == {
+            **TEST_GRIEVANCE,
+            'escalations': [
+                {
+                    'id': 1,
+                    'date': '2025-12-19',
+                    'step': 'Step #1',
+                    'status': 'Waiting to Schedule',
+                    'date_due': '2026-01-02',
+                    'hearing_date': '2025-12-31'
+                },
+                {
+                    'id': 2,
+                    'date': '2026-01-02',
+                    'step': 'Step #1',
+                    'status': 'Waiting to File',
+                    'date_due': '2026-01-30',
+                    'hearing_date': None
+                }
+            ]
+        }

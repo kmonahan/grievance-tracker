@@ -1,13 +1,18 @@
-from flask import jsonify
+from datetime import datetime
+
+from flask import jsonify, request
+from sqlalchemy import and_
 
 from app import db
 from categories.model import Category
-from grievances.escalate_grievance import escalate_grievance
+from escalations.model import Escalation
 from grievances import bp
 from grievances.CreateGrievanceForm import CreateGrievanceForm
 from grievances.model import Grievance
-from stages.Statuses import Statuses
+from stages.Statuses import Statuses, status_with_due_dates
 from stages.Steps import Steps
+from stages.calculate_date_due import DateDue
+from stages.model import Stage
 from users.model import User
 
 
@@ -24,6 +29,23 @@ def _prepare_form_choices() -> CreateGrievanceForm:
     return form
 
 
+def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses):
+    calculator = DateDue()
+    todays_date = datetime.now()
+    escalation = Escalation(
+        date=todays_date,
+        grievance=grievance,
+        step=step,
+        status=status,
+    )
+    if status in status_with_due_dates:
+        stage = Stage.query.filter(and_(Stage.status == status), (Stage.step == step)).first()
+        escalation.date_due = calculator.calculate_date_due(todays_date, stage.num_days, stage.day_type)
+    db.session.add(escalation)
+    db.session.commit()
+    return escalation
+
+
 @bp.route('/add', methods=['POST'])
 def create():
     form = _prepare_form_choices()
@@ -36,7 +58,7 @@ def create():
         )
         db.session.add(grievance)
         db.session.commit()
-        escalate_grievance(grievance_id=grievance.id, step=Steps.ONE, status=Statuses.WAITING_TO_SCHEDULE)
+        escalate_grievance(grievance=grievance, step=Steps.ONE, status=Statuses.WAITING_TO_SCHEDULE)
         return jsonify(grievance.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
 
@@ -61,3 +83,16 @@ def delete(grievance_id):
     db.session.delete(grievance)
     db.session.commit()
     return jsonify({'ok': True})
+
+
+@bp.route('/escalate/<int:grievance_id>', methods=['POST'])
+def escalate(grievance_id):
+    grievance = Grievance.query.get_or_404(grievance_id)
+    try:
+        data = request.get_json()
+        status = Statuses[data['status']]
+        step = Steps[data['step']]
+        escalate_grievance(grievance=grievance, step=step, status=status)
+        return jsonify(grievance.to_dict()), 200
+    except KeyError:
+        return jsonify({'error': 'Missing or invalid step or status'}), 400
