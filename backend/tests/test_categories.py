@@ -1,8 +1,11 @@
+import pytest
+
 from categories.model import Category
 from tests.constants import TEST_GRIEVANCE_LIST
 
 
 class TestCategories:
+    @pytest.mark.usefixtures("app")
     def test_to_json(self):
         category = Category(id=1, name="Test")
         assert category.to_dict() == {'id': 1, 'name': 'Test'}
@@ -13,26 +16,30 @@ class TestCategories:
         assert res.json['categories'] == [
             {
                 'id': 1,
-                'name': 'Pay/PTO'
+                'name': 'Pay'
             },
             {
                 'id': 2,
-                'name': 'Failure to Bargain'
+                'name': 'PTO'
             },
             {
                 'id': 3,
-                'name': 'Health & Safety',
+                'name': 'Failure to Bargain'
             },
             {
                 'id': 4,
-                'name': 'Scheduling & Overtime'
+                'name': 'Health & Safety',
             },
             {
                 'id': 5,
-                'name': 'Union Busting'
+                'name': 'Scheduling & Overtime'
             },
             {
                 'id': 6,
+                'name': 'Union Busting'
+            },
+            {
+                'id': 7,
                 'name': 'Other'
             }]
 

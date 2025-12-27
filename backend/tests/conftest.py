@@ -8,7 +8,7 @@ from extensions import db
 with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
     _data_sql = f.read().decode('utf8')
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def app():
     test_app_config = Config()
     test_app_config.TESTING = True

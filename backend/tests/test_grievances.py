@@ -3,7 +3,6 @@ import datetime
 from freezegun import freeze_time
 
 from grievances.model import Grievance
-from status.model import Status
 from tests.constants import TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE, TEST_GRIEVANCE_LIST
 from users.model import User
 
@@ -13,14 +12,12 @@ class TestGrievances:
         grievance = Grievance(id=1,
                               name="Test",
                               description="Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.",
-                              status=Status(name='Test status'),
                               point_person=User(name='Karl Marx'), )
         assert grievance.to_dict() == {
             'id': 1,
             'name': 'Test',
             'description': 'Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.',
             'category': None,
-            'status': 'Test status',
             'point_person': 'Karl Marx',
             'escalations': []
         }

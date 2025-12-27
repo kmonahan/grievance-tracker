@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from holidays.model import Holiday
-from steps.DayTypes import DayTypes
+from stages.DayTypes import DayTypes
 
 
 class DateDue:

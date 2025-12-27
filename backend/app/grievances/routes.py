@@ -6,6 +6,8 @@ from grievances.escalate_grievance import escalate_grievance
 from grievances import bp
 from grievances.CreateGrievanceForm import CreateGrievanceForm
 from grievances.model import Grievance
+from stages.Statuses import Statuses
+from stages.Steps import Steps
 from users.model import User
 
 
@@ -31,11 +33,10 @@ def create():
             description=form.description.data,
             category_id=form.category_id.data,
             point_person_id=form.point_person_id.data,
-            status_id=1
         )
         db.session.add(grievance)
         db.session.commit()
-        escalate_grievance(grievance_id=grievance.id, step_id=1)
+        escalate_grievance(grievance_id=grievance.id, step=Steps.ONE, status=Statuses.WAITING_TO_SCHEDULE)
         return jsonify(grievance.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
 
