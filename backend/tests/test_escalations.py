@@ -15,4 +15,4 @@ class TestEscalation:
                                 status=Statuses.WAITING_TO_SCHEDULE,
                                 grievance_id=1)
         assert escalation.to_dict() == {'id': 1, 'date': '2025-12-23', 'date_due': '2026-01-02',
-                                        'hearing_date': '2025-12-30', 'step': 'Step #1', 'status': 'Waiting to Schedule'}
+                                        'hearing_date': '2025-12-30', 'step': 'Step #1', 'status': 'Waiting to Schedule', 'deadline_missed': False}

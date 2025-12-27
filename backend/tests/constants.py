@@ -10,7 +10,8 @@ TEST_GRIEVANCE = {
         'step': 'Step #1',
         'status': 'Waiting to Schedule',
         'date_due': '2026-01-02',
-        'hearing_date': '2025-12-31'
+        'hearing_date': '2025-12-31',
+        'deadline_missed': False
     }]
 }
 
@@ -38,7 +39,8 @@ TEST_CREATED_GRIEVANCE = {
             'step': 'Step #1',
             'date_due': '2026-01-02',
             'status': 'Waiting to Schedule',
-            'hearing_date': None
+            'hearing_date': None,
+            'deadline_missed': False
         }
     ]
 }

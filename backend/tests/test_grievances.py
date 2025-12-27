@@ -1,7 +1,10 @@
 import datetime
+from datetime import timedelta
 
 from freezegun import freeze_time
 
+from extensions import db
+from escalations.model import Escalation
 from grievances.model import Grievance
 from tests.constants import TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE, TEST_GRIEVANCE_LIST
 
@@ -101,7 +104,8 @@ class TestGrievances:
                     'step': 'Step #1',
                     'status': 'Waiting to Schedule',
                     'date_due': '2026-01-02',
-                    'hearing_date': '2025-12-31'
+                    'hearing_date': '2025-12-31',
+                    'deadline_missed': False
                 },
                 {
                     'id': 2,
@@ -109,7 +113,22 @@ class TestGrievances:
                     'step': 'Step #1',
                     'status': 'Waiting to File',
                     'date_due': '2026-01-30',
-                    'hearing_date': None
+                    'hearing_date': None,
+                    'deadline_missed': False
                 }
             ]
         }
+
+    @freeze_time(datetime.datetime(2026, 1, 2))
+    def test_track_missed_deadlines(self, client, app):
+        with app.app_context():
+            escalation = Escalation(date=datetime.datetime.now(), date_due=datetime.datetime.now() + timedelta(days=15),
+                                    step=Steps.TWO, status=Statuses.WAITING_TO_SCHEDULE, grievance_id=1)
+            db.session.add(escalation)
+            db.session.commit()
+        res = client.post("/grievances/missed/1")
+        assert res.status_code == 200
+        assert res.json == {'ok': True}
+        with app.app_context():
+            updated_escalation = Escalation.query.filter_by(id=2).first()
+            assert updated_escalation.deadline_missed is True

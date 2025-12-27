@@ -15,6 +15,7 @@ class Escalation(db.Model):
     status = db.Column(db.Enum(Statuses), nullable=False)
     grievance_id = db.Column(db.Integer, db.ForeignKey('grievance.id'), nullable=False)
     grievance = db.relationship('Grievance', back_populates='escalations', lazy=True)
+    deadline_missed = db.Column(db.Boolean, nullable=True)
 
     __table_args__ = (
         ForeignKeyConstraint(['step', 'status'], ['stage.step', 'stage.status']),
@@ -27,5 +28,6 @@ class Escalation(db.Model):
             'date_due': self.date_due.strftime("%Y-%m-%d") if self.date_due else None,
             'hearing_date': self.hearing_date.strftime("%Y-%m-%d") if self.hearing_date else None,
             'step': self.step.value,
-            'status': self.status.value
+            'status': self.status.value,
+            'deadline_missed': self.deadline_missed if self.deadline_missed else False,
         }

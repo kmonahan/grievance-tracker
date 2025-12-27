@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flask import jsonify, request
-from sqlalchemy import and_
+from sqlalchemy import and_, desc
 
 from app import db
 from categories.model import Category
@@ -96,3 +96,11 @@ def escalate(grievance_id):
         return jsonify(grievance.to_dict()), 200
     except KeyError:
         return jsonify({'error': 'Missing or invalid step or status'}), 400
+
+
+@bp.route('/missed/<int:grievance_id>', methods=['POST'])
+def missed(grievance_id):
+    escalation = Escalation.query.filter_by(grievance_id=grievance_id).order_by(desc(Escalation.date)).first_or_404()
+    escalation.deadline_missed = True
+    db.session.commit()
+    return jsonify({'ok': True}), 200
