@@ -20,11 +20,18 @@ VALUES
 
 INSERT into grievance (name, description, category_id, point_person_id)
 VALUES
-    ('Test #1', 'Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.', 1, 1);
+    ('Test #1', 'Test description #1', 1, 1),
+    ('Test #2', 'Test description #2', 1, 1),
+    ('Test #3', 'Test description #3', 2, 1),
+    ('Test #4', 'Test description #4', 2, 2);
 
 INSERT into escalation (date, date_due, hearing_date, step, status, grievance_id)
 VALUES
-    ('2025-12-19', '2026-01-02', '2025-12-31', 'ONE', 'WAITING_TO_SCHEDULE', 1);
+    ('2025-12-19', '2026-01-02', '2025-12-31', 'ONE', 'WAITING_TO_SCHEDULE', 1),
+    ('2025-12-19', '2026-01-02', NULL, 'ONE', 'WAITING_TO_SCHEDULE', 2),
+    ('2025-12-21', NULL, '2025-12-30', 'ONE', 'SCHEDULED', 2),
+    ('2025-12-31', '2026-01-08', NULL, 'ONE', 'WAITING_ON_DECISION', 2),
+    ('2025-01-09', '2026-01-30', NULL, 'ONE', 'WAITING_TO_FILE', 2);
 
 INSERT into holidays(date, name)
 VALUES

@@ -1,7 +1,7 @@
 import pytest
 
 from categories.model import Category
-from tests.constants import TEST_GRIEVANCE_LIST
+from constants import TEST_GRIEVANCE, TEST_GRIEVANCE_2
 
 
 class TestCategories:
@@ -46,4 +46,4 @@ class TestCategories:
     def test_get_grievances(self, client):
         res = client.get("/categories/1/grievances")
         assert res.status_code == 200
-        assert res.json['grievances'] == TEST_GRIEVANCE_LIST
+        assert res.json['grievances'] == [TEST_GRIEVANCE, TEST_GRIEVANCE_2]

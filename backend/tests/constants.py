@@ -1,7 +1,7 @@
 TEST_GRIEVANCE = {
     'id': 1,
     'name': 'Test #1',
-    'description': 'Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.',
+    'description': 'Test description #1',
     'category': 'Pay',
     'point_person': 'Jane Smith',
     'escalations': [{
@@ -15,8 +15,65 @@ TEST_GRIEVANCE = {
     }]
 }
 
+TEST_GRIEVANCE_2 = {
+    'id': 2,
+    'name': 'Test #2',
+    'description': 'Test description #2',
+    'category': 'Pay',
+    'point_person': 'Jane Smith',
+    'escalations': [{'date': '2025-12-19',
+                     'date_due': '2026-01-02',
+                     'deadline_missed': False,
+                     'hearing_date': None,
+                     'id': 2,
+                     'status': 'Waiting to Schedule',
+                     'step': 'Step #1'},
+                    {'date': '2025-12-21',
+                     'date_due': None,
+                     'deadline_missed': False,
+                     'hearing_date': '2025-12-30',
+                     'id': 3,
+                     'status': 'Scheduled',
+                     'step': 'Step #1'},
+                    {'date': '2025-12-31',
+                     'date_due': '2026-01-08',
+                     'deadline_missed': False,
+                     'hearing_date': None,
+                     'id': 4,
+                     'status': 'Waiting on Decision',
+                     'step': 'Step #1'},
+                    {'date': '2025-01-09',
+                     'date_due': '2026-01-30',
+                     'deadline_missed': False,
+                     'hearing_date': None,
+                     'id': 5,
+                     'status': 'Waiting to File',
+                     'step': 'Step #1'}]
+}
+
+TEST_GRIEVANCE_3 = {
+    'id': 3,
+    'name': 'Test #3',
+    'description': 'Test description #3',
+    'category': 'PTO',
+    'point_person': 'Jane Smith',
+    'escalations': []
+}
+
+TEST_GRIEVANCE_4 = {
+    'id': 4,
+    'name': 'Test #4',
+    'description': 'Test description #4',
+    'category': 'PTO',
+    'point_person': 'John Doe',
+    'escalations': []
+}
+
 TEST_GRIEVANCE_LIST = [
     TEST_GRIEVANCE,
+    TEST_GRIEVANCE_2,
+    TEST_GRIEVANCE_3,
+    TEST_GRIEVANCE_4
 ]
 
 TEST_CREATED_GRIEVANCE_PARTIAL = {
@@ -27,14 +84,14 @@ TEST_CREATED_GRIEVANCE_PARTIAL = {
 }
 
 TEST_CREATED_GRIEVANCE = {
-    'id': 2,
+    'id': 5,
     'name': TEST_CREATED_GRIEVANCE_PARTIAL['name'],
     'description': TEST_CREATED_GRIEVANCE_PARTIAL['description'],
     'category': 'Health & Safety',
     'point_person': 'John Doe',
     'escalations': [
         {
-            'id': 2,
+            'id': 6,
             'date': '2025-12-19',
             'step': 'Step #1',
             'date_due': '2026-01-02',

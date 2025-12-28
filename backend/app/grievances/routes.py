@@ -22,6 +22,13 @@ def get_all():
     return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
 
 
+@bp.route('/upcoming')
+def get_upcoming():
+    start_date = request.form.get('start_date', default=datetime.today())
+    grievances = Grievance.query.join(Escalation.grievance).filter(Escalation.date_due >= start_date)
+    return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
+
+
 def _prepare_form_choices() -> CreateGrievanceForm:
     form = CreateGrievanceForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query]
