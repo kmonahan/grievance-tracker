@@ -98,9 +98,13 @@ def escalate(grievance_id):
         return jsonify({'error': 'Missing or invalid step or status'}), 400
 
 
+def is_it_true(value):
+    return value.lower() == 'true'
+
+
 @bp.route('/missed/<int:grievance_id>', methods=['POST'])
 def missed(grievance_id):
     escalation = Escalation.query.filter_by(grievance_id=grievance_id).order_by(desc(Escalation.date)).first_or_404()
-    escalation.deadline_missed = True
+    escalation.deadline_missed = request.form.get('deadline_missed', default=True, type=is_it_true)
     db.session.commit()
     return jsonify({'ok': True}), 200

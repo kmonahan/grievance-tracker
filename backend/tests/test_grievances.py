@@ -126,9 +126,15 @@ class TestGrievances:
                                     step=Steps.TWO, status=Statuses.WAITING_TO_SCHEDULE, grievance_id=1)
             db.session.add(escalation)
             db.session.commit()
-        res = client.post("/grievances/missed/1")
+        res = client.post("/grievances/missed/1", data={'deadline_missed': True})
         assert res.status_code == 200
         assert res.json == {'ok': True}
         with app.app_context():
             updated_escalation = Escalation.query.filter_by(id=2).first()
             assert updated_escalation.deadline_missed is True
+        res = client.post("/grievances/missed/1", data={'deadline_missed': False})
+        assert res.status_code == 200
+        assert res.json == {'ok': True}
+        with app.app_context():
+            updated_escalation = Escalation.query.filter_by(id=2).first()
+            assert updated_escalation.deadline_missed is False
