@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from flask import jsonify, request
-from sqlalchemy import and_, desc
+from flask import jsonify, request, session
+from sqlalchemy import and_, desc, select, func
+from sqlalchemy.orm import aliased
 
 from app import db
 from categories.model import Category
@@ -120,6 +121,10 @@ def missed(grievance_id):
 def get_by_step(step_key):
     try:
         step = Steps[step_key]
-        # TODO: Get grievances where the most recent escalation is in the selected step.
+        subsubquery = db.session.query(Escalation, func.row_number().over(partition_by=Escalation.grievance_id, order_by=desc(Escalation.date)).label("row_number")).subquery()
+        subquery = db.session.query(subsubquery).filter(subsubquery.c.row_number == 1).subquery()
+        aliased_escalation = aliased(Escalation, subquery)
+        grievances = Grievance.query.join(aliased_escalation.grievance).filter(aliased_escalation.step == step)
+        return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
     except KeyError:
         return jsonify({'error': 'Missing or invalid step key'}), 400
