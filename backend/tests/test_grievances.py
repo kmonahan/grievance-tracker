@@ -7,7 +7,7 @@ from extensions import db
 from escalations.model import Escalation
 from grievances.model import Grievance
 from constants import TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE, TEST_GRIEVANCE_LIST, \
-    TEST_GRIEVANCE_2
+    TEST_GRIEVANCE_2, TEST_GRIEVANCE_4
 
 from stages.Statuses import Statuses
 from stages.Steps import Steps
@@ -109,7 +109,7 @@ class TestGrievances:
                     'deadline_missed': False
                 },
                 {
-                    'id': 6,
+                    'id': 7,
                     'date': '2026-01-02',
                     'step': 'Step #1',
                     'status': 'Waiting to File',
@@ -131,13 +131,13 @@ class TestGrievances:
         assert res.status_code == 200
         assert res.json == {'ok': True}
         with app.app_context():
-            updated_escalation = Escalation.query.filter_by(id=6).first()
+            updated_escalation = Escalation.query.filter_by(id=7).first()
             assert updated_escalation.deadline_missed is True
         res = client.post("/grievances/missed/1", data={'deadline_missed': False})
         assert res.status_code == 200
         assert res.json == {'ok': True}
         with app.app_context():
-            updated_escalation = Escalation.query.filter_by(id=6).first()
+            updated_escalation = Escalation.query.filter_by(id=7).first()
             assert updated_escalation.deadline_missed is False
 
     @freeze_time(datetime.datetime(2025, 12, 19))
@@ -147,3 +147,10 @@ class TestGrievances:
         assert res.json == {"grievances": [TEST_GRIEVANCE, TEST_GRIEVANCE_2]}
         grievances = res.json['grievances']
         assert grievances[0] == TEST_GRIEVANCE
+
+    def test_get_by_step(self, client):
+        res = client.get("/grievances/step/ONE")
+        assert res.status_code == 200
+        assert res.json == {"grievances": [TEST_GRIEVANCE, TEST_GRIEVANCE_2]}
+        grievances = res.json['grievances']
+        assert TEST_GRIEVANCE_4 not in grievances

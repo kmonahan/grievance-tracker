@@ -115,3 +115,11 @@ def missed(grievance_id):
     escalation.deadline_missed = request.form.get('deadline_missed', default=True, type=is_it_true)
     db.session.commit()
     return jsonify({'ok': True}), 200
+
+@bp.route('/step/<step_key>', methods=['GET'])
+def get_by_step(step_key):
+    try:
+        step = Steps[step_key]
+        # TODO: Get grievances where the most recent escalation is in the selected step.
+    except KeyError:
+        return jsonify({'error': 'Missing or invalid step key'}), 400

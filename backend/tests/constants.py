@@ -42,7 +42,7 @@ TEST_GRIEVANCE_2 = {
                      'id': 4,
                      'status': 'Waiting on Decision',
                      'step': 'Step #1'},
-                    {'date': '2025-01-09',
+                    {'date': '2026-01-09',
                      'date_due': '2026-01-30',
                      'deadline_missed': False,
                      'hearing_date': None,
@@ -66,7 +66,13 @@ TEST_GRIEVANCE_4 = {
     'description': 'Test description #4',
     'category': 'PTO',
     'point_person': 'John Doe',
-    'escalations': []
+    'escalations': [{'date': '2026-01-10',
+                     'date_due': None,
+                     'deadline_missed': False,
+                     'hearing_date': None,
+                     'id': 6,
+                     'status': 'In Abeyance',
+                     'step': 'Step #2'}]
 }
 
 TEST_GRIEVANCE_LIST = [
@@ -91,7 +97,7 @@ TEST_CREATED_GRIEVANCE = {
     'point_person': 'John Doe',
     'escalations': [
         {
-            'id': 6,
+            'id': 7,
             'date': '2025-12-19',
             'step': 'Step #1',
             'date_due': '2026-01-02',
