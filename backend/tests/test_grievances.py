@@ -3,12 +3,11 @@ from datetime import timedelta
 
 from freezegun import freeze_time
 
-from extensions import db
-from escalations.model import Escalation
-from grievances.model import Grievance
 from constants import TEST_CREATED_GRIEVANCE_PARTIAL, TEST_CREATED_GRIEVANCE, TEST_GRIEVANCE, TEST_GRIEVANCE_LIST, \
     TEST_GRIEVANCE_2, TEST_GRIEVANCE_4
-
+from escalations.model import Escalation
+from extensions import db
+from grievances.model import Grievance
 from stages.Statuses import Statuses
 from stages.Steps import Steps
 from users.model import User

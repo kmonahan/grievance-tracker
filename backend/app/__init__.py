@@ -31,6 +31,6 @@ def create_app(config_class=Config):
     from holidays import bp as holidays_bp
     app.register_blueprint(holidays_bp, url_prefix='/holidays')
     from escalations import bp as escalations_bp
-    app.register_blueprint(escalations_bp, url_prefix='/escalate')
+    app.register_blueprint(escalations_bp, url_prefix='/escalations')
 
     return app

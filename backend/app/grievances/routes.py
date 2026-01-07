@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from flask import jsonify, request, session
-from sqlalchemy import and_, desc, select, func
+from flask import jsonify, request
+from sqlalchemy import and_, desc, func
 from sqlalchemy.orm import aliased
 
 from app import db
@@ -117,11 +117,14 @@ def missed(grievance_id):
     db.session.commit()
     return jsonify({'ok': True}), 200
 
+
 @bp.route('/step/<step_key>', methods=['GET'])
 def get_by_step(step_key):
     try:
         step = Steps[step_key]
-        subsubquery = db.session.query(Escalation, func.row_number().over(partition_by=Escalation.grievance_id, order_by=desc(Escalation.date)).label("row_number")).subquery()
+        subsubquery = db.session.query(Escalation, func.row_number().over(partition_by=Escalation.grievance_id,
+                                                                          order_by=desc(Escalation.date)).label(
+            "row_number")).subquery()
         subquery = db.session.query(subsubquery).filter(subsubquery.c.row_number == 1).subquery()
         aliased_escalation = aliased(Escalation, subquery)
         grievances = Grievance.query.join(aliased_escalation.grievance).filter(aliased_escalation.step == step)
