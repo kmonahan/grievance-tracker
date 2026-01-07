@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Config
-from extensions import db
+from extensions import db, jwt
 
 
 def create_app(config_class=Config):
@@ -10,6 +10,7 @@ def create_app(config_class=Config):
 
     # Register extensions
     db.init_app(app)
+    jwt.init_app(app)
 
     # Register database tables
     from categories.model import Category

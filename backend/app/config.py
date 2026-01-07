@@ -8,3 +8,5 @@ class Config:
     SECRET_KEY = os.environ.get('FLASK_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
+    JWT_SECRET_KEY = os.environ.get('JWT_KEY')
+    JWT_VERIFY_SUB = False
