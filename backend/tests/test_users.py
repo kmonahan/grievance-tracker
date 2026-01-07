@@ -1,4 +1,5 @@
 import pytest
+from werkzeug.security import generate_password_hash
 
 from extensions import db
 from users.model import User
@@ -71,3 +72,26 @@ class TestUser:
         assert res.json == {
             'error': 'An account already exists for this user.'
         }
+
+    def test_login(self, client, app):
+        with app.app_context():
+            example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            example_user.password = generate_password_hash('password123')
+            db.session.commit()
+
+        res = client.post('/users/login', data={
+            'email': 'jsmith@example.com',
+            'password': 'password123'
+        })
+        assert res.status_code == 200
+        data = res.json
+        assert data['access_token'] is not None
+
+    def test_login_wrong_password(self, client):
+        res = client.post('/users/login', data={
+            'email': 'jsmith@example.com',
+            'password': 'bpl psa is great'
+        })
+        assert res.status_code == 401
+        data = res.json
+        assert data['error'] == 'Incorrect password. Please try again.'

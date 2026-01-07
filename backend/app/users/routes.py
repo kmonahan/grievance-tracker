@@ -28,8 +28,8 @@ def register():
 
 @bp.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    user = db.session.execute(db.select(User).filter_by(email=data['email'])).one_or_none()
+    data = request.form
+    user = db.session.execute(db.select(User).filter_by(email=data['email'])).scalar_one_or_none()
     if user is None:
         return jsonify({
             "error": "No user account found for that email address."

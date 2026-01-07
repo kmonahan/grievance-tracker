@@ -15,8 +15,8 @@ VALUES
 
 INSERT INTO user (name, email, password)
 VALUES
-    ('Jane Smith', 'jsmith@example.com', 'password'),
-    ('John Doe', 'jdoe@example.com', 'password');
+    ('Jane Smith', 'jsmith@example.com', 'password123'),
+    ('John Doe', 'jdoe@example.com', 'password123');
 
 INSERT into grievance (name, description, category_id, point_person_id)
 VALUES
