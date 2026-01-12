@@ -188,3 +188,24 @@ class TestUser:
             'password': ['Passwords must match'],
             'confirm': ['Field is required']
         }
+
+    def test_deactivate_user(self, client, app):
+        res = client.patch('/users/deactivate/1')
+        assert res.status_code == 204
+        with app.app_context():
+            test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            assert test_user.is_active == False
+
+
+    def test_reactivate_user(self, client, app):
+        with app.app_context():
+            example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            example_user.password = generate_password_hash('password123')
+            example_user.is_active = False
+            db.session.commit()
+
+        res = client.patch('/users/reactivate/1')
+        assert res.status_code == 204
+        with app.app_context():
+            test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            assert test_user.is_active == True

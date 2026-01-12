@@ -71,6 +71,20 @@ def edit(user_id):
     return jsonify({'errors': form.errors}), 400
 
 
+@bp.route('/deactivate/<int:user_id>', methods=['PATCH'])
+def deactivate(user_id):
+    user = db.get_or_404(User, user_id)
+    user.is_active = False
+    db.session.commit()
+    return "", 204
+
+@bp.route('/reactivate/<int:user_id>', methods=['PATCH'])
+def reactivate(user_id):
+    user = db.get_or_404(User, user_id)
+    user.is_active = True
+    db.session.commit()
+    return "", 204
+
 @bp.route('')
 def get_steps():
     users = db.session.execute(db.select(User)).scalars()
