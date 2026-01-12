@@ -75,7 +75,7 @@ def create():
 def update(grievance_id):
     form = _prepare_form_choices()
     if form.validate_on_submit():
-        grievance = Grievance.query.get_or_404(grievance_id)
+        grievance = db.get_or_404(Grievance, grievance_id)
         grievance.name = form.name.data
         grievance.description = form.description.data
         grievance.category_id = form.category_id.data
@@ -87,7 +87,7 @@ def update(grievance_id):
 
 @bp.route('/delete/<int:grievance_id>', methods=['DELETE'])
 def delete(grievance_id):
-    grievance = Grievance.query.get_or_404(grievance_id)
+    grievance = db.get_or_404(Grievance, grievance_id)
     db.session.delete(grievance)
     db.session.commit()
     return jsonify({'ok': True})
@@ -95,7 +95,7 @@ def delete(grievance_id):
 
 @bp.route('/escalate/<int:grievance_id>', methods=['POST'])
 def escalate(grievance_id):
-    grievance = Grievance.query.get_or_404(grievance_id)
+    grievance = db.get_or_404(Grievance, grievance_id)
     try:
         data = request.get_json()
         status = Statuses[data['status']]

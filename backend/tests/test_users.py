@@ -95,3 +95,27 @@ class TestUser:
         assert res.status_code == 401
         data = res.json
         assert data['error'] == 'Incorrect password. Please try again.'
+
+    def test_edit_user(self, client, app):
+        res = client.patch('/users/edit/1', data={
+            'email': 'jsmith@example.com',
+            'name': 'Jane Lynn Smith'
+        })
+        assert res.status_code == 200
+        with app.app_context():
+            test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            assert test_user.name == 'Jane Lynn Smith'
+        assert res.json == {
+            'id': 1,
+            'name': 'Jane Lynn Smith',
+        }
+
+    def test_edit_user_invalid(self, client, app):
+        res = client.patch('/users/edit/1', data={
+            'email': 'jsmith@example.com',
+            'name': ''
+        })
+        assert res.status_code == 400
+        with app.app_context():
+            test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            assert test_user.name == 'Jane Smith'
