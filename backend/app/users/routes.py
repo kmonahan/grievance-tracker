@@ -5,13 +5,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
 from users import bp
 from users.EditUserForm import EditUserForm
-from users.UserForm import UserForm
+from users.NewUserForm import NewUserForm
 from users.model import User
 
 
 @bp.route("/register", methods=['POST'])
 def register():
-    form = UserForm()
+    form = NewUserForm()
     if form.validate_on_submit():
         user = db.session.execute(db.select(User).filter_by(email=form.email.data)).scalar_one_or_none()
         if user is None:
@@ -55,6 +55,8 @@ def edit(user_id):
         user = db.get_or_404(User, user_id)
         user.name = form.name.data
         user.email = form.email.data
+        if form.password.data and len(form.password.data) > 0:
+            user.password = generate_password_hash(form.password.data)
         db.session.commit()
         return jsonify(user.to_dict()), 200
     return jsonify({'errors': form.errors}), 400

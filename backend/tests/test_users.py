@@ -1,5 +1,5 @@
 import pytest
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
 from users.model import User
@@ -97,6 +97,10 @@ class TestUser:
         assert data['error'] == 'Incorrect password. Please try again.'
 
     def test_edit_user(self, client, app):
+        with app.app_context():
+            example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            example_user.password = generate_password_hash('password123')
+            db.session.commit()
         res = client.patch('/users/edit/1', data={
             'email': 'jsmith@example.com',
             'name': 'Jane Lynn Smith'
@@ -105,6 +109,7 @@ class TestUser:
         with app.app_context():
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.name == 'Jane Lynn Smith'
+            assert check_password_hash(test_user.password, 'password123') == True
         assert res.json == {
             'id': 1,
             'name': 'Jane Lynn Smith',
@@ -119,3 +124,37 @@ class TestUser:
         with app.app_context():
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.name == 'Jane Smith'
+
+    def test_edit_user_password(self, client, app):
+        res = client.patch('/users/edit/1', data={
+            'email': 'jsmith@example.com',
+            'name': 'Jane Smith',
+            'password': 'password123456',
+            'confirm': 'password123456'
+        })
+        assert res.status_code == 200
+        with app.app_context():
+            test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            assert check_password_hash(test_user.password, 'password123456') == True
+
+    def test_edit_password_invalid(self, client):
+        res = client.patch('/users/edit/1', data={
+            'email': 'jsmith@example.com',
+            'name': 'Jane Smith',
+            'password': 'p123',
+            'confirm': 'password123'
+        })
+        assert res.status_code == 400
+        assert res.json['errors'] == {
+            'password': ['Password must be at least 12 characters', 'Passwords must match']
+        }
+        res = client.patch('/users/edit/1', data={
+            'email': 'jsmith@example.com',
+            'name': 'Jane Smith',
+            'password': 'password123456',
+        })
+        assert res.status_code == 400
+        assert res.json['errors'] == {
+            'password': ['Passwords must match'],
+            'confirm': ['Field is required']
+        }

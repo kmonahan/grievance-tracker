@@ -1,11 +1,8 @@
-from wtforms.fields.simple import PasswordField
-from wtforms.validators import DataRequired, Length, EqualTo
+from flask_wtf import FlaskForm
+from wtforms import StringField, EmailField
+from wtforms.validators import DataRequired, Email
 
-from users.EditUserForm import EditUserForm
 
-
-class UserForm(EditUserForm):
-    password = PasswordField(
-        validators=[DataRequired(), Length(min=12, message='Password must be at least 12 characters'),
-                    EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField(validators=[DataRequired()])
+class UserForm(FlaskForm):
+    name = StringField(validators=[DataRequired()])
+    email = EmailField(validators=[DataRequired(), Email()])
