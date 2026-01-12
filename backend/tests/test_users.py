@@ -145,6 +145,16 @@ class TestUser:
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.name == 'Jane Smith'
 
+    def test_edit_user_existing_email(self, client, app):
+        res = client.patch('/users/edit/1', data={
+            'email': 'jdoe@example.com',
+            'name': 'Jane Smith'
+        })
+        assert res.status_code == 400
+        with app.app_context():
+            test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            assert test_user.email == 'jsmith@example.com'
+
     def test_edit_user_password(self, client, app):
         res = client.patch('/users/edit/1', data={
             'email': 'jsmith@example.com',

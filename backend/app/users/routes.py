@@ -57,6 +57,11 @@ def edit(user_id):
     form = EditUserForm()
     if form.validate_on_submit():
         user = db.get_or_404(User, user_id)
+        existing_email = db.session.execute(db.select(User).filter_by(email=form.email.data)).scalar_one_or_none()
+        if existing_email is not None and existing_email.id != user_id:
+            return jsonify({'errors': {
+                'email': ['Email address is already in use']
+            }}), 400
         user.name = form.name.data
         user.email = form.email.data
         if form.password.data and len(form.password.data) > 0:
