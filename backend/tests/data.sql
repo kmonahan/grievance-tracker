@@ -13,10 +13,10 @@ VALUES
     ('Union Busting'),
     ('Other');
 
-INSERT INTO user (name, email, password)
+INSERT INTO user (name, email, password, is_active)
 VALUES
-    ('Jane Smith', 'jsmith@example.com', 'password123'),
-    ('John Doe', 'jdoe@example.com', 'password123');
+    ('Jane Smith', 'jsmith@example.com', 'password123', TRUE),
+    ('John Doe', 'jdoe@example.com', 'password123', TRUE);
 
 INSERT into grievance (name, description, category_id, point_person_id)
 VALUES

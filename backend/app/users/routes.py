@@ -16,7 +16,7 @@ def register():
         user = db.session.execute(db.select(User).filter_by(email=form.email.data)).scalar_one_or_none()
         if user is None:
             new_user = User(name=form.name.data, email=form.email.data,
-                            password=generate_password_hash(form.password.data))
+                            password=generate_password_hash(form.password.data), is_active=True)
             db.session.add(new_user)
             db.session.commit()
             return jsonify(new_user.to_dict()), 201
@@ -36,6 +36,10 @@ def login():
         return jsonify({
             "error": "No user account found for that email address."
         }), 401
+    if user.is_active is not True:
+        return jsonify({
+            "error": "This user account is not active."
+        }), 403
     password_match = check_password_hash(user.password, data['password'])
     if not password_match:
         return jsonify({

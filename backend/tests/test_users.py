@@ -8,8 +8,8 @@ from users.model import User
 class TestUser:
     @pytest.mark.usefixtures("app")
     def test_to_json(self):
-        user = User(id=1, name="Test")
-        assert user.to_dict() == {'id': 1, 'name': 'Test'}
+        user = User(id=1, name="Test", is_active=True)
+        assert user.to_dict() == {'id': 1, 'name': 'Test', 'is_active': True}
 
     def test_get_all(self, client):
         res = client.get("/users")
@@ -17,11 +17,13 @@ class TestUser:
         assert res.json['users'] == [
             {
                 'id': 1,
-                'name': 'Jane Smith'
+                'name': 'Jane Smith',
+                'is_active': True
             },
             {
                 'id': 2,
-                'name': 'John Doe'
+                'name': 'John Doe',
+                'is_active': True
             }]
 
     def test_register_user(self, client, app):
@@ -37,7 +39,8 @@ class TestUser:
             assert new_user.id == 3
         assert res.json == {
             'id': 3,
-            'name': 'Sarah Johnson'
+            'name': 'Sarah Johnson',
+            'is_active': True
         }
 
     def test_register_invalid_user(self, client, app):
@@ -96,6 +99,22 @@ class TestUser:
         data = res.json
         assert data['error'] == 'Incorrect password. Please try again.'
 
+    def test_login_inactive(self, client, app):
+        with app.app_context():
+            example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            example_user.password = generate_password_hash('password123')
+            example_user.is_active = False
+            db.session.commit()
+
+        res = client.post('/users/login', data={
+            'email': 'jsmith@example.com',
+            'password': 'password123'
+        })
+        assert res.status_code == 403
+        data = res.json
+        with pytest.raises(KeyError, match='access_token'):
+            var = data['access_token']
+
     def test_edit_user(self, client, app):
         with app.app_context():
             example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
@@ -113,6 +132,7 @@ class TestUser:
         assert res.json == {
             'id': 1,
             'name': 'Jane Lynn Smith',
+            'is_active': True
         }
 
     def test_edit_user_invalid(self, client, app):
