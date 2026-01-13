@@ -1,5 +1,6 @@
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jti, get_jwt, jwt_required
+from flask_jwt_extended import create_access_token, get_jti, get_jwt, jwt_required, create_refresh_token, \
+    get_jwt_identity, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
@@ -28,6 +29,11 @@ def register():
     else:
         return jsonify({'errors': form.errors}), 400
 
+def _store_token(encoded_token: str, user_id: int):
+    jti = get_jti(encoded_token)
+    token = Token(jti=jti, user_id=user_id, is_active=True)
+    db.session.add(token)
+    db.session.commit()
 
 @bp.route('/login', methods=['POST'])
 def login():
@@ -46,25 +52,35 @@ def login():
         return jsonify({
             "error": "Incorrect password. Please try again."
         }), 401
-    access_token = create_access_token(identity=user)
-    jti = get_jti(access_token)
-    token = Token(jti=jti, user_id=user.id, is_active=True)
-    db.session.add(token)
+    access_token = create_access_token(identity=user, fresh=True)
+    refresh_token = create_refresh_token(identity=user)
+    _store_token(access_token, user.id)
+    _store_token(refresh_token, user.id)
     db.session.commit()
     return jsonify({
         "message": "You have successfully logged in",
         "access_token": access_token,
+        "refresh_token": refresh_token
     })
 
 @bp.route('/logout', methods=['DELETE'])
 @jwt_required(verify_type=False)
-def logout():
+def revoke_token():
     token = get_jwt()
     jti = token['jti']
     token = db.session.execute(db.select(Token).filter_by(jti=jti)).scalar()
     token.is_active = False
     db.session.commit()
     return "", 204
+
+@bp.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    if not current_user:
+        return jsonify({'error': 'You must be logged in'}), 403
+    access_token = create_access_token(identity=current_user, fresh=False)
+    _store_token(access_token, current_user.id)
+    return jsonify(access_token=access_token)
 
 @bp.route('/edit/<int:user_id>', methods=['PATCH'])
 def edit(user_id):

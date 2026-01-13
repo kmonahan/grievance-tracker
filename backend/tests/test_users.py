@@ -91,12 +91,18 @@ class TestUser:
         assert res.status_code == 200
         data = res.json
         assert data['access_token'] is not None
+        assert data['refresh_token'] is not None
         with app.app_context():
-            jti = get_jti(data['access_token'])
-            assert jti is not None
-            token = db.session.execute(db.select(Token).filter_by(jti=jti)).scalar_one_or_none()
-            assert token is not None
-            assert token.is_active == True
+            access_jti = get_jti(data['access_token'])
+            assert access_jti is not None
+            access_token = db.session.execute(db.select(Token).filter_by(jti=access_jti)).scalar_one_or_none()
+            assert access_token is not None
+            assert access_token.is_active == True
+            refresh_jti = get_jti(data['refresh_token'])
+            assert refresh_jti is not None
+            refresh_token = db.session.execute(db.select(Token).filter_by(jti=refresh_jti)).scalar_one_or_none()
+            assert refresh_token is not None
+            assert refresh_token.is_active == True
 
     def test_login_wrong_password(self, client):
         res = client.post('/users/login', data={
@@ -243,3 +249,22 @@ class TestUser:
         with app.app_context():
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.is_active == True
+
+
+    def test_refresh_token(self, client, app):
+        with app.app_context():
+            example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            example_user.password = generate_password_hash('password123')
+            db.session.commit()
+
+        res = client.post('/users/login', data={
+            'email': 'jsmith@example.com',
+            'password': 'password123'
+        })
+        refresh_token = res.json['refresh_token']
+        res = client.post('/users/refresh', headers={
+            "Authorization": f"Bearer {refresh_token}"
+        })
+        assert res.status_code == 200
+        data = res.json
+        assert data['access_token'] is not None
