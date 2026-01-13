@@ -89,6 +89,9 @@ def edit(user_id):
 def deactivate(user_id):
     user = db.get_or_404(User, user_id)
     user.is_active = False
+    tokens = db.session.execute(db.select(Token).filter(Token.user_id == user.id and Token.is_active == True)).scalars()
+    for token in tokens:
+        token.is_active = False
     db.session.commit()
     return "", 204
 

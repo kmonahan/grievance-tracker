@@ -218,12 +218,18 @@ class TestUser:
         }
 
     def test_deactivate_user(self, client, app):
+        with app.app_context():
+            existing_token = Token(user_id=1, jti='test', is_active=True)
+            db.session.add(existing_token)
+            db.session.commit()
+
         res = client.patch('/users/deactivate/1')
         assert res.status_code == 204
         with app.app_context():
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.is_active == False
-
+            token = db.session.query(Token.is_active).filter_by(user_id=1).scalar()
+            assert token == False
 
     def test_reactivate_user(self, client, app):
         with app.app_context():
