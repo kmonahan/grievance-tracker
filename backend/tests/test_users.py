@@ -123,6 +123,26 @@ class TestUser:
         with pytest.raises(KeyError, match='access_token'):
             var = data['access_token']
 
+    def test_logout(self, client, app):
+        with app.app_context():
+            example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
+            example_user.password = generate_password_hash('password123')
+            db.session.commit()
+
+        res = client.post('/users/login', data={
+            'email': 'jsmith@example.com',
+            'password': 'password123'
+        })
+        token = res.json['access_token']
+        res = client.delete('/users/logout', headers={
+            "Authorization": f"Bearer {token}"
+        })
+        assert res.status_code == 204
+        with app.app_context():
+            jti = get_jti(token)
+            token = db.session.execute(db.select(Token).filter_by(jti=jti)).scalar_one_or_none()
+            assert token.is_active == False
+
     def test_edit_user(self, client, app):
         with app.app_context():
             example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()

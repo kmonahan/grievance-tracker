@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jti
+from flask_jwt_extended import create_access_token, get_jti, get_jwt, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
@@ -56,6 +56,15 @@ def login():
         "access_token": access_token,
     })
 
+@bp.route('/logout', methods=['DELETE'])
+@jwt_required(verify_type=False)
+def logout():
+    token = get_jwt()
+    jti = token['jti']
+    token = db.session.execute(db.select(Token).filter_by(jti=jti)).scalar()
+    token.is_active = False
+    db.session.commit()
+    return "", 204
 
 @bp.route('/edit/<int:user_id>', methods=['PATCH'])
 def edit(user_id):
