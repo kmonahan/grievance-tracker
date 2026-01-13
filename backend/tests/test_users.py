@@ -1,7 +1,9 @@
 import pytest
+from flask_jwt_extended import get_jti
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
+from users.Token import Token
 from users.model import User
 
 
@@ -89,6 +91,12 @@ class TestUser:
         assert res.status_code == 200
         data = res.json
         assert data['access_token'] is not None
+        with app.app_context():
+            jti = get_jti(data['access_token'])
+            assert jti is not None
+            token = db.session.execute(db.select(Token).filter_by(jti=jti)).scalar_one_or_none()
+            assert token is not None
+            assert token.is_active == True
 
     def test_login_wrong_password(self, client):
         res = client.post('/users/login', data={

@@ -1,11 +1,12 @@
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jti
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
 from users import bp
 from users.EditUserForm import EditUserForm
 from users.NewUserForm import NewUserForm
+from users.Token import Token
 from users.model import User
 
 
@@ -46,6 +47,10 @@ def login():
             "error": "Incorrect password. Please try again."
         }), 401
     access_token = create_access_token(identity=user)
+    jti = get_jti(access_token)
+    token = Token(jti=jti, user_id=user.id, is_active=True)
+    db.session.add(token)
+    db.session.commit()
     return jsonify({
         "message": "You have successfully logged in",
         "access_token": access_token,

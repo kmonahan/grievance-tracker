@@ -1,4 +1,6 @@
 import os
+from datetime import timedelta
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,3 +12,4 @@ class Config:
     WTF_CSRF_ENABLED = False
     JWT_SECRET_KEY = os.environ.get('JWT_KEY')
     JWT_VERIFY_SUB = False
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
