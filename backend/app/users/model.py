@@ -9,6 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(250), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
     grievances = db.relationship('Grievance', back_populates='point_person')
+    escalations = db.relationship('Escalation', back_populates='user')
     is_active = db.Column(db.Boolean, default=False, server_default=expression.false(), nullable=False)
 
     def to_dict(self):

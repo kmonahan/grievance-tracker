@@ -9,3 +9,4 @@ class CreateGrievanceForm(FlaskForm):
     description = StringField()
     category_id = SelectField(coerce=int)
     point_person_id = SelectField(coerce=int)
+    user_id = SelectField(coerce=int)

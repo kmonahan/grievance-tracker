@@ -5,6 +5,7 @@ import pytest
 from escalations.model import Escalation
 from stages.Statuses import Statuses
 from stages.Steps import Steps
+from users.model import User
 
 
 class TestEscalation:
@@ -13,9 +14,13 @@ class TestEscalation:
         escalation = Escalation(id=1, date=datetime(2025, 12, 23), date_due=datetime(2026, 1, 2),
                                 hearing_date=datetime(2025, 12, 30), step=Steps.ONE,
                                 status=Statuses.WAITING_TO_SCHEDULE,
-                                grievance_id=1)
+                                grievance_id=1, user_id=1,
+                                user=User(id=1, email='jsmith@example.com', name='Jane Smith', is_active=True), )
         assert escalation.to_dict() == {'id': 1, 'date': '2025-12-23', 'date_due': '2026-01-02',
-                                        'hearing_date': '2025-12-30', 'step': 'Step #1', 'status': 'Waiting to Schedule', 'deadline_missed': False}
+                                        'hearing_date': '2025-12-30', 'step': 'Step #1',
+                                        'status': 'Waiting to Schedule', 'deadline_missed': False, 'user': {'id': 1,
+                                                                                                            'name': 'Jane Smith',
+                                                                                                            'is_active': True}}
 
     def test_edit_due_date(self, client, app):
         res = client.post("/escalations/edit/1", data={'date_due': '2026-01-05'})

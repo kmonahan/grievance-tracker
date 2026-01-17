@@ -11,7 +11,10 @@ TEST_GRIEVANCE = {
         'status': 'Waiting to Schedule',
         'date_due': '2026-01-02',
         'hearing_date': '2025-12-31',
-        'deadline_missed': False
+        'deadline_missed': False,
+        'user': {'id': 1,
+                 'is_active': True,
+                 'name': 'Jane Smith'}
     }]
 }
 
@@ -27,28 +30,39 @@ TEST_GRIEVANCE_2 = {
                      'hearing_date': None,
                      'id': 2,
                      'status': 'Waiting to Schedule',
-                     'step': 'Step #1'},
+                     'step': 'Step #1', 'user': {'id': 1,
+                                                 'is_active': True,
+                                                 'name': 'Jane Smith'}},
                     {'date': '2025-12-21',
                      'date_due': None,
                      'deadline_missed': False,
                      'hearing_date': '2025-12-30',
                      'id': 3,
                      'status': 'Scheduled',
-                     'step': 'Step #1'},
+                     'step': 'Step #1',
+                     'user': {'id': 1,
+                              'is_active': True,
+                              'name': 'Jane Smith'}},
                     {'date': '2025-12-31',
                      'date_due': '2026-01-08',
                      'deadline_missed': False,
                      'hearing_date': None,
                      'id': 4,
                      'status': 'Waiting on Decision',
-                     'step': 'Step #1'},
+                     'step': 'Step #1',
+                     'user': {'id': 1,
+                              'is_active': True,
+                              'name': 'Jane Smith'}},
                     {'date': '2026-01-09',
                      'date_due': '2026-01-30',
                      'deadline_missed': False,
                      'hearing_date': None,
                      'id': 5,
                      'status': 'Waiting to File',
-                     'step': 'Step #1'}]
+                     'step': 'Step #1',
+                     'user': {'id': 1,
+                              'is_active': True,
+                              'name': 'Jane Smith'}}]
 }
 
 TEST_GRIEVANCE_3 = {
@@ -72,7 +86,10 @@ TEST_GRIEVANCE_4 = {
                      'hearing_date': None,
                      'id': 6,
                      'status': 'In Abeyance',
-                     'step': 'Step #2'}]
+                     'step': 'Step #2',
+                     'user': {'id': 1,
+                              'is_active': True,
+                              'name': 'Jane Smith'}}]
 }
 
 TEST_GRIEVANCE_LIST = [
@@ -87,6 +104,7 @@ TEST_CREATED_GRIEVANCE_PARTIAL = {
     'description': 'Test description',
     'category_id': 4,
     'point_person_id': 2,
+    'user_id': 1,
 }
 
 TEST_CREATED_GRIEVANCE = {
@@ -103,7 +121,12 @@ TEST_CREATED_GRIEVANCE = {
             'date_due': '2026-01-02',
             'status': 'Waiting to Schedule',
             'hearing_date': None,
-            'deadline_missed': False
+            'deadline_missed': False,
+            'user': {
+                'id': 1,
+                'name': 'Jane Smith',
+                'is_active': True
+            }
         }
     ]
 }

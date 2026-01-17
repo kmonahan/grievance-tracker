@@ -15,6 +15,8 @@ class Escalation(db.Model):
     status = db.Column(db.Enum(Statuses), nullable=False)
     grievance_id = db.Column(db.Integer, db.ForeignKey('grievance.id'), nullable=False)
     grievance = db.relationship('Grievance', back_populates='escalations', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', back_populates='escalations', lazy=True)
     deadline_missed = db.Column(db.Boolean, nullable=True)
 
     __table_args__ = (
@@ -30,4 +32,5 @@ class Escalation(db.Model):
             'step': self.step.value,
             'status': self.status.value,
             'deadline_missed': self.deadline_missed if self.deadline_missed else False,
+            'user': self.user.to_dict()
         }

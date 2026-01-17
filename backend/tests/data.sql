@@ -25,14 +25,14 @@ VALUES
     ('Test #3', 'Test description #3', 2, 1),
     ('Test #4', 'Test description #4', 2, 2);
 
-INSERT into escalation (date, date_due, hearing_date, step, status, grievance_id)
+INSERT into escalation (date, date_due, hearing_date, step, status, grievance_id, user_id)
 VALUES
-    ('2025-12-19', '2026-01-02', '2025-12-31', 'ONE', 'WAITING_TO_SCHEDULE', 1),
-    ('2025-12-19', '2026-01-02', NULL, 'ONE', 'WAITING_TO_SCHEDULE', 2),
-    ('2025-12-21', NULL, '2025-12-30', 'ONE', 'SCHEDULED', 2),
-    ('2025-12-31', '2026-01-08', NULL, 'ONE', 'WAITING_ON_DECISION', 2),
-    ('2026-01-09', '2026-01-30', NULL, 'ONE', 'WAITING_TO_FILE', 2),
-    ('2026-01-10', NULL, NULL, 'TWO', 'IN_ABEYANCE', 4);
+    ('2025-12-19', '2026-01-02', '2025-12-31', 'ONE', 'WAITING_TO_SCHEDULE', 1, 1),
+    ('2025-12-19', '2026-01-02', NULL, 'ONE', 'WAITING_TO_SCHEDULE', 2, 1),
+    ('2025-12-21', NULL, '2025-12-30', 'ONE', 'SCHEDULED', 2, 1),
+    ('2025-12-31', '2026-01-08', NULL, 'ONE', 'WAITING_ON_DECISION', 2, 1),
+    ('2026-01-09', '2026-01-30', NULL, 'ONE', 'WAITING_TO_FILE', 2, 1),
+    ('2026-01-10', NULL, NULL, 'TWO', 'IN_ABEYANCE', 4, 1);
 
 INSERT into holidays(date, name)
 VALUES

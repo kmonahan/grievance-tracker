@@ -33,11 +33,13 @@ def get_upcoming():
 def _prepare_form_choices() -> CreateGrievanceForm:
     form = CreateGrievanceForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query]
-    form.point_person_id.choices = [(p.id, p.name) for p in User.query]
+    user_choices = [(p.id, p.name) for p in User.query]
+    form.point_person_id.choices = user_choices
+    form.user_id.choices = user_choices
     return form
 
 
-def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses):
+def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses, user_id: int):
     calculator = DateDue()
     todays_date = datetime.now()
     escalation = Escalation(
@@ -45,6 +47,7 @@ def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses):
         grievance=grievance,
         step=step,
         status=status,
+        user_id=user_id,
     )
     if status in status_with_due_dates:
         stage = Stage.query.filter(and_(Stage.status == status), (Stage.step == step)).first()
@@ -66,7 +69,8 @@ def create():
         )
         db.session.add(grievance)
         db.session.commit()
-        escalate_grievance(grievance=grievance, step=Steps.ONE, status=Statuses.WAITING_TO_SCHEDULE)
+        escalate_grievance(grievance=grievance, user_id=form.user_id.data, step=Steps.ONE,
+                           status=Statuses.WAITING_TO_SCHEDULE)
         return jsonify(grievance.to_dict()), 201
     return jsonify({'errors': form.errors}), 400
 
@@ -100,7 +104,7 @@ def escalate(grievance_id):
         data = request.get_json()
         status = Statuses[data['status']]
         step = Steps[data['step']]
-        escalate_grievance(grievance=grievance, step=step, status=status)
+        escalate_grievance(grievance=grievance, step=step, status=status, user_id=data['user_id'])
         return jsonify(grievance.to_dict()), 200
     except KeyError:
         return jsonify({'error': 'Missing or invalid step or status'}), 400

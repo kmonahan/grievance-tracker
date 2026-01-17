@@ -50,20 +50,23 @@ class TestGrievances:
         assert res.json == {'errors': {
             'name': ['This field is required.'],
             'category_id': ['Not a valid choice.'],
-            'point_person_id': ['Not a valid choice.']
+            'point_person_id': ['Not a valid choice.'],
+            'user_id': ['Not a valid choice.'],
         }}
 
     def test_create_invalid_grievance(self, client):
         data = {
             'name': 'Test name',
             'category_id': 8,
-            'point_person_id': 'Jane Smith'
+            'point_person_id': 'Jane Smith',
+            'user_id': 'Jane Smith',
         }
         res = client.post("/grievances/add", data=data)
         assert res.status_code == 400
         assert res.json == {'errors': {
             'category_id': ['Not a valid choice.'],
-            'point_person_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.']
+            'point_person_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.'],
+            'user_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.'],
         }}
 
     def test_update_grievance(self, client, app):
@@ -72,6 +75,7 @@ class TestGrievances:
             'description': 'Test description is edited.',
             'category_id': 1,
             'point_person_id': 1,
+            'user_id': 1,
         }
         res = client.patch("/grievances/edit/1", data=data)
         with app.app_context():
@@ -92,7 +96,8 @@ class TestGrievances:
     def test_advance_grievance(self, client):
         res = client.post("/grievances/escalate/1", json={
             'status': Statuses.WAITING_TO_FILE.name,
-            'step': Steps.ONE.name
+            'step': Steps.ONE.name,
+            'user_id': 1,
         })
         assert res.status_code == 200
         assert res.json == {
@@ -105,7 +110,8 @@ class TestGrievances:
                     'status': 'Waiting to Schedule',
                     'date_due': '2026-01-02',
                     'hearing_date': '2025-12-31',
-                    'deadline_missed': False
+                    'deadline_missed': False,
+                    'user': {'id': 1, 'is_active': True, 'name': 'Jane Smith'}
                 },
                 {
                     'id': 7,
@@ -114,7 +120,8 @@ class TestGrievances:
                     'status': 'Waiting to File',
                     'date_due': '2026-01-30',
                     'hearing_date': None,
-                    'deadline_missed': False
+                    'deadline_missed': False,
+                    'user': {'id': 1, 'is_active': True, 'name': 'Jane Smith'}
                 }
             ]
         }
@@ -123,7 +130,7 @@ class TestGrievances:
     def test_track_missed_deadlines(self, client, app):
         with app.app_context():
             escalation = Escalation(date=datetime.datetime.now(), date_due=datetime.datetime.now() + timedelta(days=15),
-                                    step=Steps.TWO, status=Statuses.WAITING_TO_SCHEDULE, grievance_id=1)
+                                    step=Steps.TWO, status=Statuses.WAITING_TO_SCHEDULE, grievance_id=1, user_id=1)
             db.session.add(escalation)
             db.session.commit()
         res = client.post("/grievances/missed/1", data={'deadline_missed': True})
