@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from categories.model import Category
@@ -10,7 +12,8 @@ class TestCategories:
         category = Category(id=1, name="Test")
         assert category.to_dict() == {'id': 1, 'name': 'Test'}
 
-    def test_get_all(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_all(self, _mock_verify_jwt, client):
         res = client.get("/categories")
         assert res.status_code == 200
         assert res.json['categories'] == [
@@ -43,7 +46,8 @@ class TestCategories:
                 'name': 'Other'
             }]
 
-    def test_get_grievances(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_grievances(self, _mock_verify_jwt, client):
         res = client.get("/categories/1/grievances")
         assert res.status_code == 200
         assert res.json['grievances'] == [TEST_GRIEVANCE, TEST_GRIEVANCE_2]
