@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from flask_jwt_extended import create_access_token, get_jti, get_jwt, jwt_required, create_refresh_token, \
-    get_jwt_identity, current_user
+    current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
@@ -12,6 +12,7 @@ from users.model import User
 
 
 @bp.route("/register", methods=['POST'])
+@jwt_required()
 def register():
     form = NewUserForm()
     if form.validate_on_submit():
@@ -83,6 +84,7 @@ def refresh():
     return jsonify(access_token=access_token)
 
 @bp.route('/edit/<int:user_id>', methods=['PATCH'])
+@jwt_required()
 def edit(user_id):
     form = EditUserForm()
     if form.validate_on_submit():
@@ -102,6 +104,7 @@ def edit(user_id):
 
 
 @bp.route('/deactivate/<int:user_id>', methods=['PATCH'])
+@jwt_required()
 def deactivate(user_id):
     user = db.get_or_404(User, user_id)
     user.is_active = False
@@ -112,6 +115,7 @@ def deactivate(user_id):
     return "", 204
 
 @bp.route('/reactivate/<int:user_id>', methods=['PATCH'])
+@jwt_required()
 def reactivate(user_id):
     user = db.get_or_404(User, user_id)
     user.is_active = True
@@ -119,6 +123,7 @@ def reactivate(user_id):
     return "", 204
 
 @bp.route('')
+@jwt_required()
 def get_steps():
     users = db.session.execute(db.select(User)).scalars()
     return jsonify({'users': [user.to_dict() for user in users]})

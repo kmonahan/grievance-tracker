@@ -1,5 +1,6 @@
 import datetime
 from datetime import timedelta
+from unittest.mock import patch
 
 from freezegun import freeze_time
 
@@ -28,13 +29,15 @@ class TestGrievances:
             'escalations': []
         }
 
-    def test_get_all(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_all(self, _mock_verify_jwt, client):
         res = client.get("/grievances/all")
         assert res.status_code == 200
         assert res.json['grievances'] == TEST_GRIEVANCE_LIST
 
     @freeze_time(datetime.datetime(2025, 12, 19))
-    def test_create_grievance(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_create_grievance(self, _mock_verify_jwt, client, app):
         data = TEST_CREATED_GRIEVANCE_PARTIAL
         res = client.post("/grievances/add", data=data)
         with app.app_context():
@@ -43,7 +46,8 @@ class TestGrievances:
         assert res.status_code == 201
         assert res.json == TEST_CREATED_GRIEVANCE
 
-    def test_create_empty_grievance(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_create_empty_grievance(self, _mock_verify_jwt, client):
         data = {}
         res = client.post("/grievances/add", data=data)
         assert res.status_code == 400
@@ -54,7 +58,8 @@ class TestGrievances:
             'user_id': ['Not a valid choice.'],
         }}
 
-    def test_create_invalid_grievance(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_create_invalid_grievance(self, _mock_verify_jwt, client):
         data = {
             'name': 'Test name',
             'category_id': 8,
@@ -69,7 +74,8 @@ class TestGrievances:
             'user_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.'],
         }}
 
-    def test_update_grievance(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_update_grievance(self, _mock_verify_jwt, client, app):
         data = {
             'name': 'Test name is edited',
             'description': 'Test description is edited.',
@@ -84,7 +90,8 @@ class TestGrievances:
         assert res.status_code == 200
         assert res.json == {**TEST_GRIEVANCE, 'name': data['name'], 'description': data['description']}
 
-    def test_delete_grievance(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_delete_grievance(self, _mock_verify_jwt, client, app):
         res = client.delete("/grievances/delete/1")
         with app.app_context():
             grievance_from_db = Grievance.query.filter_by(id=1).first()
@@ -93,7 +100,8 @@ class TestGrievances:
         assert res.json == {'ok': True}
 
     @freeze_time(datetime.datetime(2026, 1, 2))
-    def test_advance_grievance(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_advance_grievance(self, _mock_verify_jwt, client):
         res = client.post("/grievances/escalate/1", json={
             'status': Statuses.WAITING_TO_FILE.name,
             'step': Steps.ONE.name,
@@ -127,7 +135,8 @@ class TestGrievances:
         }
 
     @freeze_time(datetime.datetime(2026, 1, 2))
-    def test_track_missed_deadlines(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_track_missed_deadlines(self, _mock_verify_jwt, client, app):
         with app.app_context():
             escalation = Escalation(date=datetime.datetime.now(), date_due=datetime.datetime.now() + timedelta(days=15),
                                     step=Steps.TWO, status=Statuses.WAITING_TO_SCHEDULE, grievance_id=1, user_id=1)
@@ -147,14 +156,16 @@ class TestGrievances:
             assert updated_escalation.deadline_missed is False
 
     @freeze_time(datetime.datetime(2025, 12, 19))
-    def test_get_upcoming(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_upcoming(self, _mock_verify_jwt, client):
         res = client.get("/grievances/upcoming")
         assert res.status_code == 200
         assert res.json == {"grievances": [TEST_GRIEVANCE, TEST_GRIEVANCE_2]}
         grievances = res.json['grievances']
         assert grievances[0] == TEST_GRIEVANCE
 
-    def test_get_by_step(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_by_step(self, _mock_verify_jwt, client):
         res = client.get("/grievances/step/ONE")
         assert res.status_code == 200
         assert res.json == {"grievances": [TEST_GRIEVANCE, TEST_GRIEVANCE_2]}

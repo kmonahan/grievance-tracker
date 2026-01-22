@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import jsonify, request
+from flask_jwt_extended import jwt_required
 from sqlalchemy import and_, desc, func
 from sqlalchemy.orm import aliased
 
@@ -18,12 +19,14 @@ from users.model import User
 
 
 @bp.route('/all')
+@jwt_required()
 def get_all():
     grievances = Grievance.query.all()
     return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
 
 
 @bp.route('/upcoming')
+@jwt_required()
 def get_upcoming():
     start_date = request.form.get('start_date', default=datetime.today())
     grievances = Grievance.query.join(Escalation.grievance).filter(Escalation.date_due >= start_date)
@@ -58,6 +61,7 @@ def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses, user
 
 
 @bp.route('/add', methods=['POST'])
+@jwt_required()
 def create():
     form = _prepare_form_choices()
     if form.validate_on_submit():
@@ -76,6 +80,7 @@ def create():
 
 
 @bp.route('/edit/<int:grievance_id>', methods=['PATCH'])
+@jwt_required()
 def update(grievance_id):
     form = _prepare_form_choices()
     if form.validate_on_submit():
@@ -90,6 +95,7 @@ def update(grievance_id):
 
 
 @bp.route('/delete/<int:grievance_id>', methods=['DELETE'])
+@jwt_required()
 def delete(grievance_id):
     grievance = db.get_or_404(Grievance, grievance_id)
     db.session.delete(grievance)
@@ -98,6 +104,7 @@ def delete(grievance_id):
 
 
 @bp.route('/escalate/<int:grievance_id>', methods=['POST'])
+@jwt_required()
 def escalate(grievance_id):
     grievance = db.get_or_404(Grievance, grievance_id)
     try:
@@ -115,6 +122,7 @@ def is_it_true(value):
 
 
 @bp.route('/missed/<int:grievance_id>', methods=['POST'])
+@jwt_required()
 def missed(grievance_id):
     escalation = Escalation.query.filter_by(grievance_id=grievance_id).order_by(desc(Escalation.date)).first_or_404()
     escalation.deadline_missed = request.form.get('deadline_missed', default=True, type=is_it_true)
@@ -123,6 +131,7 @@ def missed(grievance_id):
 
 
 @bp.route('/step/<step_key>', methods=['GET'])
+@jwt_required()
 def get_by_step(step_key):
     try:
         step = Steps[step_key]

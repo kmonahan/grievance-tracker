@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from flask_jwt_extended import get_jti
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,7 +15,8 @@ class TestUser:
         user = User(id=1, name="Test", is_active=True)
         assert user.to_dict() == {'id': 1, 'name': 'Test', 'is_active': True}
 
-    def test_get_all(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_all(self, _mock_verify_jwt, client):
         res = client.get("/users")
         assert res.status_code == 200
         assert res.json['users'] == [
@@ -28,7 +31,8 @@ class TestUser:
                 'is_active': True
             }]
 
-    def test_register_user(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_register_user(self, _mock_verify_jwt, client, app):
         res = client.post('/users/register', data={
             'name': 'Sarah Johnson',
             'email': 'sjohnson@example.com',
@@ -45,7 +49,8 @@ class TestUser:
             'is_active': True
         }
 
-    def test_register_invalid_user(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_register_invalid_user(self, _mock_verify_jwt, client, app):
         res = client.post('/users/register', data={
             'name': 'Sarah Johnson',
             'email': 'sjohnson',
@@ -63,7 +68,8 @@ class TestUser:
             }
         }
 
-    def test_register_existing_user(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_register_existing_user(self, _mock_verify_jwt, client, app):
         res = client.post('/users/register', data={
             'name': 'Jane Smith',
             'email': 'jsmith@example.com',
@@ -149,7 +155,8 @@ class TestUser:
             token = db.session.execute(db.select(Token).filter_by(jti=jti)).scalar_one_or_none()
             assert token.is_active == False
 
-    def test_edit_user(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_user(self, _mock_verify_jwt, client, app):
         with app.app_context():
             example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             example_user.password = generate_password_hash('password123')
@@ -169,7 +176,8 @@ class TestUser:
             'is_active': True
         }
 
-    def test_edit_user_invalid(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_user_invalid(self, _mock_verify_jwt, client, app):
         res = client.patch('/users/edit/1', data={
             'email': 'jsmith@example.com',
             'name': ''
@@ -179,7 +187,8 @@ class TestUser:
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.name == 'Jane Smith'
 
-    def test_edit_user_existing_email(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_user_existing_email(self, _mock_verify_jwt, client, app):
         res = client.patch('/users/edit/1', data={
             'email': 'jdoe@example.com',
             'name': 'Jane Smith'
@@ -189,7 +198,8 @@ class TestUser:
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.email == 'jsmith@example.com'
 
-    def test_edit_user_password(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_user_password(self, _mock_verify_jwt, client, app):
         res = client.patch('/users/edit/1', data={
             'email': 'jsmith@example.com',
             'name': 'Jane Smith',
@@ -201,7 +211,8 @@ class TestUser:
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert check_password_hash(test_user.password, 'password123456') == True
 
-    def test_edit_password_invalid(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_password_invalid(self, _mock_verify_jwt, client):
         res = client.patch('/users/edit/1', data={
             'email': 'jsmith@example.com',
             'name': 'Jane Smith',
@@ -223,7 +234,8 @@ class TestUser:
             'confirm': ['Field is required']
         }
 
-    def test_deactivate_user(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_deactivate_user(self, _mock_verify_jwt, client, app):
         with app.app_context():
             existing_token = Token(user_id=1, jti='test', is_active=True)
             db.session.add(existing_token)
@@ -237,7 +249,8 @@ class TestUser:
             token = db.session.query(Token.is_active).filter_by(user_id=1).scalar()
             assert token == False
 
-    def test_reactivate_user(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_reactivate_user(self, _mock_verify_jwt, client, app):
         with app.app_context():
             example_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             example_user.password = generate_password_hash('password123')

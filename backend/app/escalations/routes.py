@@ -1,6 +1,7 @@
 import datetime
 
 from flask import request, jsonify
+from flask_jwt_extended import jwt_required
 
 from app import db
 from escalations import bp
@@ -12,8 +13,9 @@ def _convert_to_date(date_as_string):
 
 
 @bp.route('/edit/<int:escalation_id>', methods=['POST'])
+@jwt_required()
 def edit_escalation(escalation_id):
-    escalation = db.session.execute(db.select(Escalation)).get_or_404(escalation_id)
+    escalation = db.get_or_404(Escalation, escalation_id)
     date_due = request.form.get('date_due', type=_convert_to_date)
     if date_due is None:
         return jsonify({'error': 'Missing or invalid due date'}), 400

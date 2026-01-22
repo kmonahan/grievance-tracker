@@ -1,4 +1,5 @@
 import os
+from unittest.mock import patch
 
 import pytest
 from __init__ import create_app

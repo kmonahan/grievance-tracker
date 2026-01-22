@@ -13,6 +13,7 @@ def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     return db.session.execute(db.select(User).filter_by(id=identity)).scalar_one()
 
+
 @jwt.token_in_blocklist_loader
 def check_if_token_is_revoked(_jwt_header, jwt_payload: dict):
     jti = jwt_payload['jti']

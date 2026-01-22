@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from unittest.mock import patch
 
 import pytest
 
@@ -22,17 +23,20 @@ class TestEscalation:
                                                                                                             'name': 'Jane Smith',
                                                                                                             'is_active': True}}
 
-    def test_edit_due_date(self, client, app):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_due_date(self, _mock_verify_jwt, client, app):
         res = client.post("/escalations/edit/1", data={'date_due': '2026-01-05'})
         assert res.status_code == 200
         with app.app_context():
             escalation_from_db = Escalation.query.filter_by(id=1).first()
             assert escalation_from_db.date_due == date(2026, 1, 5)
 
-    def test_edit_due_date_with_invalid_field(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_due_date_with_invalid_field(self, _mock_verify_jwt, client):
         res = client.post("/escalations/edit/1", data={'due_date': '2026-01-05'})
         assert res.status_code == 400
 
-    def test_edit_due_date_with_invalid_date(self, client):
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_edit_due_date_with_invalid_date(self, _mock_verify_jwt, client):
         res = client.post("/escalations/edit/1", data={'date_due': '1/5/2026'})
         assert res.status_code == 400
