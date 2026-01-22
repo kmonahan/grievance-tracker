@@ -1,4 +1,4 @@
-import datetime
+from datetime import timedelta, date, datetime
 
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required
@@ -9,7 +9,7 @@ from escalations.model import Escalation
 
 
 def _convert_to_date(date_as_string):
-    return datetime.datetime.strptime(date_as_string, '%Y-%m-%d').date()
+    return datetime.strptime(date_as_string, '%Y-%m-%d').date()
 
 
 @bp.route('/edit/<int:escalation_id>', methods=['POST'])
@@ -24,5 +24,7 @@ def edit_escalation(escalation_id):
     return jsonify({'ok': True}), 200
 
 @bp.route('/recent', methods=['GET'])
+@jwt_required()
 def get_recent_escalations():
-    escalations = db.session.execute(db.select(Escalation).filter().order_by(Escalation.date_due.desc())).scalars()
+    escalations = db.session.execute(db.select(Escalation).filter(Escalation.date >= date.today() + timedelta(days=-14)).order_by(Escalation.date_due.desc())).scalars()
+    return jsonify([escalation.to_dict() for escalation in escalations])
