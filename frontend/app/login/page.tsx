@@ -1,43 +1,41 @@
 export default function Login() {
   return (
-    <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 sm:items-start">
-      <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-        <h1 className="text-5xl font-montserrat font-weight-bold leading-10 tracking-tight text-neutral-0 dark:text-zinc-50">
+    <main className="flex w-full max-w-5xl mx-auto px-5 md:px-10 flex-col gap-12 items-start">
+      <h1 className="text-5xl font-montserrat font-weight-bold text-teal-900 leading-10 tracking-tight">
+        Log In
+      </h1>
+      <form className="bg-teal-500 p-12 w-full flex flex-col items-center gap-6 text-center sm:items-start rounded-xl">
+        <div className="flex flex-col items-start gap-3 w-full max-w-sm">
+          <label htmlFor="email" className="text-xl text-neutral-0">
+            Email address
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required={true}
+            className="bg-teal-0 text-neutral-900 px-4 py-2 w-full rounded-sm"
+          />
+        </div>
+        <div className="flex flex-col items-start gap-3 w-full max-w-sm">
+          <label htmlFor="password" className="text-xl text-teal-0">
+            Password
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required={true}
+            className="bg-teal-0 text-teal-900 px-4 py-2 w-full rounded-sm"
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-orange-500 text-teal-0 font-bold font-montserrat text-2xl py-4 px-8 cursor-pointer transition-colors hover:bg-teal-0 hover:text-orange-500 rounded-md"
+        >
           Log In
-        </h1>
-        <form className="w-full sm:w-sm max-w-sm sm:max-w-none flex flex-col items-center gap-6 text-center sm:items-start">
-          <div className="flex flex-col items-start gap-3 w-full">
-            <label htmlFor="email" className="text-xl text-neutral-0">
-              Email address
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required={true}
-              className="bg-neutral-0 text-neutral-900 px-4 py-2 w-full"
-            />
-          </div>
-          <div className="flex flex-col items-start gap-3 w-full">
-            <label htmlFor="password" className="text-xl text-neutral-0">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required={true}
-              className="bg-neutral-0 text-neutral-900 px-4 py-2 w-full"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-orange-600 text-neutral-0 font-bold font-montserrat text-2xl py-4 px-8 cursor-pointer hover:bg-orange-800"
-          >
-            Log In
-          </button>
-        </form>
-      </div>
+        </button>
+      </form>
     </main>
   );
 }

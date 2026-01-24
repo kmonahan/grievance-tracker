@@ -57,6 +57,7 @@
   --color-teal-200: oklch(0.590 0.098 220.083);
   --color-teal-100: oklch(0.657 0.109 220.083);
   --color-teal-50: oklch(0.725 0.120 220.083);
+  --color-teal-0: oklch(0.990 0.01 220.083);
   --color-neutral-950: oklch(0.100 0.000 0.000);
   --color-neutral-900: oklch(0.180 0.000 0.000);
   --color-neutral-800: oklch(0.260 0.000 0.000);
