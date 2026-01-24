@@ -124,6 +124,12 @@ def reactivate(user_id):
 
 @bp.route('')
 @jwt_required()
-def get_steps():
+def get_all_users():
     users = db.session.execute(db.select(User)).scalars()
+    return jsonify({'users': [user.to_dict() for user in users]})
+
+@bp.route('/active')
+@jwt_required()
+def get_active_users():
+    users = db.session.execute(db.select(User).filter_by(is_active=True)).scalars()
     return jsonify({'users': [user.to_dict() for user in users]})

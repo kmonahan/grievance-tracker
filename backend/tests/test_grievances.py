@@ -119,7 +119,7 @@ class TestGrievances:
                     'date_due': '2026-01-02',
                     'hearing_date': '2025-12-31',
                     'deadline_missed': False,
-                    'user': {'id': 1, 'is_active': True, 'name': 'Jane Smith'}
+                    'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}
                 },
                 {
                     'id': 7,
@@ -129,7 +129,7 @@ class TestGrievances:
                     'date_due': '2026-01-30',
                     'hearing_date': None,
                     'deadline_missed': False,
-                    'user': {'id': 1, 'is_active': True, 'name': 'Jane Smith'}
+                    'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}
                 }
             ]
         }
