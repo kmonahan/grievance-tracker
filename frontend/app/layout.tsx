@@ -52,9 +52,9 @@ export default function RootLayout({
         className={`${glacialIndifferenceBplPsa.variable} ${lovelo.variable} ${montserrat.variable} antialiased`}
       >
         <div className="flex flex-col min-h-screen items-center bg-teal-0 font-glacial">
-          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between w-full max-w-5xl mx-auto px-5 md:px-10 py-5">
-            <div className="text-teal-900 font-lovelo font-black text-2xl uppercase">
-              <Link href="/">BPL PSA Grievance Tracker</Link>
+          <div className="backdrop-blur-xs flex flex-col sm:flex-row items-center justify-center sm:justify-between w-full max-w-5xl mx-auto px-5 md:px-10 py-5">
+            <div className="text-teal-500 font-montserrat font-bold text-xl uppercase">
+              <Link href="/">Home</Link>
             </div>
           </div>
           {children}
