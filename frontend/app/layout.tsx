@@ -2,38 +2,39 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
+import Link from "next/link";
 
 const glacialIndifferenceBplPsa = localFont({
   src: [
     {
-      path: './fonts/glacialindifferencebplpsa-bold-webfont.woff2',
-      weight: '700',
-      style: 'normal'
+      path: "./fonts/glacialindifferencebplpsa-bold-webfont.woff2",
+      weight: "700",
+      style: "normal",
     },
     {
-      path: './fonts/glacialindifferencebplpsa-italic-webfont.woff2',
-      weight: '400',
-      style: 'italic'
+      path: "./fonts/glacialindifferencebplpsa-italic-webfont.woff2",
+      weight: "400",
+      style: "italic",
     },
     {
-      path: './fonts/glacialindifferencebplpsa-regular-webfont.woff2',
-      weight: '400',
-      style: 'normal'
-    }
+      path: "./fonts/glacialindifferencebplpsa-regular-webfont.woff2",
+      weight: "400",
+      style: "normal",
+    },
   ],
-  variable: '--font-glacial'
+  variable: "--font-glacial",
 });
 
 const lovelo = localFont({
-  src:  './fonts/Lovelo-Black.woff2',
-  variable: '--font-lovelo'
+  src: "./fonts/Lovelo-Black.woff2",
+  variable: "--font-lovelo",
 });
 
-const monteserrat = Montserrat({
-  weight: '700',
-  subsets: ['latin'],
-  variable: '--font-monteserrat'
-})
+const montserrat = Montserrat({
+  weight: "700",
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -48,9 +49,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${glacialIndifferenceBplPsa.variable} ${lovelo.variable} ${monteserrat.variable} antialiased`}
+        className={`${glacialIndifferenceBplPsa.variable} ${lovelo.variable} ${montserrat.variable} antialiased`}
       >
-        {children}
+        <div className="flex flex-col min-h-screen items-center justify-center bg-teal-600 font-glacial">
+          <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between w-full max-w-5xl mx-auto px-5 md:px-10 py-5">
+            <div className="text-neutral-0 font-lovelo font-black text-2xl uppercase">
+              <Link href="/">BPL PSA Grievance Tracker</Link>
+            </div>
+          </div>
+          {children}
+        </div>
       </body>
     </html>
   );
