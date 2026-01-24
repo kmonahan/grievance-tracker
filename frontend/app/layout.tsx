@@ -1,16 +1,39 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import localFont from "next/font/local";
+import { Montserrat } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const glacialIndifferenceBplPsa = localFont({
+  src: [
+    {
+      path: './fonts/glacialindifferencebplpsa-bold-webfont.woff2',
+      weight: '700',
+      style: 'normal'
+    },
+    {
+      path: './fonts/glacialindifferencebplpsa-italic-webfont.woff2',
+      weight: '400',
+      style: 'italic'
+    },
+    {
+      path: './fonts/glacialindifferencebplpsa-regular-webfont.woff2',
+      weight: '400',
+      style: 'normal'
+    }
+  ],
+  variable: '--font-glacial'
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const lovelo = localFont({
+  src:  './fonts/Lovelo-Black.woff2',
+  variable: '--font-lovelo'
 });
+
+const monteserrat = Montserrat({
+  weight: '700',
+  subsets: ['latin'],
+  variable: '--font-monteserrat'
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${glacialIndifferenceBplPsa.variable} ${lovelo.variable} ${monteserrat.variable} antialiased`}
       >
         {children}
       </body>
