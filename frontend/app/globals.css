@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+:root {
+  --background: oklch(0.990 0.01 220.083);
+  --foreground: oklch(0.117 0.019 220.083);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.117 0.019 220.083);
+  --primary: oklch(0.117 0.019 220.083);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.387 0.064 220.083);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.900 0.000 0.000);
+  --muted-foreground: oklch(0.455 0.075 220.083);
+  --accent: oklch(0.651 0.177 45.749);
+  --accent-foreground: oklch(0.990 0.01 220.083);
+  --border: oklch(0.820 0.000 0.000);
+}
+
 @theme inline {
   --color-*: initial;
   --color-plum-950: oklch(0.050 0.021 348.596);
@@ -74,4 +90,31 @@
   --font-glacial: var(--font-glacial);
   --font-lovelo: var(--font-lovelo);
   --font-montserrat: var(--font-montserrat);
+
+  --font-body: var(--font-glacial);
+  --font-title: var(--font-lovelo);
+  --font-subtitle: var(--font-montserrat);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

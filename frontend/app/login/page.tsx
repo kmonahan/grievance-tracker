@@ -1,12 +1,12 @@
 export default function Login() {
   return (
     <main className="flex w-full max-w-5xl mx-auto px-5 md:px-10 flex-col gap-12 items-start">
-      <h1 className="text-5xl font-montserrat font-weight-bold text-teal-900 leading-10 tracking-tight">
+      <h1 className="text-5xl font-mono font-weight-bold text-primary leading-10 tracking-tight">
         Log In
       </h1>
       <form className="bg-teal-500 p-12 w-full flex flex-col items-center gap-6 text-center sm:items-start rounded-xl">
         <div className="flex flex-col items-start gap-3 w-full max-w-sm">
-          <label htmlFor="email" className="text-xl text-neutral-0">
+          <label htmlFor="email" className="text-xl text-primary-foreground">
             Email address
           </label>
           <input
@@ -31,7 +31,7 @@ export default function Login() {
         </div>
         <button
           type="submit"
-          className="bg-orange-500 text-teal-0 font-bold font-montserrat text-2xl py-4 px-8 cursor-pointer transition-colors hover:bg-teal-0 hover:text-orange-500 rounded-md"
+          className="bg-accent text-accent-foreground font-bold font-mono text-2xl py-4 px-8 cursor-pointer transition-colors hover:bg-background hover:text-accent rounded-md"
         >
           Log In
         </button>
