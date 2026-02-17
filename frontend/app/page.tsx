@@ -1,3 +1,5 @@
+import GrievanceDeadlineCard from "./components/GrievanceDeadlineCard";
+
 export default function Home() {
   return (
     <main className="flex flex-col">
@@ -5,15 +7,9 @@ export default function Home() {
         <h2 className="text-4xl font-mono font-bold text-primary">
           Upcoming Deadlines
         </h2>
-        <ol>
+        <ol className="mt-4 space-y-3">
           <li>
-            <div>
-              <h3>
-                <a href="#">Test Grievance #1</a>
-              </h3>
-              <p>Waiting to Schedule - January 6, 2026</p>
-              <p>Point Person: Walter Reuther</p>
-            </div>
+            <GrievanceDeadlineCard />
           </li>
         </ol>
         <a href="#">See all grievances by deadline</a>
