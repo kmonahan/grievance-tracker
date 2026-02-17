@@ -64,7 +64,7 @@ export default function RootLayout({
       <body
         className={`${glacialIndifferenceBplPsa.variable} ${lovelo.variable} ${montserrat.variable} antialiased`}
       >
-        <div className="flex flex-col min-h-screen bg-background font-sans">
+        <div className="flex flex-col min-h-screen bg-gradient-to-br from-background via-muted/20 to-secondary/10 font-body">
           <Header />
           {children}
         </div>
