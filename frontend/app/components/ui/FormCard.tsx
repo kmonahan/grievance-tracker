@@ -1,9 +1,11 @@
 export default function FormCard({
   title,
   children,
+  action,
 }: {
   title: string;
   children: React.ReactNode;
+  action?: (formData: FormData) => void | Promise<void>;
 }) {
   return (
     <main className="w-full mx-auto px-6 py-8 flex items-center justify-center">
@@ -14,7 +16,7 @@ export default function FormCard({
               {title}
             </h1>
           </div>
-          <form className="px-6 space-y-5">{children}</form>
+          <form className="px-6 space-y-5" action={action}>{children}</form>
         </div>
       </div>
     </main>
