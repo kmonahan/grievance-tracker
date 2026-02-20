@@ -2,17 +2,82 @@ import { login } from "./actions";
 
 global.fetch = jest.fn();
 
+const mockCookiesSet = jest.fn();
+jest.mock("next/headers", () => ({
+  cookies: jest.fn(() => Promise.resolve({ set: mockCookiesSet })),
+}));
+
+const mockRedirect = jest.fn();
+jest.mock("next/navigation", () => ({
+  redirect: (path: string) => mockRedirect(path),
+}));
+
+const FIXED_NOW = new Date("2026-01-01T00:00:00.000Z").getTime();
+
 describe("login action", () => {
   beforeEach(() => {
     process.env.BACKEND_URL = "http://localhost:8000";
+    delete process.env.NODE_ENV;
+    jest.clearAllMocks();
+    jest.spyOn(Date, "now").mockReturnValue(FIXED_NOW);
   });
 
-  it("returns error: null on a successful response", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
-    const result = await login({ error: null }, new FormData());
+  it("stores tokens in cookies with correct options and redirects on success", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        access_token: "access-jwt",
+        refresh_token: "refresh-jwt",
+      }),
+    });
 
-    expect(result).toEqual({ error: null });
+    await login({ error: null }, new FormData());
+
+    expect(mockCookiesSet).toHaveBeenCalledWith("access_token", "access-jwt", {
+      httpOnly: true,
+      secure: false,
+      path: "/",
+      expires: new Date(FIXED_NOW + 45 * 60 * 1000),
+    });
+    expect(mockCookiesSet).toHaveBeenCalledWith(
+      "refresh_token",
+      "refresh-jwt",
+      {
+        httpOnly: true,
+        secure: false,
+        path: "/",
+        expires: new Date(FIXED_NOW + 28 * 24 * 60 * 60 * 1000),
+      },
+    );
+    expect(mockRedirect).toHaveBeenCalledWith("/");
+  });
+
+  it("sets secure: true on cookies in production", async () => {
+    process.env.NODE_ENV = "production";
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        access_token: "access-jwt",
+        refresh_token: "refresh-jwt",
+      }),
+    });
+
+    await login({ error: null }, new FormData());
+
+    expect(mockCookiesSet).toHaveBeenCalledWith(
+      "access_token",
+      "access-jwt",
+      expect.objectContaining({ secure: true }),
+    );
+    expect(mockCookiesSet).toHaveBeenCalledWith(
+      "refresh_token",
+      "refresh-jwt",
+      expect.objectContaining({ secure: true }),
+    );
   });
 
   it("returns the server error message on a failed response", async () => {
@@ -38,7 +103,13 @@ describe("login action", () => {
   });
 
   it("calls the correct endpoint with POST and the submitted FormData", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        access_token: "access-jwt",
+        refresh_token: "refresh-jwt",
+      }),
+    });
     const formData = new FormData();
 
     await login({ error: null }, formData);
