@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import localFont from "next/font/local";
 import { Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import Header from "./components/Header";
 
 const glacialIndifferenceBplPsa = localFont({

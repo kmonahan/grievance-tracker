@@ -23,7 +23,7 @@ export default function Home() {
           </div>
           <footer className="mt-6 flex justify-center">
             <a
-              href="#"
+              href="/grievances"
               className="font-subtitle text-sm font-semibold text-primary hover:text-accent transition-colors inline-flex items-center gap-2 group"
             >
               See all grievances by deadline
@@ -32,6 +32,8 @@ export default function Home() {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                role="presentation"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -59,27 +61,6 @@ export default function Home() {
               </li>
             </ol>
           </div>
-          <footer className="mt-6 flex justify-center">
-            <a
-              href="#"
-              className="font-subtitle text-sm font-semibold text-accent hover:text-primary transition-colors inline-flex items-center gap-2 group"
-            >
-              See all recent activity
-              <svg
-                className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          </footer>
         </section>
       </div>
     </main>

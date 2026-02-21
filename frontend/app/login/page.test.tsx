@@ -35,9 +35,7 @@ describe("Login page", () => {
 
   it("renders the submit button", () => {
     render(<Login />);
-    expect(
-      screen.getByRole("button", { name: "Log In" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument();
   });
 
   it("does not show an error message when there is no error", () => {

@@ -16,7 +16,9 @@ export default function FormCard({
               {title}
             </h1>
           </div>
-          <form className="px-6 space-y-5" action={action}>{children}</form>
+          <form className="px-6 space-y-5" action={action}>
+            {children}
+          </form>
         </div>
       </div>
     </main>
