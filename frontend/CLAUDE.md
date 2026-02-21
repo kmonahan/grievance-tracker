@@ -18,6 +18,8 @@ No UI library is used.
 Authentication is cookie-based. The presence of a `access_token` cookie indicates the
 user is logged in.
 
+Helper functions in `lib/auth.ts` are used to determine user's auth state.
+
 ## Code Conventions
 ### Path Aliases
 `"~/*"`: `"./*"`

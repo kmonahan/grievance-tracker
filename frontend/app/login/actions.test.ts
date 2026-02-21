@@ -41,7 +41,7 @@ describe("login action", () => {
       httpOnly: true,
       secure: false,
       path: "/",
-      expires: new Date(FIXED_NOW + 45 * 60 * 1000),
+      expires: new Date(FIXED_NOW + 60 * 60 * 1000),
     });
     expect(mockCookiesSet).toHaveBeenCalledWith(
       "refresh_token",
