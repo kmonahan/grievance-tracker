@@ -14,6 +14,10 @@ No UI library is used.
 - The `~/` path alias is mapped in Jest config, so imports work the same as in app code
 - Test files use `.test.ts` / `.test.tsx` extensions
 
+## Auth States
+Authentication is cookie-based. The presence of a `access_token` cookie indicates the
+user is logged in.
+
 ## Code Conventions
 ### Path Aliases
 `"~/*"`: `"./*"`
