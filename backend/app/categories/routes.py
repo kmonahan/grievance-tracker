@@ -1,7 +1,9 @@
 from flask import jsonify
 from flask_jwt_extended import jwt_required
 
+from app import db
 from categories import bp
+from categories.CreateCategoryForm import CreateCategoryForm
 from categories.model import Category
 
 
@@ -17,3 +19,14 @@ def get_categories():
 def get_related_grievances(category_id):
     category = Category.query.get_or_404(category_id)
     return jsonify({'grievances': [grievance.to_dict() for grievance in category.grievances]})
+
+@bp.route('/add', methods=['POST'])
+@jwt_required()
+def add_category():
+    form = CreateCategoryForm()
+    if form.validate_on_submit():
+        category = Category(name=form.name.data)
+        db.session.add(category)
+        db.session.commit()
+        return jsonify(category.to_dict()), 201
+    return jsonify({'errors': form.errors}), 400

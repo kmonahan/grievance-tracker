@@ -51,3 +51,28 @@ class TestCategories:
         res = client.get("/categories/1/grievances")
         assert res.status_code == 200
         assert res.json['grievances'] == [TEST_GRIEVANCE, TEST_GRIEVANCE_2]
+
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_create_category(self, _mock_verify_jwt, app, client):
+        test_category = {
+            'name': 'Test category'
+        }
+        data = test_category
+        res = client.post("/categories/add", data=data)
+        with app.app_context():
+            category_from_db = Category.query.filter_by(name=test_category['name']).first()
+            assert category_from_db is not None
+        assert res.status_code == 201
+        assert res.json == {
+            'id': 8,
+            'name': test_category['name']
+        }
+
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_create_empty_category(self, _mock_verify_jwt, client):
+        data = {}
+        res = client.post("/categories/add", data=data)
+        assert res.status_code == 400
+        assert res.json == {'errors': {
+            'name': ['This field is required.']
+        }}
