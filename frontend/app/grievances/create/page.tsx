@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Button from "~/app/components/ui/Button";
 import FormCard from "~/app/components/ui/FormCard";
 import FormField from "~/app/components/ui/FormField";
@@ -42,6 +43,12 @@ export default function CreateGrievance() {
           </option>
         ))}
       </FormSelect>
+      <Link
+        href="/categories/add"
+        className="inline-flex items-center text-sm font-medium text-secondary hover:underline font-subtitle"
+      >
+        + Add Category
+      </Link>
       <FormSelect id="point_person" label="Point Person">
         <option></option>
         {POINT_PERSONS.map((person) => (

@@ -24,6 +24,12 @@ Helper functions in `lib/auth.ts` are used to determine user's auth state.
 ### Path Aliases
 `"~/*"`: `"./*"`
 
+### Code Style
+- Prefer native HTML elements over custom components or third-party libraries
+  - EXAMPLE: Use `<dialog>` for modals
+  - EXAMPLE: Use `popover` attribute for tooltips
+- Use semantic HTML elements where possible
+
 ## Checklist for Completion
 Before any task is considered complete, you **must** check the following:
 - [ ] `npm run format` has been run to format all files

@@ -26,6 +26,14 @@ export default async function Header() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/grievances/create"
+                  className="font-body text-sm text-muted-foreground tracking-wide hover:text-primary transition-colors"
+                >
+                  Add Grievance
+                </Link>
+              </li>
+              <li>
                 <a
                   href="/logout"
                   className="font-body text-sm text-muted-foreground tracking-wide hover:text-primary transition-colors"
