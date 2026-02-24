@@ -42,7 +42,9 @@ describe("Modal", () => {
 
   it("closes the dialog when the close button is clicked", () => {
     render(<Modal>content</Modal>);
-    fireEvent.click(screen.getByRole("button", { name: "Close", hidden: true }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Close", hidden: true }),
+    );
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
   });
 

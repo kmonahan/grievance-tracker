@@ -20,6 +20,9 @@ user is logged in.
 
 Helper functions in `lib/auth.ts` are used to determine user's auth state.
 
+**ALL** back-end API endpoints other than /login are protected and require authentication via
+bearer token.
+
 ## Code Conventions
 ### Path Aliases
 `"~/*"`: `"./*"`
