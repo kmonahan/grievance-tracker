@@ -28,9 +28,6 @@ bearer token.
 `"~/*"`: `"./*"`
 
 ### Code Style
-- Prefer native HTML elements over custom components or third-party libraries
-  - EXAMPLE: Use `<dialog>` for modals
-  - EXAMPLE: Use `popover` attribute for tooltips
 - Use semantic HTML elements where possible
 
 ## Checklist for Completion

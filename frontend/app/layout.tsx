@@ -56,10 +56,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -69,7 +67,6 @@ export default function RootLayout({
         <div className="flex flex-col min-h-screen bg-gradient-to-br from-background via-muted/20 to-secondary/10 font-body">
           <Header />
           {children}
-          {modal}
         </div>
       </body>
     </html>

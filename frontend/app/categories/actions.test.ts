@@ -65,10 +65,10 @@ describe("addCategory action", () => {
     expect(mockRevalidateTag).toHaveBeenCalledWith("categories");
   });
 
-  it("returns success state on success", async () => {
+  it("returns success state with category data on success", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ id: 42 }),
+      json: async () => ({ id: 42, name: "Safety" }),
     });
 
     const result = await addCategory(
@@ -76,7 +76,11 @@ describe("addCategory action", () => {
       new FormData(),
     );
 
-    expect(result).toEqual({ error: null, success: true });
+    expect(result).toEqual({
+      error: null,
+      success: true,
+      category: { id: 42, name: "Safety" },
+    });
   });
 
   it("returns error state on failure", async () => {

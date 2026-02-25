@@ -1,22 +1,27 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-export default function Modal({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+export default function Modal({
+  children,
+  open,
+  onClose,
+}: {
+  children: React.ReactNode;
+  open: boolean;
+  onClose: () => void;
+}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (dialog && !dialog.open) {
+    if (!dialog) return;
+    if (open && !dialog.open) {
       dialog.showModal();
+    } else if (!open && dialog.open) {
+      dialog.close();
     }
-  }, []);
-
-  function handleClose() {
-    router.back();
-  }
+  }, [open]);
 
   function handleDialogClick(e: React.MouseEvent<HTMLDialogElement>) {
     if (e.target === dialogRef.current) {
@@ -28,7 +33,7 @@ export default function Modal({ children }: { children: React.ReactNode }) {
     // biome-ignore lint/a11y/useKeyWithClickEvents: <dialog> natively handles keyboard interaction (Escape to close)
     <dialog
       ref={dialogRef}
-      onClose={handleClose}
+      onClose={onClose}
       onClick={handleDialogClick}
       className="relative w-[calc(100%-2rem)] max-w-md m-auto bg-card text-card-foreground rounded-xl border-2 shadow-xl backdrop:bg-black/50 p-0"
     >

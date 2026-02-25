@@ -3,7 +3,11 @@
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export type AddCategoryState = { error: string | null; success: boolean };
+export type AddCategoryState = {
+  error: string | null;
+  success: boolean;
+  category?: { id: number; name: string };
+};
 
 export async function addCategory(
   _prevState: AddCategoryState,
@@ -28,6 +32,11 @@ export async function addCategory(
     };
   }
 
+  const category = (await response.json()) as { id: number; name: string };
   revalidateTag("categories");
-  return { error: null, success: true };
+  return {
+    error: null,
+    success: true,
+    category: { id: category.id, name: category.name },
+  };
 }
