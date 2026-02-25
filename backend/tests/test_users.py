@@ -276,7 +276,6 @@ class TestUser:
             test_user = db.session.execute(db.select(User).filter_by(id=1)).scalar_one()
             assert test_user.is_active == True
 
-
     @pytest.mark.usefixtures('set_passwords')
     def test_refresh_token(self, client):
         res = client.post('/users/login', data={
@@ -290,3 +289,21 @@ class TestUser:
         assert res.status_code == 200
         data = res.json
         assert data['access_token'] is not None
+
+    @pytest.mark.usefixtures('set_passwords')
+    def test_get_current_user(self, client):
+        res = client.post('/users/login', data={
+            'email': 'wreuther@example.com',
+            'password': 'password123'
+        })
+        token = res.json['access_token']
+        res = client.get('/users/me', headers={
+            "Authorization": f"Bearer {token}"
+        })
+        assert res.status_code == 200
+        data = res.json
+        assert data == {
+            'id': 1,
+            'name': 'Walter Reuther',
+            'is_active': True
+        }

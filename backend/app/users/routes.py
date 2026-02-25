@@ -133,3 +133,8 @@ def get_all_users():
 def get_active_users():
     users = db.session.execute(db.select(User).filter_by(is_active=True)).scalars()
     return jsonify({'users': [user.to_dict() for user in users]})
+
+@bp.route('/me')
+@jwt_required()
+def get_current_user():
+    return current_user.to_dict()
