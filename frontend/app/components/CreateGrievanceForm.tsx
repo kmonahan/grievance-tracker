@@ -13,12 +13,22 @@ type Category = {
   name: string;
 };
 
+type PointPerson = {
+  id: number;
+  name: string;
+  isActive: boolean;
+};
+
 export default function CreateGrievanceForm({
   categories: initialCategories,
   pointPersons,
+  defaultPointPersonId,
+  pointPersonsError,
 }: {
   categories: Category[];
-  pointPersons: string[];
+  pointPersons: PointPerson[];
+  defaultPointPersonId?: number | null;
+  pointPersonsError?: string | null;
 }) {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -27,6 +37,8 @@ export default function CreateGrievanceForm({
     error: null,
     success: false,
   });
+
+  const isDisabled = !!pointPersonsError;
 
   useEffect(() => {
     if (addCategoryState.success && addCategoryState.category) {
@@ -40,8 +52,15 @@ export default function CreateGrievanceForm({
   return (
     <>
       <FormCard title="Create New Grievance">
+        {pointPersonsError && <p>{pointPersonsError}</p>}
         <input type="hidden" name="user_id" value="" />
-        <FormField id="name" label="Name" required maxLength={255} />
+        <FormField
+          id="name"
+          label="Name"
+          required
+          maxLength={255}
+          disabled={isDisabled}
+        />
         <div className="space-y-2">
           <label
             htmlFor="description"
@@ -53,6 +72,7 @@ export default function CreateGrievanceForm({
             id="description"
             name="description"
             rows={4}
+            disabled={isDisabled}
             className="border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive resize-none"
           />
         </div>
@@ -61,6 +81,7 @@ export default function CreateGrievanceForm({
           label="Category"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
+          disabled={isDisabled}
         >
           <option value=""></option>
           {categories.map((cat) => (
@@ -76,15 +97,24 @@ export default function CreateGrievanceForm({
         >
           + Add Category
         </button>
-        <FormSelect id="point_person" label="Point Person">
+        <FormSelect
+          id="point_person"
+          label="Point Person"
+          defaultValue={
+            defaultPointPersonId != null ? String(defaultPointPersonId) : ""
+          }
+          disabled={isDisabled}
+        >
           <option value=""></option>
           {pointPersons.map((person) => (
-            <option key={person} value={person}>
-              {person}
+            <option key={person.id} value={person.id}>
+              {person.name}
             </option>
           ))}
         </FormSelect>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isDisabled}>
+          Submit
+        </Button>
       </FormCard>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="flex flex-col gap-6 py-6">

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useActionState } from "react";
 import CreateGrievanceForm from "./CreateGrievanceForm";
+import { PointPerson } from "~/app/grievances/create/page";
 
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
@@ -18,7 +19,11 @@ const mockCategories = [
   { id: 2, name: "PTO" },
 ];
 
-const mockPointPersons = ["Walter Reuther", "Cesar Chavez"];
+const mockPointPersonsObjects: PointPerson[] = [
+  { id: 1, name: "Walter Reuther", isActive: true },
+  { id: 2, name: "Cesar Chavez", isActive: true },
+  { id: 3, name: "Clara Lemlich", isActive: true },
+];
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -43,7 +48,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
@@ -53,7 +58,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(screen.getByLabelText("Description")).toBeInTheDocument();
@@ -63,7 +68,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(screen.getByLabelText("Category")).toBeInTheDocument();
@@ -73,7 +78,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(screen.getByRole("option", { name: "Pay" })).toBeInTheDocument();
@@ -84,7 +89,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(screen.getByLabelText("Point Person")).toBeInTheDocument();
@@ -94,7 +99,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
@@ -104,7 +109,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(
@@ -116,7 +121,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
@@ -127,7 +132,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
@@ -138,7 +143,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
@@ -156,7 +161,7 @@ describe("CreateGrievanceForm", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
     expect(screen.getByText("Name already taken")).toBeInTheDocument();
@@ -166,7 +171,7 @@ describe("CreateGrievanceForm", () => {
     const { rerender } = render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
 
@@ -178,7 +183,7 @@ describe("CreateGrievanceForm", () => {
     rerender(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
 
@@ -192,7 +197,7 @@ describe("CreateGrievanceForm", () => {
     const { rerender } = render(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
 
@@ -209,10 +214,107 @@ describe("CreateGrievanceForm", () => {
     rerender(
       <CreateGrievanceForm
         categories={mockCategories}
-        pointPersons={mockPointPersons}
+        pointPersons={mockPointPersonsObjects}
       />,
     );
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+  });
+
+  describe("Point Person field", () => {
+    it("renders point persons from the API as dropdown options", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          defaultPointPersonId={null}
+          pointPersonsError={null}
+        />,
+      );
+      expect(
+        screen.getByRole("option", { name: "Walter Reuther" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Cesar Chavez" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Clara Lemlich" }),
+      ).toBeInTheDocument();
+    });
+
+    it("pre-selects the current user as the default point person", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          defaultPointPersonId={2}
+          pointPersonsError={null}
+        />,
+      );
+      expect(screen.getByLabelText("Point Person")).toHaveValue("2");
+    });
+
+    it("does not pre-select any point person when defaultPointPersonId is null", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          defaultPointPersonId={null}
+          pointPersonsError={null}
+        />,
+      );
+      expect(screen.getByLabelText("Point Person")).toHaveValue("");
+    });
+  });
+
+  describe("when point persons fetch fails", () => {
+    it("displays an error message above the form", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={[]}
+          defaultPointPersonId={null}
+          pointPersonsError="Failed to load user list."
+        />,
+      );
+      expect(screen.getByText("Failed to load user list.")).toBeInTheDocument();
+    });
+
+    it("renders the error message before the form fields", () => {
+      const { container } = render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={[]}
+          defaultPointPersonId={null}
+          pointPersonsError="Failed to load user list."
+        />,
+      );
+      const errorEl = screen.getByText("Failed to load user list.");
+      const nameField = screen.getByRole("textbox", { name: "Name" });
+      expect(
+        container.compareDocumentPosition(errorEl) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(
+        errorEl.compareDocumentPosition(nameField) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+    });
+
+    it("disables all form fields and the submit button", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={[]}
+          defaultPointPersonId={null}
+          pointPersonsError="Failed to load user list."
+        />,
+      );
+      expect(screen.getByRole("textbox", { name: "Name" })).toBeDisabled();
+      expect(screen.getByLabelText("Description")).toBeDisabled();
+      expect(screen.getByLabelText("Category")).toBeDisabled();
+      expect(screen.getByLabelText("Point Person")).toBeDisabled();
+      expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled();
+    });
   });
 });
