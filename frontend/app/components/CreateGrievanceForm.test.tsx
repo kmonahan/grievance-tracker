@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useActionState } from "react";
+import type { PointPerson } from "~/app/grievances/create/page";
 import CreateGrievanceForm from "./CreateGrievanceForm";
-import { PointPerson } from "~/app/grievances/create/page";
 
 jest.mock("react", () => ({
   ...jest.requireActual("react"),

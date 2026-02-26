@@ -7,9 +7,9 @@ jest.mock("next/headers", () => ({
   cookies: jest.fn(() => Promise.resolve({ get: mockCookiesGet })),
 }));
 
-const mockRevalidateTag = jest.fn();
+const mockUpdateTag = jest.fn();
 jest.mock("next/cache", () => ({
-  revalidateTag: (tag: string) => mockRevalidateTag(tag),
+  updateTag: (tag: string) => mockUpdateTag(tag),
 }));
 
 describe("addCategory action", () => {
@@ -54,7 +54,7 @@ describe("addCategory action", () => {
     );
   });
 
-  it("calls revalidateTag('categories') on success", async () => {
+  it("calls updateTag('categories') on success", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ id: 5 }),
@@ -62,7 +62,7 @@ describe("addCategory action", () => {
 
     await addCategory({ error: null, success: false }, new FormData());
 
-    expect(mockRevalidateTag).toHaveBeenCalledWith("categories");
+    expect(mockUpdateTag).toHaveBeenCalledWith("categories");
   });
 
   it("returns success state with category data on success", async () => {

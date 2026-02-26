@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export type AddCategoryState = {
@@ -33,7 +33,7 @@ export async function addCategory(
   }
 
   const category = (await response.json()) as { id: number; name: string };
-  revalidateTag("categories");
+  updateTag("categories");
   return {
     error: null,
     success: true,
