@@ -1,3 +1,4 @@
+import { env } from "~/test/helpers";
 import { accessTokenCookieOptions, fetchRefreshedAccessToken } from "./token";
 
 global.fetch = jest.fn();
@@ -6,7 +7,7 @@ const FIXED_NOW = new Date("2026-01-01T00:00:00.000Z").getTime();
 
 describe("accessTokenCookieOptions", () => {
   beforeEach(() => {
-    delete process.env.NODE_ENV;
+    delete env.NODE_ENV;
     jest.spyOn(Date, "now").mockReturnValue(FIXED_NOW);
   });
 
@@ -30,7 +31,7 @@ describe("accessTokenCookieOptions", () => {
   });
 
   it("sets secure: true in production", () => {
-    process.env.NODE_ENV = "production";
+    env.NODE_ENV = "production";
     expect(accessTokenCookieOptions().secure).toBe(true);
   });
 });

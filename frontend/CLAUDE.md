@@ -35,5 +35,6 @@ Before any task is considered complete, you **must** check the following:
 - [ ] `npm run format` has been run to format all files
 - [ ] `npm run lint:fix` has been run to lint with safe code fixes applied
 - [ ] No remaining linting errors occur (run `npm run lint` to verify)
+- [ ] No TypeScript errors occur (run `npm run typecheck` to verify)
 - [ ] Unit tests have been added for new functionality
 - [ ] All tests pass (run `npm test` to verify)

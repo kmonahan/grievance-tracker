@@ -1,3 +1,4 @@
+import { env } from "~/test/helpers";
 import { login } from "./actions";
 
 global.fetch = jest.fn();
@@ -17,7 +18,7 @@ const FIXED_NOW = new Date("2026-01-01T00:00:00.000Z").getTime();
 describe("login action", () => {
   beforeEach(() => {
     process.env.BACKEND_URL = "http://localhost:8000";
-    delete process.env.NODE_ENV;
+    delete env.NODE_ENV;
     jest.clearAllMocks();
     jest.spyOn(Date, "now").mockReturnValue(FIXED_NOW);
   });
@@ -57,7 +58,7 @@ describe("login action", () => {
   });
 
   it("sets secure: true on cookies in production", async () => {
-    process.env.NODE_ENV = "production";
+    env.NODE_ENV = "production";
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({

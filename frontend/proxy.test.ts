@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isTokenExpiredOrExpiringSoon } from "~/app/lib/jwt";
+import { env } from "~/test/helpers";
 
 jest.mock("~/app/lib/jwt", () => ({
   isTokenExpiredOrExpiringSoon: jest.fn(),
@@ -37,7 +38,7 @@ let mockCookiesSet: jest.Mock;
 
 beforeEach(() => {
   process.env.BACKEND_URL = "http://localhost:8000";
-  delete process.env.NODE_ENV;
+  delete env.NODE_ENV;
   jest.spyOn(Date, "now").mockReturnValue(FIXED_NOW);
 
   mockCookiesSet = jest.fn();
@@ -180,7 +181,7 @@ describe("token refresh — expiring soon access token with refresh token", () =
   });
 
   it("sets secure: true on the cookie in production", async () => {
-    process.env.NODE_ENV = "production";
+    env.NODE_ENV = "production";
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ access_token: "new-access-token" }),
