@@ -31,7 +31,7 @@ const mockPointPersonsObjects: PointPerson[] = [
 
 const grievanceInitialState: {
   error: string | null;
-  errors: Record<string, string[]>[] | null;
+  errors: Record<string, string[]> | null;
   fields: Record<string, string>;
 } = {
   error: null,
@@ -492,12 +492,10 @@ describe("CreateGrievanceForm", () => {
       it("displays all field-specific error messages", () => {
         mockBothActionStates({
           error: "Validation failed",
-          errors: [
-            {
-              name: ["Name is required", "Name must be at least 3 characters"],
-            },
-            { description: ["Description is required"] },
-          ],
+          errors: {
+            name: ["Name is required", "Name must be at least 3 characters"],
+            description: ["Description is required"],
+          },
           fields: {
             name: "",
             description: "",
@@ -518,10 +516,34 @@ describe("CreateGrievanceForm", () => {
         expect(screen.getByText("Description is required")).toBeInTheDocument();
       });
 
+      it("does not crash when errors is a non-array object from the backend", () => {
+        mockBothActionStates({
+          error: "Validation failed",
+          errors: {
+            name: ["Name is required"],
+          },
+          fields: {
+            name: "",
+            description: "",
+            category_id: "",
+            point_person_id: "",
+          },
+        });
+        expect(() =>
+          render(
+            <CreateGrievanceForm
+              categories={mockCategories}
+              pointPersons={mockPointPersonsObjects}
+            />,
+          ),
+        ).not.toThrow();
+        expect(screen.getByText("Name is required")).toBeInTheDocument();
+      });
+
       it("preserves all field values when field-specific errors are present", () => {
         mockBothActionStates({
           error: "Validation failed",
-          errors: [{ name: ["Name must be at least 3 characters"] }],
+          errors: { name: ["Name must be at least 3 characters"] },
           fields: {
             name: "AB",
             description: "A valid description",

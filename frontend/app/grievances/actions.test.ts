@@ -133,19 +133,19 @@ describe("addGrievance action", () => {
       ok: false,
       json: async () => ({
         error: "Validation failed",
-        errors: [
-          { name: ["Name is required"] },
-          { description: ["Description must be at least 10 characters"] },
-        ],
+        errors: {
+          name: ["Name is required"],
+          description: ["Description must be at least 10 characters"],
+        },
       }),
     });
 
     const result = await addGrievance(initialState, buildFormData());
 
-    expect(result.errors).toEqual([
-      { name: ["Name is required"] },
-      { description: ["Description must be at least 10 characters"] },
-    ]);
+    expect(result.errors).toEqual({
+      name: ["Name is required"],
+      description: ["Description must be at least 10 characters"],
+    });
   });
 
   it("returns a fallback error when the server provides no error message", async () => {

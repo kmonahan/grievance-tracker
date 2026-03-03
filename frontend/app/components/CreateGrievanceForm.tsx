@@ -71,15 +71,14 @@ export default function CreateGrievanceForm({
           Object.keys(grievanceState.fields).length > 0 && (
             <p className="text-destructive text-md">{grievanceState.error}</p>
           )}
-        {fieldErrors?.map((fieldError) =>
-          Object.values(fieldError)
+        {fieldErrors &&
+          Object.values(fieldErrors)
             .flat()
             .map((msg) => (
               <p key={msg} className="text-destructive text-md">
                 {msg}
               </p>
-            )),
-        )}
+            ))}
         <FormField
           id="name"
           label="Name"

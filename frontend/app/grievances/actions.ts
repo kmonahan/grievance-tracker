@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export type AddGrievanceState = {
   error: string | null;
-  errors: Record<string, string[]>[] | null;
+  errors: Record<string, string[]> | null;
   fields: Record<string, string>;
 };
 
