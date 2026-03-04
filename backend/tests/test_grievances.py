@@ -171,3 +171,9 @@ class TestGrievances:
         assert res.json == {"grievances": [TEST_GRIEVANCE, TEST_GRIEVANCE_2]}
         grievances = res.json['grievances']
         assert TEST_GRIEVANCE_4 not in grievances
+
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_by_id(self, _mock_verify_jwt, client):
+        res = client.get("/grievances/1")
+        assert res.status_code == 200
+        assert res.json == TEST_GRIEVANCE

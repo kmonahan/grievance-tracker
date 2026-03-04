@@ -32,6 +32,12 @@ def get_upcoming():
     grievances = Grievance.query.join(Escalation.grievance).filter(Escalation.date_due >= start_date)
     return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
 
+@bp.route('/<int:grievance_id>')
+@jwt_required()
+def get_grievance(grievance_id):
+    grievance = db.get_or_404(Grievance, grievance_id)
+    return jsonify(grievance.to_dict())
+
 
 def _prepare_form_choices() -> CreateGrievanceForm:
     form = CreateGrievanceForm()
