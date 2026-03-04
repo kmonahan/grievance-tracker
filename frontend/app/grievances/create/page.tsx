@@ -61,6 +61,7 @@ export default async function CreateGrievance() {
       pointPersonsError={
         pointPersons === null ? "Failed to load user list." : null
       }
+      userId={currentUser?.id ?? 0}
     />
   );
 }

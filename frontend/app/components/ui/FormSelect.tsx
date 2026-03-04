@@ -2,11 +2,13 @@ export default function FormSelect({
   id,
   label,
   children,
+  errors,
   ...props
 }: {
   id: string;
   label: string;
   children: React.ReactNode;
+  errors?: string[];
 } & React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <div className="space-y-2">
@@ -24,6 +26,11 @@ export default function FormSelect({
       >
         {children}
       </select>
+      {errors?.map((message) => (
+        <p key={message} className="text-destructive text-md">
+          {message}
+        </p>
+      ))}
     </div>
   );
 }

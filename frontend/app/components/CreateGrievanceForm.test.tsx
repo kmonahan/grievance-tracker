@@ -74,6 +74,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
@@ -84,6 +85,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(screen.getByLabelText("Description")).toBeInTheDocument();
@@ -94,6 +96,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(screen.getByLabelText("Category")).toBeInTheDocument();
@@ -104,6 +107,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(screen.getByRole("option", { name: "Pay" })).toBeInTheDocument();
@@ -115,6 +119,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(screen.getByLabelText("Point Person")).toBeInTheDocument();
@@ -125,6 +130,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
@@ -135,6 +141,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(
@@ -147,6 +154,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
@@ -158,6 +166,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
@@ -169,6 +178,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
@@ -187,6 +197,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
     expect(screen.getByText("Name already taken")).toBeInTheDocument();
@@ -197,6 +208,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
 
@@ -209,6 +221,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
 
@@ -223,6 +236,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
 
@@ -240,6 +254,7 @@ describe("CreateGrievanceForm", () => {
       <CreateGrievanceForm
         categories={mockCategories}
         pointPersons={mockPointPersonsObjects}
+        userId={1}
       />,
     );
 
@@ -254,6 +269,7 @@ describe("CreateGrievanceForm", () => {
           pointPersons={mockPointPersonsObjects}
           defaultPointPersonId={null}
           pointPersonsError={null}
+          userId={1}
         />,
       );
       expect(
@@ -274,6 +290,7 @@ describe("CreateGrievanceForm", () => {
           pointPersons={mockPointPersonsObjects}
           defaultPointPersonId={2}
           pointPersonsError={null}
+          userId={1}
         />,
       );
       expect(screen.getByLabelText("Point Person")).toHaveValue("2");
@@ -286,6 +303,7 @@ describe("CreateGrievanceForm", () => {
           pointPersons={mockPointPersonsObjects}
           defaultPointPersonId={null}
           pointPersonsError={null}
+          userId={1}
         />,
       );
       expect(screen.getByLabelText("Point Person")).toHaveValue("");
@@ -300,6 +318,7 @@ describe("CreateGrievanceForm", () => {
           pointPersons={[]}
           defaultPointPersonId={null}
           pointPersonsError="Failed to load user list."
+          userId={1}
         />,
       );
       expect(screen.getByText("Failed to load user list.")).toBeInTheDocument();
@@ -312,6 +331,7 @@ describe("CreateGrievanceForm", () => {
           pointPersons={[]}
           defaultPointPersonId={null}
           pointPersonsError="Failed to load user list."
+          userId={1}
         />,
       );
       const errorEl = screen.getByText("Failed to load user list.");
@@ -333,6 +353,7 @@ describe("CreateGrievanceForm", () => {
           pointPersons={[]}
           defaultPointPersonId={null}
           pointPersonsError="Failed to load user list."
+          userId={1}
         />,
       );
       expect(screen.getByRole("textbox", { name: "Name" })).toBeDisabled();
@@ -343,6 +364,55 @@ describe("CreateGrievanceForm", () => {
     });
   });
 
+  describe("user_id hidden field", () => {
+    it("renders a hidden input with the name user_id", () => {
+      mockBothActionStates();
+      const { container } = render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={42}
+        />,
+      );
+      const hiddenInput = container.querySelector(
+        'input[type="hidden"][name="user_id"]',
+      );
+      expect(hiddenInput).toBeInTheDocument();
+    });
+
+    it("sets the hidden user_id value to the provided userId prop", () => {
+      mockBothActionStates();
+      const { container } = render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={42}
+        />,
+      );
+      const hiddenInput = container.querySelector(
+        'input[type="hidden"][name="user_id"]',
+      );
+      expect(hiddenInput).toHaveValue("42");
+    });
+
+    it("places the hidden user_id input inside the form", () => {
+      mockBothActionStates();
+      const { container } = render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={7}
+        />,
+      );
+      const form = container.querySelector("form");
+      const hiddenInput = form?.querySelector(
+        'input[type="hidden"][name="user_id"]',
+      );
+      expect(hiddenInput).toBeInTheDocument();
+      expect(hiddenInput).toHaveValue("7");
+    });
+  });
+
   describe("form submission", () => {
     it("wires the form action to the addGrievance server action", () => {
       mockBothActionStates();
@@ -350,6 +420,7 @@ describe("CreateGrievanceForm", () => {
         <CreateGrievanceForm
           categories={mockCategories}
           pointPersons={mockPointPersonsObjects}
+          userId={1}
         />,
       );
       const form = screen
@@ -364,6 +435,7 @@ describe("CreateGrievanceForm", () => {
         <CreateGrievanceForm
           categories={mockCategories}
           pointPersons={mockPointPersonsObjects}
+          userId={1}
         />,
       );
       const categorySelect = screen.getByLabelText("Category");
@@ -376,6 +448,7 @@ describe("CreateGrievanceForm", () => {
         <CreateGrievanceForm
           categories={mockCategories}
           pointPersons={mockPointPersonsObjects}
+          userId={1}
         />,
       );
       const pointPersonSelect = screen.getByLabelText("Point Person");
@@ -398,6 +471,7 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
         expect(screen.getByText("Name is required")).toBeInTheDocument();
@@ -418,6 +492,7 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
         expect(screen.getByRole("textbox", { name: "Name" })).toHaveValue(
@@ -440,6 +515,7 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
         expect(screen.getByLabelText("Description")).toHaveValue(
@@ -462,6 +538,7 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
         expect(screen.getByLabelText("Category")).toHaveValue("2");
@@ -482,6 +559,7 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
         expect(screen.getByLabelText("Point Person")).toHaveValue("3");
@@ -489,7 +567,7 @@ describe("CreateGrievanceForm", () => {
     });
 
     describe("when submission fails with field-specific errors", () => {
-      it("displays all field-specific error messages", () => {
+      it("displays field-specific error messages below their respective fields", () => {
         mockBothActionStates({
           error: "Validation failed",
           errors: {
@@ -507,13 +585,26 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
-        expect(screen.getByText("Name is required")).toBeInTheDocument();
-        expect(
-          screen.getByText("Name must be at least 3 characters"),
-        ).toBeInTheDocument();
-        expect(screen.getByText("Description is required")).toBeInTheDocument();
+
+        const nameError = screen.getByText("Name is required");
+        const nameError2 = screen.getByText(
+          "Name must be at least 3 characters",
+        );
+        const descError = screen.getByText("Description is required");
+
+        expect(nameError).toBeInTheDocument();
+        expect(nameError2).toBeInTheDocument();
+        expect(descError).toBeInTheDocument();
+
+        const nameField = screen.getByRole("textbox", { name: "Name" });
+        const descField = screen.getByLabelText("Description");
+
+        expect(nameField.closest(".space-y-2")).toContainElement(nameError);
+        expect(nameField.closest(".space-y-2")).toContainElement(nameError2);
+        expect(descField.closest(".space-y-2")).toContainElement(descError);
       });
 
       it("does not crash when errors is a non-array object from the backend", () => {
@@ -534,10 +625,14 @@ describe("CreateGrievanceForm", () => {
             <CreateGrievanceForm
               categories={mockCategories}
               pointPersons={mockPointPersonsObjects}
+              userId={1}
             />,
           ),
         ).not.toThrow();
-        expect(screen.getByText("Name is required")).toBeInTheDocument();
+
+        const nameError = screen.getByText("Name is required");
+        const nameField = screen.getByRole("textbox", { name: "Name" });
+        expect(nameField.closest(".space-y-2")).toContainElement(nameError);
       });
 
       it("preserves all field values when field-specific errors are present", () => {
@@ -555,6 +650,7 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
         expect(screen.getByRole("textbox", { name: "Name" })).toHaveValue("AB");
@@ -582,6 +678,7 @@ describe("CreateGrievanceForm", () => {
           <CreateGrievanceForm
             categories={mockCategories}
             pointPersons={mockPointPersonsObjects}
+            userId={1}
           />,
         );
         expect(

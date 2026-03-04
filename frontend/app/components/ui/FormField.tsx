@@ -6,8 +6,9 @@ const FormField = forwardRef<
     id: string;
     label: string;
     type?: React.HTMLInputTypeAttribute;
+    errors?: string[];
   } & React.InputHTMLAttributes<HTMLInputElement>
->(function FormField({ id, label, type = "text", ...props }, ref) {
+>(function FormField({ id, label, type = "text", errors, ...props }, ref) {
   return (
     <div className="space-y-2">
       <label
@@ -24,6 +25,11 @@ const FormField = forwardRef<
         ref={ref}
         {...props}
       />
+      {errors?.map((message) => (
+        <p key={message} className="text-destructive text-md">
+          {message}
+        </p>
+      ))}
     </div>
   );
 });

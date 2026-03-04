@@ -26,14 +26,25 @@ export default function Register() {
     }
   }
 
+  const fieldErrors: Record<string, string[]> = {};
+  if (state.errors) {
+    for (const errorObj of state.errors) {
+      for (const [field, messages] of Object.entries(errorObj)) {
+        fieldErrors[field] = [...(fieldErrors[field] ?? []), ...messages];
+      }
+    }
+  }
+
   return (
     <FormCard title="Create Account" action={action}>
+      {state.error && <p className="text-destructive text-md">{state.error}</p>}
       <FormField
         id="name"
         label="Name"
         type="text"
         required
         defaultValue={state.fields.name}
+        errors={fieldErrors.name}
       />
       <FormField
         id="email"
@@ -41,6 +52,7 @@ export default function Register() {
         type="email"
         required
         defaultValue={state.fields.email}
+        errors={fieldErrors.email}
       />
       <FormField
         id="password"
@@ -50,6 +62,7 @@ export default function Register() {
         ref={passwordRef}
         onChange={validatePasswords}
         defaultValue={state.fields.password}
+        errors={fieldErrors.password}
       />
       <FormField
         id="confirm"
@@ -59,17 +72,8 @@ export default function Register() {
         ref={confirmRef}
         onChange={validatePasswords}
         defaultValue={state.fields.confirm}
+        errors={fieldErrors.confirm}
       />
-      {state.error && <p className="text-destructive text-md">{state.error}</p>}
-      {state.errors?.map((errorObj) =>
-        Object.entries(errorObj).map(([field, messages]) =>
-          messages.map((message) => (
-            <p key={`${field}-${message}`} className="text-destructive text-md">
-              {message}
-            </p>
-          )),
-        ),
-      )}
       <Button type="submit">Create Account</Button>
     </FormCard>
   );

@@ -72,7 +72,7 @@ describe("Register page", () => {
     expect(screen.getByText("Email already registered")).toBeInTheDocument();
   });
 
-  it("displays field-specific error messages", () => {
+  it("displays field-specific error messages below the relevant field", () => {
     (useActionState as jest.Mock).mockReturnValue([
       {
         error: null,
@@ -91,10 +91,14 @@ describe("Register page", () => {
 
     render(<Register />);
 
+    const passwordField = screen.getByLabelText("Password");
+    const container = passwordField.closest(".space-y-2");
+
     expect(
       screen.getByText("Password must be at least 12 characters"),
     ).toBeInTheDocument();
     expect(screen.getByText("Passwords must match")).toBeInTheDocument();
+    expect(container?.querySelector(".text-destructive")).toBeInTheDocument();
   });
 
   it("preserves previously entered field values on error", () => {
@@ -156,7 +160,7 @@ describe("Register page", () => {
     expect((confirm as HTMLInputElement).validationMessage).toBe("");
   });
 
-  it("displays multiple field errors for different fields", () => {
+  it("displays multiple field errors for different fields below their respective fields", () => {
     (useActionState as jest.Mock).mockReturnValue([
       {
         error: null,
@@ -171,7 +175,16 @@ describe("Register page", () => {
 
     render(<Register />);
 
-    expect(screen.getByText("Email is already taken")).toBeInTheDocument();
-    expect(screen.getByText("Password is too short")).toBeInTheDocument();
+    const emailError = screen.getByText("Email is already taken");
+    const passwordError = screen.getByText("Password is too short");
+
+    expect(emailError).toBeInTheDocument();
+    expect(passwordError).toBeInTheDocument();
+
+    const emailField = screen.getByLabelText("Email address");
+    const passwordField = screen.getByLabelText("Password");
+
+    expect(emailField.closest(".space-y-2")).toContainElement(emailError);
+    expect(passwordField.closest(".space-y-2")).toContainElement(passwordError);
   });
 });

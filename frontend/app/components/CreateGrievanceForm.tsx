@@ -25,11 +25,13 @@ export default function CreateGrievanceForm({
   pointPersons,
   defaultPointPersonId,
   pointPersonsError,
+  userId,
 }: {
   categories: Category[];
   pointPersons: PointPerson[];
   defaultPointPersonId?: number | null;
   pointPersonsError?: string | null;
+  userId: number;
 }) {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -65,20 +67,13 @@ export default function CreateGrievanceForm({
   return (
     <>
       <FormCard title="Create New Grievance" action={grievanceAction}>
+        <input type="hidden" name="user_id" value={userId} />
         {pointPersonsError && <p>{pointPersonsError}</p>}
         {grievanceState.error &&
           grievanceState.fields &&
           Object.keys(grievanceState.fields).length > 0 && (
             <p className="text-destructive text-md">{grievanceState.error}</p>
           )}
-        {fieldErrors &&
-          Object.values(fieldErrors)
-            .flat()
-            .map((msg) => (
-              <p key={msg} className="text-destructive text-md">
-                {msg}
-              </p>
-            ))}
         <FormField
           id="name"
           label="Name"
@@ -86,6 +81,7 @@ export default function CreateGrievanceForm({
           maxLength={255}
           disabled={isDisabled}
           defaultValue={grievanceState.fields?.name ?? ""}
+          errors={fieldErrors?.name}
         />
         <div className="space-y-2">
           <label
@@ -102,6 +98,11 @@ export default function CreateGrievanceForm({
             defaultValue={grievanceState.fields?.description ?? ""}
             className="border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive resize-none"
           />
+          {fieldErrors?.description?.map((message) => (
+            <p key={message} className="text-destructive text-md">
+              {message}
+            </p>
+          ))}
         </div>
         <FormSelect
           id="category_id"
@@ -109,6 +110,7 @@ export default function CreateGrievanceForm({
           value={grievanceState.fields?.category_id ?? selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
           disabled={isDisabled}
+          errors={fieldErrors?.category_id}
         >
           <option value=""></option>
           {categories.map((cat) => (
@@ -132,6 +134,7 @@ export default function CreateGrievanceForm({
             (defaultPointPersonId != null ? String(defaultPointPersonId) : "")
           }
           disabled={isDisabled}
+          errors={fieldErrors?.point_person_id}
         >
           <option value=""></option>
           {pointPersons.map((person) => (
