@@ -1,75 +1,7 @@
-import type { Escalation } from "~/app/grievances/types";
+import { EscalationTimeline } from "~/app/components/EscalationTimeline";
+import { StatusTag } from "~/app/components/StatusTag";
+import { formatDate, getInitials } from "~/lib/format";
 import { EXAMPLE_GRIEVANCES } from "./constants";
-
-const STATUS_COLORS: Record<string, string> = {
-  "Waiting to Schedule": "bg-accent text-accent-foreground",
-  Scheduled: "bg-teal-500 text-teal-0",
-  "Waiting on Decision": "bg-red-500 text-neutral-0",
-  "Waiting to File": "bg-plum-500 text-neutral-0",
-  "In Abeyance": "bg-neutral-50 text-neutral-800",
-};
-
-function getStatusClasses(status: string): string {
-  return STATUS_COLORS[status] ?? "bg-muted text-muted-foreground";
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
-
-function formatDate(dateStr: string): string {
-  const date = new Date(`${dateStr}T00:00:00`);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-function EscalationTimeline({ escalations }: { escalations: Escalation[] }) {
-  const reversed = [...escalations].reverse();
-
-  return (
-    <ol className="relative ml-4 border-l-2 border-border">
-      {reversed.map((esc) => (
-        <li key={esc.id} className="relative mb-8 ml-6 last:mb-0">
-          <span className="absolute -left-[31px] flex h-4 w-4 items-center justify-center rounded-full border-2 border-border bg-card" />
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <time className="text-sm text-teal-600">
-                {formatDate(esc.date)}
-              </time>
-              <span className="font-subtitle text-sm font-semibold">
-                {esc.step}
-              </span>
-              <span
-                className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${getStatusClasses(esc.status)}`}
-              >
-                {esc.status}
-              </span>
-            </div>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-teal-700">
-              {esc.hearing_date && (
-                <span>Hearing: {formatDate(esc.hearing_date)}</span>
-              )}
-              {esc.date_due && <span>Due: {formatDate(esc.date_due)}</span>}
-              <span className="flex items-center gap-1">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-[10px] text-secondary-foreground">
-                  {getInitials(esc.user.name)}
-                </span>
-                {esc.user.name}
-              </span>
-            </div>
-          </div>
-        </li>
-      ))}
-    </ol>
-  );
-}
 
 export default async function GrievanceDetailPage({
   params,
@@ -106,13 +38,7 @@ export default async function GrievanceDetailPage({
             <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
               {grievance.category}
             </span>
-            {latestEscalation && (
-              <span
-                className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${getStatusClasses(latestEscalation.status)}`}
-              >
-                {latestEscalation.status}
-              </span>
-            )}
+            {latestEscalation && <StatusTag status={latestEscalation.status} />}
           </div>
         </header>
 
