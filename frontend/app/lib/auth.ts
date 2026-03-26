@@ -9,3 +9,8 @@ export async function isLoggedIn(): Promise<boolean> {
   const cookieStore = await cookies();
   return !!cookieStore.get("access_token");
 }
+
+export async function getAccessToken(): Promise<string | undefined> {
+  const cookieStore = await cookies();
+  return cookieStore.get("access_token")?.value;
+}

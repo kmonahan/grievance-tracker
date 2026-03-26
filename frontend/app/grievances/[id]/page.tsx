@@ -1,7 +1,8 @@
 import { EscalationTimeline } from "~/app/components/EscalationTimeline";
 import { StatusTag } from "~/app/components/StatusTag";
+import type { Grievance } from "~/app/grievances/types";
+import { getAccessToken } from "~/app/lib/auth";
 import { formatDate, getInitials } from "~/lib/format";
-import { EXAMPLE_GRIEVANCES } from "./constants";
 
 export default async function GrievanceDetailPage({
   params,
@@ -9,9 +10,15 @@ export default async function GrievanceDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const grievance = EXAMPLE_GRIEVANCES.find((g) => g.id === Number(id));
+  const accessToken = await getAccessToken();
 
-  if (!grievance) {
+  const response = await fetch(`${process.env.BACKEND_URL}/grievances/${id}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
     return (
       <main className="w-full px-5 md:px-6 py-8">
         <div className="mx-auto w-full max-w-5xl bg-card text-card-foreground rounded-xl border p-8 shadow-lg">
@@ -23,6 +30,8 @@ export default async function GrievanceDetailPage({
       </main>
     );
   }
+
+  const grievance: Grievance = await response.json();
 
   const latestEscalation =
     grievance.escalations.length > 0

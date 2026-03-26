@@ -1,5 +1,5 @@
-import type { Escalation } from "~/app/grievances/types";
 import { StatusTag } from "~/app/components/StatusTag";
+import type { Escalation } from "~/app/grievances/types";
 import { formatDate, getInitials } from "~/lib/format";
 
 export function EscalationTimeline({
