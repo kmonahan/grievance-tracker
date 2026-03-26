@@ -58,10 +58,10 @@ def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses, user
         status=status,
         user_id=user_id,
     )
+    db.session.add(escalation)
     if status in status_with_due_dates:
         stage = Stage.query.filter(and_(Stage.status == status), (Stage.step == step)).first()
         escalation.date_due = calculator.calculate_date_due(todays_date, stage.num_days, stage.day_type)
-    db.session.add(escalation)
     db.session.commit()
     return escalation
 
