@@ -3,6 +3,7 @@ import { StatusTag } from "~/app/components/StatusTag";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
 import { formatDate, getInitials } from "~/lib/format";
+import { notFound } from "next/navigation";
 
 export default async function GrievanceDetailPage({
   params,
@@ -19,16 +20,7 @@ export default async function GrievanceDetailPage({
   });
 
   if (!response.ok) {
-    return (
-      <main className="w-full px-5 md:px-6 py-8">
-        <div className="mx-auto w-full max-w-5xl bg-card text-card-foreground rounded-xl border p-8 shadow-lg">
-          <h1 className="font-title text-3xl font-bold">Grievance not found</h1>
-          <p className="mt-2 text-muted-foreground">
-            No grievance exists with ID {id}.
-          </p>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   const grievance: Grievance = await response.json();
@@ -44,10 +36,10 @@ export default async function GrievanceDetailPage({
         <header className="border-b px-6 py-6">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-title text-3xl font-bold">{grievance.name}</h1>
-            <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-sm font-medium text-muted-foreground">
-              {grievance.category}
-            </span>
             {latestEscalation && <StatusTag status={latestEscalation.status} />}
+          </div>
+          <div className="text-base font-subtitle text-muted-foreground">
+            {grievance.category}
           </div>
         </header>
 
