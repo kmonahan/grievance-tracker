@@ -35,7 +35,7 @@ VALUES
 INSERT INTO user (name, email, password, is_active)
 VALUES
     ('Walter Reuther', 'wreuther@example.com', 'password123', TRUE),
-    ('Cesar Chavez', 'cchavez@example.com', 'password123', TRUE),
+    ('Dolores Huerta', 'dhuerta@example.com', 'password123', TRUE),
     ('Clara Lemlich', 'clemlich@example.com', 'password123', TRUE),
     ('Jimmy Hoffa', 'jhoffa@example.com', 'password123', FALSE);
 

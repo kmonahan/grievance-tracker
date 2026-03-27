@@ -5,17 +5,17 @@ TEST_GRIEVANCE = {'id': 1, 'name': 'Test #1', 'description': 'Test description #
             'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}}]}
 
 TEST_GRIEVANCE_2 = {'id': 2, 'name': 'Test #2', 'description': 'Test description #2', 'category': 'Pay',
-    'point_person': 'Cesar Chavez', 'escalations': [
+    'point_person': 'Dolores Huerta', 'escalations': [
         {'date': '2025-12-19', 'date_due': '2026-01-02', 'deadline_missed': False, 'hearing_date': None, 'id': 2,
          'status': 'Waiting to Schedule', 'step': 'Step #1',
-         'user': {'id': 2, 'is_active': True, 'name': 'Cesar Chavez'}},
+         'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}},
         {'date': '2025-12-21', 'date_due': None, 'deadline_missed': False, 'hearing_date': '2025-12-30', 'id': 3,
-         'status': 'Scheduled', 'step': 'Step #1', 'user': {'id': 2, 'is_active': True, 'name': 'Cesar Chavez'}},
+         'status': 'Scheduled', 'step': 'Step #1', 'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}},
         {'date': '2025-12-31', 'date_due': '2026-01-08', 'deadline_missed': False, 'hearing_date': None, 'id': 4,
          'status': 'Waiting on Decision', 'step': 'Step #1',
-         'user': {'id': 2, 'is_active': True, 'name': 'Cesar Chavez'}},
+         'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}},
         {'date': '2026-01-09', 'date_due': '2026-01-30', 'deadline_missed': False, 'hearing_date': None, 'id': 5,
-         'status': 'Waiting to File', 'step': 'Step #1', 'user': {'id': 2, 'is_active': True, 'name': 'Cesar Chavez'}}]}
+         'status': 'Waiting to File', 'step': 'Step #1', 'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}}]}
 
 TEST_GRIEVANCE_3 = {'id': 3, 'name': 'Test #3', 'description': 'Test description #3', 'category': 'PTO',
     'point_person': 'Clara Lemlich', 'escalations': []}
@@ -32,7 +32,7 @@ TEST_CREATED_GRIEVANCE_PARTIAL = {'name': 'Test grievance', 'description': 'Test
 
 TEST_CREATED_GRIEVANCE = {'id': 5, 'name': TEST_CREATED_GRIEVANCE_PARTIAL['name'],
     'description': TEST_CREATED_GRIEVANCE_PARTIAL['description'], 'category': 'Health & Safety',
-    'point_person': 'Cesar Chavez', 'escalations': [
+    'point_person': 'Dolores Huerta', 'escalations': [
         {'id': 7, 'date': '2025-12-19', 'step': 'Step #1', 'date_due': '2026-01-02', 'status': 'Waiting to Schedule',
             'hearing_date': None, 'deadline_missed': False,
             'user': {'id': 1, 'name': 'Walter Reuther', 'is_active': True}}]}

@@ -27,7 +27,7 @@ class TestUser:
             },
             {
                 'id': 2,
-                'name': 'Cesar Chavez',
+                'name': 'Dolores Huerta',
                 'is_active': True
             },
             {
@@ -54,7 +54,7 @@ class TestUser:
             },
             {
                 'id': 2,
-                'name': 'Cesar Chavez',
+                'name': 'Dolores Huerta',
                 'is_active': True
             },
             {
@@ -220,8 +220,8 @@ class TestUser:
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_edit_user_password(self, _mock_verify_jwt, client, app):
         res = client.patch('/users/edit/2', data={
-            'email': 'cchavez@example.com',
-            'name': 'Cesar Chavez',
+            'email': 'dhuerta@example.com',
+            'name': 'Dolores Huerta',
             'password': 'password123456',
             'confirm': 'password123456'
         })
@@ -233,8 +233,8 @@ class TestUser:
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_edit_password_invalid(self, _mock_verify_jwt, client):
         res = client.patch('/users/edit/2', data={
-            'email': 'cchavez@example.com',
-            'name': 'Cesar Chavez',
+            'email': 'dhuerta@example.com',
+            'name': 'Dolores Huerta',
             'password': 'p123',
             'confirm': 'password123'
         })
@@ -243,8 +243,8 @@ class TestUser:
             'password': ['Password must be at least 12 characters', 'Passwords must match']
         }
         res = client.patch('/users/edit/2', data={
-            'email': 'cchavez@example.com',
-            'name': 'Cesar Chavez',
+            'email': 'dhuerta@example.com',
+            'name': 'Dolores Huerta',
             'password': 'password123456',
         })
         assert res.status_code == 400
