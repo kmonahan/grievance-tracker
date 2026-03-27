@@ -72,7 +72,7 @@ export default function CreateGrievanceForm({
         {grievanceState.error &&
           grievanceState.fields &&
           Object.keys(grievanceState.fields).length > 0 && (
-            <p className="text-destructive text-md">{grievanceState.error}</p>
+            <p className="text-destructive text-lg">{grievanceState.error}</p>
           )}
         <FormField
           id="name"
@@ -86,7 +86,7 @@ export default function CreateGrievanceForm({
         <div className="space-y-2">
           <label
             htmlFor="description"
-            className="flex items-center gap-2 text-sm leading-none font-medium select-none font-subtitle"
+            className="flex items-center gap-2 text-base leading-none font-medium select-none font-subtitle"
           >
             Description
           </label>
@@ -96,10 +96,10 @@ export default function CreateGrievanceForm({
             rows={4}
             disabled={isDisabled}
             defaultValue={grievanceState.fields?.description ?? ""}
-            className="border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive resize-none"
+            className="border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-lg shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive resize-none"
           />
           {fieldErrors?.description?.map((message) => (
-            <p key={message} className="text-destructive text-md">
+            <p key={message} className="text-destructive text-lg">
               {message}
             </p>
           ))}
@@ -122,7 +122,7 @@ export default function CreateGrievanceForm({
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center text-sm font-medium text-secondary hover:underline font-subtitle"
+          className="inline-flex items-center text-base font-medium text-secondary hover:underline font-subtitle"
         >
           + Add Category
         </button>
@@ -150,7 +150,7 @@ export default function CreateGrievanceForm({
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="flex flex-col gap-6 py-6">
           <div className="px-6 pb-6 space-y-1">
-            <h2 className="font-semibold font-subtitle text-2xl text-center">
+            <h2 className="font-semibold font-subtitle text-3xl text-center">
               Add Category
             </h2>
           </div>
@@ -164,7 +164,7 @@ export default function CreateGrievanceForm({
                 maxLength={255}
               />
               {addCategoryState.error && (
-                <p className="text-destructive text-md">
+                <p className="text-destructive text-lg">
                   {addCategoryState.error}
                 </p>
               )}

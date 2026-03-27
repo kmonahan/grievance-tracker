@@ -10,22 +10,22 @@ export default function GrievanceDeadlineCard() {
               <h3 className="font-subtitle font-semibold text-foreground">
                 Denial of Bereavement Leave
               </h3>
-              <span className="inline-flex items-center rounded-md border border-transparent bg-accent px-2 py-0.5 text-xs font-medium text-accent-foreground">
+              <span className="inline-flex items-center rounded-md border border-transparent bg-accent px-2 py-0.5 text-sm font-medium text-accent-foreground">
                 In Progress
               </span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-xs text-secondary-foreground">
+            <div className="flex items-center gap-2 text-base">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-sm text-secondary-foreground">
                 WR
               </span>
               <span className="text-muted-foreground">Walter Reuther</span>
             </div>
           </div>
           <div className="text-right">
-            <div className="font-subtitle text-sm font-semibold text-accent">
+            <div className="font-subtitle text-base font-semibold text-accent">
               12 days
             </div>
-            <div className="mt-1 text-xs text-muted-foreground">
+            <div className="mt-1 text-sm text-muted-foreground">
               Feb 28, 2026
             </div>
           </div>

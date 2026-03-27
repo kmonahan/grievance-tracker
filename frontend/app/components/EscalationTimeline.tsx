@@ -16,15 +16,15 @@ export function EscalationTimeline({
           <span className="absolute -left-8 flex h-4 w-4 items-center justify-center rounded-full border-2 border-border bg-card" />
           <div className="rounded-lg border border-border bg-card p-4">
             <div className="mb-2 flex flex-wrap items-center gap-2">
-              <time className="text-sm text-teal-600">
+              <time className="text-base text-teal-600">
                 {formatDate(esc.date)}
               </time>
-              <span className="font-subtitle text-sm font-semibold">
+              <span className="font-subtitle text-base font-semibold">
                 {esc.step}
               </span>
               <StatusTag status={esc.status} />
             </div>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-teal-700">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-teal-700">
               {esc.hearing_date && (
                 <span>Hearing: {formatDate(esc.hearing_date)}</span>
               )}

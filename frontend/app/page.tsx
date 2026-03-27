@@ -7,10 +7,10 @@ export default function Home() {
       <div className="grid gap-8 lg:grid-cols-2">
         <section className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 border-primary/20 shadow-lg">
           <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 border-b">
-            <h2 className="font-bold font-title text-2xl text-primary">
+            <h2 className="font-bold font-title text-3xl text-primary">
               Upcoming Deadlines
             </h2>
-            <div className="text-muted-foreground text-sm font-subtitle">
+            <div className="text-muted-foreground text-base font-subtitle">
               Grievances with deadlines in the next two weeks
             </div>
           </div>
@@ -24,7 +24,7 @@ export default function Home() {
           <footer className="mt-6 flex justify-center">
             <a
               href="/grievances"
-              className="font-subtitle text-sm font-semibold text-primary hover:text-accent transition-colors inline-flex items-center gap-2 group"
+              className="font-subtitle text-base font-semibold text-primary hover:text-accent transition-colors inline-flex items-center gap-2 group"
             >
               See all grievances by deadline
               <svg
@@ -47,10 +47,10 @@ export default function Home() {
         </section>
         <section className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 border-accent/20 shadow-lg">
           <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 border-b">
-            <h2 className="font-bold font-title text-2xl text-accent">
+            <h2 className="font-bold font-title text-3xl text-accent">
               Recent Activity
             </h2>
-            <div className="text-muted-foreground text-sm font-subtitle">
+            <div className="text-muted-foreground text-base font-subtitle">
               Changes made in the last two weeks
             </div>
           </div>

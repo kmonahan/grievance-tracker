@@ -9,18 +9,18 @@ export default function RecentActivityCard() {
             <h3 className="font-subtitle font-semibold text-foreground flex-1">
               Denial of Bereavement Leave
             </h3>
-            <span className="text-xs text-muted-foreground whitespace-nowrap">
+            <span className="text-sm text-muted-foreground whitespace-nowrap">
               1d ago
             </span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-xs text-accent-foreground">
+          <div className="flex items-center gap-2 text-base">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-sm text-accent-foreground">
               WR
             </span>
             <span className="text-muted-foreground">Walter Reuther</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="inline-flex items-center rounded-md border border-border px-2 py-0.5 text-xs font-medium text-foreground">
+          <div className="flex items-center gap-2 text-base">
+            <span className="inline-flex items-center rounded-md border border-border px-2 py-0.5 text-sm font-medium text-foreground">
               In Progress
             </span>
             <svg
@@ -39,11 +39,11 @@ export default function RecentActivityCard() {
               <path d="M16 7h6v6" />
               <path d="m22 7-8.5 8.5-5-5L2 17" />
             </svg>
-            <span className="inline-flex items-center rounded-md border border-transparent bg-chart-4 px-2 py-0.5 text-xs font-medium text-white">
+            <span className="inline-flex items-center rounded-md border border-transparent bg-chart-4 px-2 py-0.5 text-sm font-medium text-white">
               Review
             </span>
           </div>
-          <div className="text-xs text-muted-foreground">Feb 15, 2026</div>
+          <div className="text-sm text-muted-foreground">Feb 15, 2026</div>
         </div>
       </div>
     </Link>

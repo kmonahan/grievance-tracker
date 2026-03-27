@@ -13,7 +13,7 @@ export function getStatusClasses(status: string): string {
 export function StatusTag({ status }: { status: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${getStatusClasses(status)}`}
+      className={`inline-flex items-center rounded-md px-2 py-0.5 text-sm font-medium ${getStatusClasses(status)}`}
     >
       {status}
     </span>

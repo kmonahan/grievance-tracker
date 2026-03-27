@@ -37,7 +37,7 @@ export default function Register() {
 
   return (
     <FormCard title="Create Account" action={action}>
-      {state.error && <p className="text-destructive text-md">{state.error}</p>}
+      {state.error && <p className="text-destructive text-lg">{state.error}</p>}
       <FormField
         id="name"
         label="Name"

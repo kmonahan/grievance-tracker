@@ -13,7 +13,7 @@ export default function Login() {
     <FormCard title="Log In" action={action}>
       <FormField id="email" label="Email address" type="email" required />
       <FormField id="password" label="Password" type="password" required />
-      {state.error && <p className="text-destructive text-md">{state.error}</p>}
+      {state.error && <p className="text-destructive text-lg">{state.error}</p>}
       <Button type="submit">Log In</Button>
     </FormCard>
   );

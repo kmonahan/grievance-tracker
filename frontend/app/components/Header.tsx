@@ -10,7 +10,7 @@ export default async function Header() {
       <div className="w-full mx-auto px-5 md:px-6 py-6 flex items-center justify-between">
         <Link
           href="/"
-          className="font-title text-4xl text-primary font-bold tracking-tight hover:text-teal-700 transition-colors"
+          className="font-title text-5xl text-primary font-bold tracking-tight hover:text-teal-700 transition-colors"
         >
           BPL PSA Grievance Tracker
         </Link>
@@ -20,7 +20,7 @@ export default async function Header() {
               <li>
                 <Link
                   href="/"
-                  className="font-body text-sm text-muted-foreground tracking-wide hover:text-primary transition-colors"
+                  className="font-body text-base text-muted-foreground tracking-wide hover:text-primary transition-colors"
                 >
                   Home
                 </Link>
@@ -28,7 +28,7 @@ export default async function Header() {
               <li>
                 <Link
                   href="/grievances/create"
-                  className="font-body text-sm text-muted-foreground tracking-wide hover:text-primary transition-colors"
+                  className="font-body text-base text-muted-foreground tracking-wide hover:text-primary transition-colors"
                 >
                   Add Grievance
                 </Link>
@@ -36,7 +36,7 @@ export default async function Header() {
               <li>
                 <a
                   href="/logout"
-                  className="font-body text-sm text-muted-foreground tracking-wide hover:text-primary transition-colors"
+                  className="font-body text-base text-muted-foreground tracking-wide hover:text-primary transition-colors"
                 >
                   Log Out
                 </a>
