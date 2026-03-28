@@ -1,6 +1,11 @@
 {
   "permissions": {
-    "allow": ["Bash(npm test:*)", "Bash(npm run:*)"]
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(npm run:*)",
+      "Read(//tmp/grievance-escalate-inline/frontend/app/grievances/**)",
+      "Read(//tmp/grievance-escalate-drawer/frontend/app/grievances/**)"
+    ]
   },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,

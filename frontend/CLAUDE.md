@@ -30,6 +30,10 @@ bearer token.
 ### Code Style
 - Use semantic HTML elements where possible
 
+### UI Style
+- Write styling mobile-first. The site will be viewed on phones more often than on laptops
+- Do not use font sizes smaller than 14px (text-sm)
+
 ## Checklist for Completion
 Before any task is considered complete, you **must** check the following:
 - [ ] `npm run format` has been run to format all files
