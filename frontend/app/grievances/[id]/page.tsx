@@ -4,6 +4,7 @@ import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
 import { formatDate, getInitials } from "~/lib/format";
 import { notFound } from "next/navigation";
+import { EscalateSection } from "~/app/grievances/[id]/EscalateSection";
 
 export default async function GrievanceDetailPage({
   params,
@@ -78,13 +79,15 @@ export default async function GrievanceDetailPage({
         </section>
 
         {grievance.escalations.length > 0 && (
-          <section className="px-6 py-6">
+          <section className="border-b px-6 py-6">
             <h2 className="font-subtitle mb-4 text-xl font-semibold">
               Escalation History
             </h2>
             <EscalationTimeline escalations={grievance.escalations} />
           </section>
         )}
+
+        <EscalateSection />
       </article>
     </main>
   );
