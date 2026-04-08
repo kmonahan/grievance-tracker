@@ -77,16 +77,14 @@ export default async function GrievanceDetailPage({
             </div>
           </dl>
         </section>
-
         {grievance.escalations.length > 0 && (
           <section className="border-b px-6 py-6">
             <h2 className="font-subtitle mb-4 text-xl font-semibold">
-              Escalation History
+              History
             </h2>
             <EscalationTimeline escalations={grievance.escalations} />
           </section>
         )}
-
         <EscalateSection />
       </article>
     </main>
