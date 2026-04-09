@@ -9,6 +9,13 @@ jest.mock("next/headers", () => ({
   cookies: jest.fn(() => Promise.resolve({ get: mockCookiesGet })),
 }));
 
+const mockNotFound = jest.fn(() => {
+  throw new Error("NEXT_NOT_FOUND");
+});
+jest.mock("next/navigation", () => ({
+  notFound: () => mockNotFound(),
+}));
+
 const GRIEVANCES: Record<string, Grievance> = {
   "1": {
     id: 1,
@@ -162,6 +169,17 @@ describe("GrievanceDetailPage", () => {
     expect(initials.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("renders the current step from the latest escalation", async () => {
+    await renderWithId("4");
+    expect(screen.getByText("Current Step")).toBeInTheDocument();
+    expect(screen.getAllByText("Step #2").length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("does not render current step section when there are no escalations", async () => {
+    await renderWithId("3");
+    expect(screen.queryByText("Current Step")).not.toBeInTheDocument();
+  });
+
   it("renders the current status from the latest escalation", async () => {
     await renderWithId("2");
     const badges = screen.getAllByText("Waiting to File");
@@ -198,7 +216,7 @@ describe("GrievanceDetailPage", () => {
 
   it("renders escalation step name", async () => {
     await renderWithId("4");
-    expect(screen.getByText("Step #2")).toBeInTheDocument();
+    expect(screen.getAllByText("Step #2").length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders escalation assigned user", async () => {
@@ -219,14 +237,9 @@ describe("GrievanceDetailPage", () => {
     expect(screen.getByText("PTO")).toBeInTheDocument();
   });
 
-  it("renders not found message for invalid id", async () => {
-    await renderWithId("999");
-    expect(
-      screen.getByRole("heading", { name: "Grievance not found" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("No grievance exists with ID 999."),
-    ).toBeInTheDocument();
+  it("calls notFound for invalid id", async () => {
+    await expect(renderWithId("999")).rejects.toThrow("NEXT_NOT_FOUND");
+    expect(mockNotFound).toHaveBeenCalled();
   });
 
   it("fetches from the backend with the access token", async () => {

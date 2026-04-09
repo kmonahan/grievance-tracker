@@ -1,10 +1,10 @@
+import { notFound } from "next/navigation";
 import { EscalationTimeline } from "~/app/components/EscalationTimeline";
 import { StatusTag } from "~/app/components/StatusTag";
+import { EscalateSection } from "~/app/grievances/[id]/EscalateSection";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
 import { formatDate, getInitials } from "~/lib/format";
-import { notFound } from "next/navigation";
-import { EscalateSection } from "~/app/grievances/[id]/EscalateSection";
 
 export default async function GrievanceDetailPage({
   params,
@@ -53,6 +53,14 @@ export default async function GrievanceDetailPage({
               <dd className="mt-1">{grievance.description}</dd>
             </div>
             <div className="space-y-4">
+              {latestEscalation?.step && (
+                <div>
+                  <dt className="font-subtitle text-base font-semibold text-teal-600">
+                    Current Step
+                  </dt>
+                  <dd className="mt-1">{latestEscalation.step}</dd>
+                </div>
+              )}
               <div>
                 <dt className="font-subtitle text-base font-semibold text-teal-600">
                   Point Person

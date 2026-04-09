@@ -12,6 +12,7 @@ const ESCALATION_OPTIONS = [
         viewBox="0 0 20 20"
         fill="currentColor"
         className="size-5 text-teal-600"
+        aria-hidden="true"
       >
         <path
           fillRule="evenodd"
@@ -32,6 +33,7 @@ const ESCALATION_OPTIONS = [
         viewBox="0 0 20 20"
         fill="currentColor"
         className="size-5 text-neutral-500"
+        aria-hidden="true"
       >
         <path
           fillRule="evenodd"
@@ -52,6 +54,7 @@ const ESCALATION_OPTIONS = [
         viewBox="0 0 20 20"
         fill="currentColor"
         className="size-5 text-red-600"
+        aria-hidden="true"
       >
         <path
           fillRule="evenodd"
@@ -72,6 +75,7 @@ const ESCALATION_OPTIONS = [
         viewBox="0 0 20 20"
         fill="currentColor"
         className="size-5 text-teal-700"
+        aria-hidden="true"
       >
         <path
           fillRule="evenodd"
@@ -93,6 +97,7 @@ export function EscalateSection() {
   return (
     <section className="border-t">
       <button
+        type="button"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
         className="flex w-full items-center justify-between px-6 py-5 transition-colors hover:bg-muted/40"
@@ -105,6 +110,7 @@ export function EscalateSection() {
           viewBox="0 0 20 20"
           fill="currentColor"
           className={`size-5 text-muted-foreground transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -128,7 +134,7 @@ export function EscalateSection() {
               {ESCALATION_OPTIONS.map((opt) => (
                 <label
                   key={opt.status}
-                  className={`flex items-center cursor-pointer gap-4 rounded-xl border-2 p-4 transition-all ${
+                  className={`flex flex-col cursor-pointer gap-2 rounded-xl border-2 p-4 transition-all ${
                     selected === opt.status
                       ? opt.selectedClasses
                       : "border-border hover:border-muted-foreground/30 hover:bg-muted/20"
@@ -145,34 +151,36 @@ export function EscalateSection() {
                     }}
                     className="sr-only"
                   />
-                  <span
-                    className={`flex h-10 w-10 shrink-0 items-center text-3xl`}
-                    aria-hidden="true"
-                  >
-                    {opt.icon}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-base font-medium ${opt.badgeClasses}`}
+                  <div className="flex flex-1 items-center gap-2">
+                    <span
+                      className="flex h-10 w-10 shrink-0 items-center text-3xl"
+                      aria-hidden="true"
+                    >
+                      {opt.icon}
+                    </span>
+                    <span
+                      className={`inline-flex items-center rounded-md px-2 py-0.5 text-base font-medium ${opt.badgeClasses}`}
+                    >
+                      {opt.status}
+                    </span>
+                    {selected === opt.status && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="size-4 text-teal-600"
+                        aria-hidden="true"
                       >
-                        {opt.status}
-                      </span>
-                      {selected === opt.status && (
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="size-4 text-teal-600"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
-                    </div>
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="mt-1 text-right text-sm text-muted-foreground">
+                    Step #1
                   </div>
                 </label>
               ))}
@@ -203,12 +211,14 @@ export function EscalateSection() {
           {selected && (
             <div className="mt-5 flex items-center gap-3">
               <button
+                type="button"
                 className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 font-subtitle text-base font-semibold text-primary-foreground shadow transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={selected === "Scheduled" && !dueDate}
               >
                 Submit Escalation
               </button>
               <button
+                type="button"
                 onClick={() => {
                   setSelected(null);
                   setDueDate("");
