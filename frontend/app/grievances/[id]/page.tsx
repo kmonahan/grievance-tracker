@@ -93,7 +93,7 @@ export default async function GrievanceDetailPage({
             <EscalationTimeline escalations={grievance.escalations} />
           </section>
         )}
-        <EscalateSection />
+        <EscalateSection grievance={grievance} />
       </article>
     </main>
   );

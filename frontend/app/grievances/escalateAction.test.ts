@@ -14,6 +14,12 @@ jest.mock("next/cache", () => ({
 
 const initialState = { error: null };
 
+function makeJwt(payload: Record<string, unknown>): string {
+  const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const body = btoa(JSON.stringify(payload));
+  return `${header}.${body}.signature`;
+}
+
 function buildFormData(overrides: Record<string, string> = {}) {
   const formData = new FormData();
   const defaults: Record<string, string> = {
@@ -34,8 +40,7 @@ describe("escalateGrievance action", () => {
     process.env.BACKEND_URL = "http://localhost:8000";
     jest.clearAllMocks();
     mockCookiesGet.mockImplementation((name: string) => {
-      if (name === "access_token") return { value: "test-access-token" };
-      if (name === "user_id") return { value: "7" };
+      if (name === "access_token") return { value: makeJwt({ sub: "7" }) };
       return undefined;
     });
   });
@@ -75,10 +80,9 @@ describe("escalateGrievance action", () => {
     expect(callBody.status).toBe("WAITING_ON_DECISION");
   });
 
-  it("sends user_id from the user_id cookie in the request body", async () => {
+  it("sends user_id extracted from the JWT sub claim in the request body", async () => {
     mockCookiesGet.mockImplementation((name: string) => {
-      if (name === "access_token") return { value: "token" };
-      if (name === "user_id") return { value: "42" };
+      if (name === "access_token") return { value: makeJwt({ sub: "42" }) };
       return undefined;
     });
     (fetch as jest.Mock).mockResolvedValueOnce({
@@ -95,9 +99,9 @@ describe("escalateGrievance action", () => {
   });
 
   it("sends the access token as an Authorization bearer header", async () => {
+    const token = makeJwt({ sub: "1" });
     mockCookiesGet.mockImplementation((name: string) => {
-      if (name === "access_token") return { value: "my-secret-token" };
-      if (name === "user_id") return { value: "1" };
+      if (name === "access_token") return { value: token };
       return undefined;
     });
     (fetch as jest.Mock).mockResolvedValueOnce({
@@ -111,7 +115,7 @@ describe("escalateGrievance action", () => {
       expect.any(String),
       expect.objectContaining({
         headers: expect.objectContaining({
-          Authorization: "Bearer my-secret-token",
+          Authorization: `Bearer ${token}`,
         }),
       }),
     );

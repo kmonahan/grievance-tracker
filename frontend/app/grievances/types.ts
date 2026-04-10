@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export type User = {
   id: number;
   is_active: boolean;
@@ -22,4 +24,17 @@ export type Grievance = {
   category: string;
   point_person: string;
   escalations: Escalation[];
+};
+
+export type StepStatus = {
+  stepEnum: string;
+  stepDisplay: string;
+  statusEnum: string;
+  statusDisplay: string;
+};
+
+export type OptionStyle = {
+  selectedClasses: string;
+  icon: ReactNode;
+  badgeClasses: string;
 };

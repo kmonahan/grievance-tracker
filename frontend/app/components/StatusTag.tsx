@@ -10,7 +10,11 @@ export function getStatusClasses(status: string): string {
   return STATUS_COLORS[status] ?? "bg-muted text-muted-foreground";
 }
 
-export function StatusTag({ status }: { status: string }) {
+interface StatusTagProps {
+  status: string;
+}
+
+export function StatusTag({ status }: StatusTagProps) {
   return (
     <span
       className={`inline-flex items-center rounded-md px-2 py-0.5 text-sm font-medium ${getStatusClasses(status)}`}
