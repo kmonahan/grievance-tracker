@@ -1,4 +1,4 @@
-import { addGrievance } from "./actions";
+import { addGrievance, editGrievance } from "./actions";
 
 global.fetch = jest.fn();
 
@@ -211,6 +211,188 @@ describe("addGrievance action", () => {
     });
 
     const result = await addGrievance(initialState, buildFormData());
+
+    expect(result.errors).toBeNull();
+  });
+});
+
+describe("editGrievance action", () => {
+  beforeEach(() => {
+    process.env.BACKEND_URL = "http://localhost:8000";
+    jest.clearAllMocks();
+    mockCookiesGet.mockReturnValue({ value: "test-access-token" });
+  });
+
+  it("calls PATCH /grievances/edit/<id> with the submitted FormData", async () => {
+    const formData = buildFormData();
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({}),
+    });
+
+    await editGrievance("42", initialState, formData);
+
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:8000/grievances/edit/42",
+      expect.objectContaining({
+        method: "PATCH",
+        body: formData,
+      }),
+    );
+  });
+
+  it("sends the access token as an Authorization bearer header", async () => {
+    mockCookiesGet.mockReturnValue({ value: "my-secret-token" });
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({}),
+    });
+
+    await editGrievance("1", initialState, buildFormData());
+
+    expect(fetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        headers: { Authorization: "Bearer my-secret-token" },
+      }),
+    );
+  });
+
+  it("submits form data as FormData, not JSON", async () => {
+    const formData = buildFormData();
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({}),
+    });
+
+    await editGrievance("1", initialState, formData);
+
+    const callArgs = (fetch as jest.Mock).mock.calls[0][1];
+    expect(callArgs.body).toBeInstanceOf(FormData);
+    expect(callArgs.headers).not.toHaveProperty("Content-Type");
+  });
+
+  it("redirects to the grievance detail page on success", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({}),
+    });
+
+    await editGrievance("99", initialState, buildFormData());
+
+    expect(mockRedirect).toHaveBeenCalledWith("/grievances/99");
+  });
+
+  it("updates the grievances cache tag on success", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({}),
+    });
+
+    await editGrievance("1", initialState, buildFormData());
+
+    expect(mockUpdateTag).toHaveBeenCalledWith("grievances");
+  });
+
+  it("returns the general error message on a failed response", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Name is required" }),
+    });
+
+    const result = await editGrievance("1", initialState, buildFormData());
+
+    expect(result.error).toBe("Name is required");
+  });
+
+  it("returns field-specific errors on a failed response", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({
+        error: "Validation failed",
+        errors: {
+          name: ["Name is required"],
+          description: ["Description must be at least 10 characters"],
+        },
+      }),
+    });
+
+    const result = await editGrievance("1", initialState, buildFormData());
+
+    expect(result.errors).toEqual({
+      name: ["Name is required"],
+      description: ["Description must be at least 10 characters"],
+    });
+  });
+
+  it("returns a fallback error when the server provides no error message", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({}),
+    });
+
+    const result = await editGrievance("1", initialState, buildFormData());
+
+    expect(result.error).toBe("An error occurred. Please try again.");
+  });
+
+  it("does not redirect on a failed response", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Name is required" }),
+    });
+
+    await editGrievance("1", initialState, buildFormData());
+
+    expect(mockRedirect).not.toHaveBeenCalled();
+  });
+
+  it("does not update cache tag on a failed response", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Name is required" }),
+    });
+
+    await editGrievance("1", initialState, buildFormData());
+
+    expect(mockUpdateTag).not.toHaveBeenCalled();
+  });
+
+  it("preserves submitted form field values on error", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Name is required" }),
+    });
+
+    const formData = buildFormData({
+      name: "Updated grievance",
+      description: "Updated description",
+      category_id: "5",
+      point_person_id: "12",
+    });
+
+    const result = await editGrievance("1", initialState, formData);
+
+    expect(result.fields).toEqual({
+      name: "Updated grievance",
+      description: "Updated description",
+      category_id: "5",
+      point_person_id: "12",
+    });
+  });
+
+  it("returns null errors array when server provides no field-specific errors", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Something went wrong" }),
+    });
+
+    const result = await editGrievance("1", initialState, buildFormData());
 
     expect(result.errors).toBeNull();
   });
