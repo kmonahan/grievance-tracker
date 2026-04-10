@@ -23,8 +23,13 @@ def edit_escalation(escalation_id):
     db.session.commit()
     return jsonify({'ok': True}), 200
 
+
 @bp.route('/recent', methods=['GET'])
 @jwt_required()
 def get_recent_escalations():
-    escalations = db.session.execute(db.select(Escalation).filter(Escalation.date >= date.today() + timedelta(days=-14)).order_by(Escalation.date_due.desc())).scalars()
-    return jsonify([escalation.to_dict() for escalation in escalations])
+    escalations = db.session.execute(
+        db.select(Escalation).filter(Escalation.date >= date.today() + timedelta(days=-14)).order_by(
+            Escalation.date_due.desc())).scalars()
+    return jsonify(
+        [{**escalation.to_dict(), 'grievance': escalation.grievance.name, 'grievance_id': escalation.grievance_id} for
+         escalation in escalations])

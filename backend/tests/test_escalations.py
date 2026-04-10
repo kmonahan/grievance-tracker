@@ -46,11 +46,15 @@ class TestEscalation:
         res = client.get("/escalations/recent")
         assert res.status_code == 200
         assert res.json == [
-            {'date': '2026-01-09', 'date_due': '2026-01-30', 'deadline_missed': False, 'hearing_date': None, 'id': 5,
+            {'date': '2026-01-09', 'date_due': '2026-01-30', 'deadline_missed': False, 'grievance': 'Test #2',
+             'grievance_id': 2, 'hearing_date': None, 'id': 5,
              'status': 'Waiting to File', 'step': 'Step #1',
              'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}},
             {'date': '2025-12-31', 'date_due': '2026-01-08', 'deadline_missed': False, 'hearing_date': None, 'id': 4,
-             'status': 'Waiting on Decision', 'step': 'Step #1',
+             'status': 'Waiting on Decision', 'step': 'Step #1', 'grievance': 'Test #2',
+             'grievance_id': 2,
              'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}},
-            {'date': '2026-01-10', 'date_due': None, 'deadline_missed': False, 'hearing_date': None, 'id': 6,
-             'status': 'In Abeyance', 'step': 'Step #2', 'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}}]
+            {'date': '2026-01-10', 'date_due': None, 'deadline_missed': False, 'grievance': 'Test #4',
+             'grievance_id': 4, 'hearing_date': None, 'id': 6,
+             'status': 'In Abeyance', 'step': 'Step #2',
+             'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}}]
