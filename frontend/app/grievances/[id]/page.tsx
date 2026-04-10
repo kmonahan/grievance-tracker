@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EscalationTimeline } from "~/app/components/EscalationTimeline";
 import { StatusTag } from "~/app/components/StatusTag";
@@ -39,8 +40,16 @@ export default async function GrievanceDetailPage({
             <h1 className="font-title text-3xl font-bold">{grievance.name}</h1>
             {latestEscalation && <StatusTag status={latestEscalation.status} />}
           </div>
-          <div className="text-base font-subtitle text-muted-foreground">
-            {grievance.category}
+          <div className="flex items-center justify-between gap-3 mt-1">
+            <div className="text-base font-subtitle text-muted-foreground">
+              {grievance.category}
+            </div>
+            <Link
+              href={`/grievances/${id}/edit`}
+              className="text-base font-subtitle font-medium text-secondary hover:underline"
+            >
+              Edit
+            </Link>
           </div>
         </header>
 

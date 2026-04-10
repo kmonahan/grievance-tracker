@@ -3,6 +3,24 @@ import { useActionState } from "react";
 import type { PointPerson } from "~/app/grievances/create/page";
 import CreateGrievanceForm from "./CreateGrievanceForm";
 
+jest.mock("next/link", () => {
+  return function MockLink({
+    href,
+    children,
+    ...props
+  }: {
+    href: string;
+    children: React.ReactNode;
+    [key: string]: unknown;
+  }) {
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    );
+  };
+});
+
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
   useActionState: jest.fn(),
@@ -134,6 +152,61 @@ describe("CreateGrievanceForm", () => {
       />,
     );
     expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+  });
+
+  it("renders the default title 'Create New Grievance'", () => {
+    render(
+      <CreateGrievanceForm
+        categories={mockCategories}
+        pointPersons={mockPointPersonsObjects}
+        userId={1}
+      />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Create New Grievance" }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders a custom title when provided", () => {
+    render(
+      <CreateGrievanceForm
+        categories={mockCategories}
+        pointPersons={mockPointPersonsObjects}
+        userId={1}
+        title="Edit Grievance"
+      />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Edit Grievance" }),
+    ).toBeInTheDocument();
+  });
+
+  it("does not render a cancel link when cancelHref is not provided", () => {
+    render(
+      <CreateGrievanceForm
+        categories={mockCategories}
+        pointPersons={mockPointPersonsObjects}
+        userId={1}
+      />,
+    );
+    expect(
+      screen.queryByRole("link", { name: "Cancel" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders a cancel link when cancelHref is provided", () => {
+    render(
+      <CreateGrievanceForm
+        categories={mockCategories}
+        pointPersons={mockPointPersonsObjects}
+        userId={1}
+        cancelHref="/grievances/5"
+      />,
+    );
+    expect(screen.getByRole("link", { name: "Cancel" })).toHaveAttribute(
+      "href",
+      "/grievances/5",
+    );
   });
 
   it("renders the '+ Add Category' button", () => {
@@ -659,6 +732,76 @@ describe("CreateGrievanceForm", () => {
         );
         expect(screen.getByLabelText("Category")).toHaveValue("1");
         expect(screen.getByLabelText("Point Person")).toHaveValue("2");
+      });
+    });
+
+    describe("edit mode with initialValues", () => {
+      it("pre-fills the name field with the initial value", () => {
+        mockBothActionStates({
+          error: null,
+          errors: null,
+          fields: { name: "Existing Grievance" },
+        });
+        render(
+          <CreateGrievanceForm
+            categories={mockCategories}
+            pointPersons={mockPointPersonsObjects}
+            userId={1}
+            initialValues={{ name: "Existing Grievance" }}
+          />,
+        );
+        expect(screen.getByRole("textbox", { name: "Name" })).toHaveValue(
+          "Existing Grievance",
+        );
+      });
+
+      it("pre-fills the description field with the initial value", () => {
+        mockBothActionStates({
+          error: null,
+          errors: null,
+          fields: { description: "Existing description" },
+        });
+        render(
+          <CreateGrievanceForm
+            categories={mockCategories}
+            pointPersons={mockPointPersonsObjects}
+            userId={1}
+            initialValues={{ description: "Existing description" }}
+          />,
+        );
+        expect(screen.getByLabelText("Description")).toHaveValue(
+          "Existing description",
+        );
+      });
+
+      it("pre-selects the category matching the initial category_id", () => {
+        mockBothActionStates();
+        render(
+          <CreateGrievanceForm
+            categories={mockCategories}
+            pointPersons={mockPointPersonsObjects}
+            userId={1}
+            initialValues={{ category_id: "2" }}
+          />,
+        );
+        expect(screen.getByLabelText("Category")).toHaveValue("2");
+      });
+
+      it("pre-selects the point person matching the initial point_person_id", () => {
+        mockBothActionStates({
+          error: null,
+          errors: null,
+          fields: { point_person_id: "3" },
+        });
+        render(
+          <CreateGrievanceForm
+            categories={mockCategories}
+            pointPersons={mockPointPersonsObjects}
+            userId={1}
+            initialValues={{ point_person_id: "3" }}
+          />,
+        );
+        expect(screen.getByLabelText("Point Person")).toHaveValue("3");
       });
     });
 
