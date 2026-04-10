@@ -1,7 +1,36 @@
+import type { Escalation, Grievance } from "~/app/grievances/types";
+import { getAccessToken } from "~/app/lib/auth";
 import GrievanceDeadlineCard from "./components/GrievanceDeadlineCard";
 import RecentActivityCard from "./components/RecentActivityCard";
 
-export default function Home() {
+export interface RecentActivity extends Escalation {
+  grievance: string;
+  grievance_id: number;
+}
+
+export default async function Home() {
+  const accessToken = await getAccessToken();
+  const upcomingResponse = await fetch(
+    `${process.env.BACKEND_URL}/grievances/upcoming`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+  const upcoming = (await upcomingResponse.json()) as {
+    grievances: Grievance[];
+  };
+  const activityResponse = await fetch(
+    `${process.env.BACKEND_URL}/escalations/recent`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+  const recent = (await activityResponse.json()) as RecentActivity[];
+
   return (
     <main className="w-full mx-auto px-6 py-8">
       <div className="grid gap-8 lg:grid-cols-2">
@@ -15,11 +44,17 @@ export default function Home() {
             </div>
           </div>
           <div className="px-6 pt-6">
-            <ol className="mt-4 space-y-3">
-              <li>
-                <GrievanceDeadlineCard />
-              </li>
-            </ol>
+            {upcoming.grievances?.length ? (
+              <ol className="mt-4 space-y-3">
+                {upcoming.grievances.map((grievance) => (
+                  <li key={grievance.id}>
+                    <GrievanceDeadlineCard {...grievance} />
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p>No upcoming deadlines</p>
+            )}
           </div>
           <footer className="mt-6 flex justify-center">
             <a
@@ -55,11 +90,17 @@ export default function Home() {
             </div>
           </div>
           <div className="px-6 pt-6">
-            <ol className="mt-4 space-y-3">
-              <li>
-                <RecentActivityCard />
-              </li>
-            </ol>
+            {recent?.length ? (
+              <ol className="mt-4 space-y-3">
+                {recent.map((escalation) => (
+                  <li key={escalation.id}>
+                    <RecentActivityCard {...escalation} />
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p>No upcoming deadlines</p>
+            )}
           </div>
         </section>
       </div>
