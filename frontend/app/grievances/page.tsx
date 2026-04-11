@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { StatusTag } from "~/app/components/StatusTag";
+import { ShowClosedToggle } from "~/app/grievances/ShowClosedToggle";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
 import { formatDate, getInitials } from "~/lib/format";
@@ -21,19 +22,32 @@ function getCategoryClasses(category: string): string {
   );
 }
 
-export default async function GrievancesPage() {
-  const accessToken = await getAccessToken();
+const CLOSED_STATUSES = ["Resolved", "Denied", "Withdrawn"];
+
+function isClosed(grievance: Grievance): boolean {
+  const latest = grievance.escalations.at(-1);
+  return !!latest && CLOSED_STATUSES.includes(latest.status);
+}
+
+interface PageProps {
+  searchParams: Promise<{ showClosed?: string }>;
+}
+
+export default async function GrievancesPage({ searchParams }: PageProps) {
+  const [accessToken, { showClosed: showClosedParam }] = await Promise.all([
+    getAccessToken(),
+    searchParams,
+  ]);
+
+  const showClosed = showClosedParam === "true";
+
   const response = await fetch(`${process.env.BACKEND_URL}/grievances/all`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   const { grievances } = (await response.json()) as { grievances: Grievance[] };
 
-  const openGrievances = grievances.filter((g) => {
-    const latest = g.escalations.at(-1);
-    return (
-      !latest || !["Resolved", "Denied", "Withdrawn"].includes(latest.status)
-    );
-  });
+  const openGrievances = grievances.filter((g) => !isClosed(g));
+  const closedGrievances = grievances.filter(isClosed);
 
   return (
     <main className="w-full mx-auto px-5 md:px-6 py-8">
@@ -49,24 +63,30 @@ export default async function GrievancesPage() {
               {openGrievances.length !== 1 ? "s" : ""}
             </p>
           </div>
-          <Link
-            href="/grievances/create"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-subtitle text-base font-semibold text-primary-foreground transition-colors hover:bg-secondary"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="size-4"
-              aria-hidden="true"
+          <div className="flex items-center gap-3">
+            <ShowClosedToggle
+              showClosed={showClosed}
+              closedCount={closedGrievances.length}
+            />
+            <Link
+              href="/grievances/create"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-subtitle text-base font-semibold text-primary-foreground transition-colors hover:bg-secondary"
             >
-              <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-            </svg>
-            Add Grievance
-          </Link>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="size-4"
+                aria-hidden="true"
+              >
+                <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+              </svg>
+              Add Grievance
+            </Link>
+          </div>
         </div>
 
-        {/* Grievance list */}
+        {/* Open grievances */}
         {openGrievances.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-20 text-center">
             <p className="font-subtitle text-lg font-semibold text-muted-foreground">
@@ -85,18 +105,50 @@ export default async function GrievancesPage() {
             ))}
           </ol>
         )}
+
+        {/* Closed grievances */}
+        {showClosed && (
+          <section className="mt-10">
+            <h2 className="mb-4 font-subtitle text-lg font-semibold text-muted-foreground">
+              Closed ({closedGrievances.length})
+            </h2>
+            {closedGrievances.length > 0 ? (
+              <ol className="space-y-3">
+                {closedGrievances.map((grievance) => (
+                  <li key={grievance.id}>
+                    <GrievanceRow grievance={grievance} muted />
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-10 text-center">
+                <p className="text-base text-muted-foreground">
+                  No closed grievances.
+                </p>
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </main>
   );
 }
 
-function GrievanceRow({ grievance }: { grievance: Grievance }) {
+function GrievanceRow({
+  grievance,
+  muted = false,
+}: {
+  grievance: Grievance;
+  muted?: boolean;
+}) {
   const latestEscalation = grievance.escalations.at(-1) ?? null;
   const initials = getInitials(grievance.point_person);
 
   return (
     <Link href={`/grievances/${grievance.id}`} className="group block">
-      <article className="rounded-xl border border-border bg-card shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
+      <article
+        className={`rounded-xl border border-border bg-card shadow-sm transition-all hover:border-primary/30 hover:shadow-md ${muted ? "opacity-60" : ""}`}
+      >
         <div className="flex">
           {/* Status stripe */}
           <div
