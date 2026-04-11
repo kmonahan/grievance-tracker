@@ -2,10 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EscalationTimeline } from "~/app/components/EscalationTimeline";
 import { StatusTag } from "~/app/components/StatusTag";
+import { EditDueDateSection } from "~/app/grievances/[id]/EditDueDateSection";
 import { EscalateSection } from "~/app/grievances/[id]/EscalateSection";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
-import { formatDate, getInitials } from "~/lib/format";
+import { getInitials } from "~/lib/format";
 
 export default async function GrievanceDetailPage({
   params,
@@ -82,14 +83,10 @@ export default async function GrievanceDetailPage({
                 </dd>
               </div>
               {latestEscalation?.date_due && (
-                <div>
-                  <dt className="font-subtitle text-base font-semibold text-teal-600">
-                    Upcoming Due Date
-                  </dt>
-                  <dd className="mt-1 font-semibold text-accent">
-                    {formatDate(latestEscalation.date_due)}
-                  </dd>
-                </div>
+                <EditDueDateSection
+                  escalationId={latestEscalation.id}
+                  initialDateDue={latestEscalation.date_due}
+                />
               )}
             </div>
           </dl>
