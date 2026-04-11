@@ -34,11 +34,13 @@ export default async function GrievanceDetailPage({
       : null;
 
   return (
-    <main className="w-full px-5 md:px-6 py-8">
+    <main className="w-full px-4 md:px-6 py-6 md:py-8">
       <article className="mx-auto w-full max-w-4xl bg-card text-card-foreground rounded-xl border shadow-lg">
-        <header className="border-b px-6 py-6">
+        <header className="border-b px-4 py-5 sm:px-6 sm:py-6">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-title text-3xl font-bold">{grievance.name}</h1>
+            <h1 className="font-title text-2xl font-bold md:text-3xl">
+              {grievance.name}
+            </h1>
             {latestEscalation && <StatusTag status={latestEscalation.status} />}
           </div>
           <div className="flex items-center justify-between gap-3 mt-1">
@@ -54,7 +56,7 @@ export default async function GrievanceDetailPage({
           </div>
         </header>
 
-        <section className="border-b px-6 py-6">
+        <section className="border-b px-4 py-5 sm:px-6 sm:py-6">
           <dl className="grid gap-4 sm:grid-cols-2">
             <div>
               <dt className="font-subtitle text-base font-semibold text-teal-600">
@@ -92,7 +94,7 @@ export default async function GrievanceDetailPage({
           </dl>
         </section>
         {grievance.escalations.length > 0 && (
-          <section className="border-b px-6 py-6">
+          <section className="border-b px-4 py-5 sm:px-6 sm:py-6">
             <h2 className="font-subtitle mb-4 text-xl font-semibold">
               History
             </h2>
