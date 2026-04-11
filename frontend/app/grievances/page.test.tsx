@@ -9,6 +9,12 @@ jest.mock("next/headers", () => ({
   cookies: jest.fn(() => Promise.resolve({ get: mockCookiesGet })),
 }));
 
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(() => ({ push: jest.fn() })),
+  usePathname: jest.fn(() => "/grievances"),
+  useSearchParams: jest.fn(() => new URLSearchParams()),
+}));
+
 const OPEN_GRIEVANCE: Grievance = {
   id: 1,
   name: "Unsafe Working Conditions",
@@ -125,8 +131,11 @@ function mockFetchWithGrievances(grievances: Grievance[]) {
   });
 }
 
-async function renderPage() {
-  const jsx = await GrievancesPage();
+async function renderPage(showClosed = false) {
+  const searchParams = Promise.resolve(
+    showClosed ? { showClosed: "true" } : {},
+  );
+  const jsx = await GrievancesPage({ searchParams });
   return render(jsx);
 }
 
@@ -140,7 +149,7 @@ describe("GrievancesPage", () => {
   it("fetches from /grievances/all with the access token", async () => {
     mockCookiesGet.mockReturnValue({ value: "my-token" });
     mockFetchWithGrievances([OPEN_GRIEVANCE]);
-    await GrievancesPage();
+    await GrievancesPage({ searchParams: Promise.resolve({}) });
     expect(fetch).toHaveBeenCalledWith(
       "http://localhost:8000/grievances/all",
       expect.objectContaining({
@@ -291,5 +300,50 @@ describe("GrievancesPage", () => {
     mockFetchWithGrievances([]);
     await renderPage();
     expect(screen.getByText("No open grievances")).toBeInTheDocument();
+  });
+
+  it("does not show closed grievances by default", async () => {
+    mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
+    await renderPage();
+    expect(screen.queryByText("Resolved Pay Dispute")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Closed \(/)).not.toBeInTheDocument();
+  });
+
+  it("shows the toggle button with the closed count", async () => {
+    mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
+    await renderPage();
+    expect(
+      screen.getByRole("button", { name: /show closed \(1\)/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows closed grievances when showClosed is true", async () => {
+    mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
+    await renderPage(true);
+    expect(screen.getByText("Resolved Pay Dispute")).toBeInTheDocument();
+    expect(screen.getByText(/Closed \(1\)/)).toBeInTheDocument();
+  });
+
+  it("shows all three closed statuses when showClosed is true", async () => {
+    mockFetchWithGrievances([
+      OPEN_GRIEVANCE,
+      RESOLVED_GRIEVANCE,
+      DENIED_GRIEVANCE,
+      WITHDRAWN_GRIEVANCE,
+    ]);
+    await renderPage(true);
+    expect(screen.getByText("Resolved Pay Dispute")).toBeInTheDocument();
+    expect(screen.getByText("Denied Overtime Claim")).toBeInTheDocument();
+    expect(
+      screen.getByText("Withdrawn Scheduling Dispute"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Closed \(3\)/)).toBeInTheDocument();
+  });
+
+  it("shows empty closed state when showClosed is true but no closed grievances", async () => {
+    mockFetchWithGrievances([OPEN_GRIEVANCE]);
+    await renderPage(true);
+    expect(screen.getByText("Closed (0)")).toBeInTheDocument();
+    expect(screen.getByText("No closed grievances.")).toBeInTheDocument();
   });
 });
