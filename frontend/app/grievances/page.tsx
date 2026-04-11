@@ -97,15 +97,10 @@ function GrievanceRow({ grievance }: { grievance: Grievance }) {
   return (
     <Link href={`/grievances/${grievance.id}`} className="group block">
       <article className="rounded-xl border border-border bg-card shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
-        <div className="flex gap-0">
+        <div className="flex">
           {/* Status stripe */}
           <div
-            className="w-1 shrink-0 rounded-l-xl"
-            style={{
-              background: latestEscalation
-                ? getStatusStripeColor(latestEscalation.status)
-                : "var(--color-border)",
-            }}
+            className={`w-1 shrink-0 rounded-l-xl ${latestEscalation ? (STATUS_STRIPE_COLORS[latestEscalation.status] ?? "bg-border") : "bg-border"}`}
             aria-hidden="true"
           />
 
@@ -176,13 +171,10 @@ function GrievanceRow({ grievance }: { grievance: Grievance }) {
   );
 }
 
-function getStatusStripeColor(status: string): string {
-  const colors: Record<string, string> = {
-    "Waiting to Schedule": "var(--color-accent)",
-    Scheduled: "var(--color-teal-500)",
-    "Waiting on Decision": "var(--color-red-500)",
-    "Waiting to File": "var(--color-plum-500)",
-    "In Abeyance": "var(--color-neutral-300)",
-  };
-  return colors[status] ?? "var(--color-border)";
-}
+const STATUS_STRIPE_COLORS: Record<string, string> = {
+  "Waiting to Schedule": "bg-accent",
+  Scheduled: "bg-teal-500",
+  "Waiting on Decision": "bg-red-500",
+  "Waiting to File": "bg-plum-500",
+  "In Abeyance": "bg-neutral-300",
+};

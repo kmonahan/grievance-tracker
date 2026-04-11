@@ -224,9 +224,6 @@ describe("GrievancesPage", () => {
   });
 
   it("renders 'No deadline' when date_due is null", async () => {
-    mockFetchWithGrievances([SCHEDULED_GRIEVANCE]);
-    await renderPage();
-    // SCHEDULED_GRIEVANCE has a due date; use a grievance without one
     const noDueDateGrievance: Grievance = {
       ...OPEN_GRIEVANCE,
       id: 99,
@@ -237,10 +234,7 @@ describe("GrievancesPage", () => {
         },
       ],
     };
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ grievances: [noDueDateGrievance] }),
-    });
+    mockFetchWithGrievances([noDueDateGrievance]);
     await renderPage();
     expect(screen.getByText("No deadline")).toBeInTheDocument();
   });
