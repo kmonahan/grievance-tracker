@@ -20,9 +20,9 @@ export default function GrievanceDeadlineCard({
   return (
     <Link href={`/grievances/${id}`}>
       <div className="group rounded-lg border border-border bg-card p-4 transition-all hover:border-accent hover:shadow-md">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 space-y-2">
-            <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-subtitle font-semibold text-foreground">
                 {name}
               </h3>
@@ -40,7 +40,7 @@ export default function GrievanceDeadlineCard({
             </div>
           </div>
           {latestEscalation?.date_due ? (
-            <div className="text-right">
+            <div className="sm:text-right">
               <div className="font-subtitle text-base font-semibold text-accent">
                 {formatDate(latestEscalation.date_due)}
               </div>

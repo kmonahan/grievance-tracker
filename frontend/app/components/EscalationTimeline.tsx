@@ -14,15 +14,17 @@ export function EscalationTimeline({
       {reversed.map((esc) => (
         <li key={esc.id} className="relative mb-8 ml-6 last:mb-0">
           <span className="absolute -left-8 flex h-4 w-4 items-center justify-center rounded-full border-2 border-border bg-card" />
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <time className="text-base text-teal-600">
+          <div className="rounded-lg border border-border bg-card p-3 sm:p-4">
+            <div className="mb-2">
+              <time className="block text-sm text-teal-600 sm:text-base">
                 {formatDate(esc.date)}
               </time>
-              <span className="font-subtitle text-base font-semibold">
-                {esc.step}
-              </span>
-              <StatusTag status={esc.status} />
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <span className="font-subtitle text-base font-semibold">
+                  {esc.step}
+                </span>
+                <StatusTag status={esc.status} />
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-teal-700">
               {esc.hearing_date && (

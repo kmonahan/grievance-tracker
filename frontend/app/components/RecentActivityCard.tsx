@@ -16,11 +16,11 @@ export default function RecentActivityCard({
     <Link href="/grievances/1">
       <div className="group rounded-lg border border-border bg-card p-4 transition-all hover:border-accent hover:shadow-md">
         <div className="space-y-3">
-          <div className="flex items-start justify-between gap-4">
-            <h3 className="font-subtitle font-semibold text-foreground flex-1">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <h3 className="font-subtitle font-semibold text-foreground">
               {grievance}
             </h3>
-            <span className="text-sm text-muted-foreground whitespace-nowrap">
+            <span className="text-sm text-muted-foreground sm:whitespace-nowrap">
               {formatDate(date)}
             </span>
           </div>
