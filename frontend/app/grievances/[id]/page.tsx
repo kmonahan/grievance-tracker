@@ -1,10 +1,12 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EscalationTimeline } from "~/app/components/EscalationTimeline";
 import { StatusTag } from "~/app/components/StatusTag";
+import { EditDueDateSection } from "~/app/grievances/[id]/EditDueDateSection";
 import { EscalateSection } from "~/app/grievances/[id]/EscalateSection";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
-import { formatDate, getInitials } from "~/lib/format";
+import { getInitials } from "~/lib/format";
 
 export default async function GrievanceDetailPage({
   params,
@@ -32,19 +34,29 @@ export default async function GrievanceDetailPage({
       : null;
 
   return (
-    <main className="w-full px-5 md:px-6 py-8">
+    <main className="w-full px-4 md:px-6 py-6 md:py-8">
       <article className="mx-auto w-full max-w-4xl bg-card text-card-foreground rounded-xl border shadow-lg">
-        <header className="border-b px-6 py-6">
+        <header className="border-b px-4 py-5 sm:px-6 sm:py-6">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-title text-3xl font-bold">{grievance.name}</h1>
+            <h1 className="font-title text-2xl font-bold md:text-3xl">
+              {grievance.name}
+            </h1>
             {latestEscalation && <StatusTag status={latestEscalation.status} />}
           </div>
-          <div className="text-base font-subtitle text-muted-foreground">
-            {grievance.category}
+          <div className="flex items-center justify-between gap-3 mt-1">
+            <div className="text-base font-subtitle text-muted-foreground">
+              {grievance.category}
+            </div>
+            <Link
+              href={`/grievances/${id}/edit`}
+              className="text-base font-subtitle font-medium text-secondary hover:underline"
+            >
+              Edit
+            </Link>
           </div>
         </header>
 
-        <section className="border-b px-6 py-6">
+        <section className="border-b px-4 py-5 sm:px-6 sm:py-6">
           <dl className="grid gap-4 sm:grid-cols-2">
             <div>
               <dt className="font-subtitle text-base font-semibold text-teal-600">
@@ -73,20 +85,16 @@ export default async function GrievanceDetailPage({
                 </dd>
               </div>
               {latestEscalation?.date_due && (
-                <div>
-                  <dt className="font-subtitle text-base font-semibold text-teal-600">
-                    Upcoming Due Date
-                  </dt>
-                  <dd className="mt-1 font-semibold text-accent">
-                    {formatDate(latestEscalation.date_due)}
-                  </dd>
-                </div>
+                <EditDueDateSection
+                  escalationId={latestEscalation.id}
+                  initialDateDue={latestEscalation.date_due}
+                />
               )}
             </div>
           </dl>
         </section>
         {grievance.escalations.length > 0 && (
-          <section className="border-b px-6 py-6">
+          <section className="border-b px-4 py-5 sm:px-6 sm:py-6">
             <h2 className="font-subtitle mb-4 text-xl font-semibold">
               History
             </h2>

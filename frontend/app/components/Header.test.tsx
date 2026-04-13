@@ -23,6 +23,18 @@ jest.mock("next/link", () => {
   return MockLink;
 });
 
+jest.mock("~/app/components/NavMenu", () => {
+  const MockNavMenu = () => (
+    <nav aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/grievances/create">Add Grievance</a>
+      <a href="/logout">Log Out</a>
+    </nav>
+  );
+  MockNavMenu.displayName = "NavMenu";
+  return MockNavMenu;
+});
+
 import { cookies } from "next/headers";
 
 function mockCookies(hasCookie: boolean) {

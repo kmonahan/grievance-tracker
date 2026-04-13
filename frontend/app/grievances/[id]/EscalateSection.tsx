@@ -86,7 +86,7 @@ export function EscalateSection({ grievance }: { grievance: Grievance }) {
         type="button"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
-        className="flex w-full items-center justify-between px-6 py-5 transition-colors hover:bg-muted/40"
+        className="flex w-full items-center justify-between px-4 py-5 sm:px-6 transition-colors hover:bg-muted/40"
       >
         <div className="flex items-center gap-2">
           <h2 className="font-subtitle text-xl font-semibold">Escalate</h2>
@@ -107,7 +107,7 @@ export function EscalateSection({ grievance }: { grievance: Grievance }) {
       </button>
 
       {expanded && (
-        <div className="px-6 pb-6">
+        <div className="px-4 pb-5 sm:px-6 sm:pb-6">
           <form action={formAction}>
             <input
               type="hidden"

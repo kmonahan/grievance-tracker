@@ -45,3 +45,6 @@ next-env.d.ts
 
 # next-agents-md
 .next-docs/
+
+# Local config
+settings.local.json

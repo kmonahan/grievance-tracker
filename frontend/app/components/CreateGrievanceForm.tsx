@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { addCategory } from "~/app/categories/actions";
 import Button from "~/app/components/ui/Button";
@@ -20,30 +21,54 @@ type PointPerson = {
   isActive: boolean;
 };
 
+type GrievanceFormAction = (
+  prevState: AddGrievanceState,
+  formData: FormData,
+) => Promise<AddGrievanceState>;
+
 export default function CreateGrievanceForm({
   categories: initialCategories,
   pointPersons,
   defaultPointPersonId,
   pointPersonsError,
   userId,
+  formAction = addGrievance,
+  initialValues,
+  cancelHref,
+  title = "Create New Grievance",
 }: {
   categories: Category[];
   pointPersons: PointPerson[];
   defaultPointPersonId?: number | null;
   pointPersonsError?: string | null;
   userId: number;
+  formAction?: GrievanceFormAction;
+  initialValues?: {
+    name?: string;
+    description?: string;
+    category_id?: string;
+    point_person_id?: string;
+  };
+  cancelHref?: string;
+  title?: string;
 }) {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialValues?.category_id ?? "",
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [grievanceState, grievanceAction] = useActionState<
     AddGrievanceState,
     FormData
-  >(addGrievance, {
+  >(formAction, {
     error: null,
     errors: null,
-    fields: {},
+    fields: {
+      name: initialValues?.name ?? "",
+      description: initialValues?.description ?? "",
+      point_person_id: initialValues?.point_person_id ?? "",
+    },
   });
 
   const [addCategoryState, addCategoryAction] = useActionState(addCategory, {
@@ -66,7 +91,7 @@ export default function CreateGrievanceForm({
 
   return (
     <>
-      <FormCard title="Create New Grievance" action={grievanceAction}>
+      <FormCard title={title} action={grievanceAction}>
         <input type="hidden" name="user_id" value={userId} />
         {pointPersonsError && <p>{pointPersonsError}</p>}
         {grievanceState.error &&
@@ -146,6 +171,14 @@ export default function CreateGrievanceForm({
         <Button type="submit" disabled={isDisabled}>
           Submit
         </Button>
+        {cancelHref && (
+          <Link
+            href={cancelHref}
+            className="inline-flex items-center justify-center w-full h-11 rounded-md border border-input px-4 py-2 font-subtitle font-semibold text-lg text-foreground hover:bg-muted transition-colors"
+          >
+            Cancel
+          </Link>
+        )}
       </FormCard>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="flex flex-col gap-6 py-6">

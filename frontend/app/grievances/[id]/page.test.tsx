@@ -237,6 +237,13 @@ describe("GrievanceDetailPage", () => {
     expect(screen.getByText("PTO")).toBeInTheDocument();
   });
 
+  it("renders an edit link pointing to the grievance edit page", async () => {
+    await renderWithId("1");
+    const editLink = screen.getByRole("link", { name: "Edit" });
+    expect(editLink).toBeInTheDocument();
+    expect(editLink).toHaveAttribute("href", "/grievances/1/edit");
+  });
+
   it("calls notFound for invalid id", async () => {
     await expect(renderWithId("999")).rejects.toThrow("NEXT_NOT_FOUND");
     expect(mockNotFound).toHaveBeenCalled();
