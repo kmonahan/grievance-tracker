@@ -17,9 +17,12 @@ def _convert_to_date(date_as_string):
 def edit_escalation(escalation_id):
     escalation = db.get_or_404(Escalation, escalation_id)
     date_due = request.form.get('date_due', type=_convert_to_date)
-    if date_due is None:
+    if request.form.get('date_due') and date_due is None:
         return jsonify({'error': 'Missing or invalid due date'}), 400
-    escalation.date_due = date_due
+    if date_due is not None:
+        escalation.date_due = date_due
+    deadline_missed = request.form.get('deadline_missed', type=bool)
+    escalation.deadline_missed = deadline_missed
     db.session.commit()
     return jsonify({'ok': True}), 200
 

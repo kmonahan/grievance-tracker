@@ -31,14 +31,17 @@ class TestEscalation:
             assert escalation_from_db.date_due == date(2026, 1, 5)
 
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
-    def test_edit_due_date_with_invalid_field(self, _mock_verify_jwt, client):
-        res = client.post("/escalations/edit/1", data={'due_date': '2026-01-05'})
-        assert res.status_code == 400
-
-    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_edit_due_date_with_invalid_date(self, _mock_verify_jwt, client):
         res = client.post("/escalations/edit/1", data={'date_due': '1/5/2026'})
         assert res.status_code == 400
+
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_mark_deadline_as_missed(self, _mock_verify_jwt, client, app):
+        res = client.post("/escalations/edit/1", data={'deadline_missed': 'missed'})
+        assert res.status_code == 200
+        with app.app_context():
+            escalation_from_db = Escalation.query.filter_by(id=1).first()
+            assert escalation_from_db.deadline_missed == True
 
     @freeze_time(datetime(2026, 1, 10))
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
@@ -47,14 +50,11 @@ class TestEscalation:
         assert res.status_code == 200
         assert res.json == [
             {'date': '2026-01-09', 'date_due': '2026-01-30', 'deadline_missed': False, 'grievance': 'Test #2',
-             'grievance_id': 2, 'hearing_date': None, 'id': 5,
-             'status': 'Waiting to File', 'step': 'Step #1',
+             'grievance_id': 2, 'hearing_date': None, 'id': 5, 'status': 'Waiting to File', 'step': 'Step #1',
              'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}},
             {'date': '2025-12-31', 'date_due': '2026-01-08', 'deadline_missed': False, 'hearing_date': None, 'id': 4,
-             'status': 'Waiting on Decision', 'step': 'Step #1', 'grievance': 'Test #2',
-             'grievance_id': 2,
+             'status': 'Waiting on Decision', 'step': 'Step #1', 'grievance': 'Test #2', 'grievance_id': 2,
              'user': {'id': 2, 'is_active': True, 'name': 'Dolores Huerta'}},
             {'date': '2026-01-10', 'date_due': None, 'deadline_missed': False, 'grievance': 'Test #4',
-             'grievance_id': 4, 'hearing_date': None, 'id': 6,
-             'status': 'In Abeyance', 'step': 'Step #2',
+             'grievance_id': 4, 'hearing_date': None, 'id': 6, 'status': 'In Abeyance', 'step': 'Step #2',
              'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}}]
