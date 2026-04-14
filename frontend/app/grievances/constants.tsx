@@ -4,8 +4,6 @@ export const STEP_DISPLAY_TO_ENUM: Record<string, string> = {
   "Step #1": "ONE",
   "Step #2": "TWO",
   "Step #3": "THREE",
-  "Step #4": "FOUR",
-  "Step #5": "FIVE",
 };
 
 export const STATUS_DISPLAY_TO_ENUM: Record<string, string> = {
@@ -74,43 +72,7 @@ export const STATE_SEQUENCE: StepStatus[] = [
     stepDisplay: "Step #3",
     statusEnum: "WAITING_ON_DECISION",
     statusDisplay: "Waiting on Decision",
-  },
-  {
-    stepEnum: "FOUR",
-    stepDisplay: "Step #4",
-    statusEnum: "WAITING_TO_SCHEDULE",
-    statusDisplay: "Waiting to Schedule",
-  },
-  {
-    stepEnum: "FOUR",
-    stepDisplay: "Step #4",
-    statusEnum: "SCHEDULED",
-    statusDisplay: "Scheduled",
-  },
-  {
-    stepEnum: "FOUR",
-    stepDisplay: "Step #4",
-    statusEnum: "WAITING_ON_DECISION",
-    statusDisplay: "Waiting on Decision",
-  },
-  {
-    stepEnum: "FIVE",
-    stepDisplay: "Step #5",
-    statusEnum: "WAITING_TO_SCHEDULE",
-    statusDisplay: "Waiting to Schedule",
-  },
-  {
-    stepEnum: "FIVE",
-    stepDisplay: "Step #5",
-    statusEnum: "SCHEDULED",
-    statusDisplay: "Scheduled",
-  },
-  {
-    stepEnum: "FIVE",
-    stepDisplay: "Step #5",
-    statusEnum: "WAITING_ON_DECISION",
-    statusDisplay: "Waiting on Decision",
-  },
+  }
 ];
 
 export const ALWAYS_AVAILABLE = [
