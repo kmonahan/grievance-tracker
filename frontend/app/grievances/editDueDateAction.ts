@@ -15,9 +15,11 @@ export async function editDueDate(
   const accessToken = await getAccessToken();
   const escalationId = formData.get("escalation_id") as string;
   const dateDue = formData.get("date_due") as string;
+  const deadlineMissed = formData.get("deadline_missed") as string;
 
   const body = new FormData();
   body.append("date_due", dateDue);
+  body.append("deadline_missed", deadlineMissed);
 
   const response = await fetch(
     `${process.env.BACKEND_URL}/escalations/edit/${escalationId}`,
