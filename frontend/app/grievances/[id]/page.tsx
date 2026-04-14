@@ -84,10 +84,11 @@ export default async function GrievanceDetailPage({
                   {grievance.point_person}
                 </dd>
               </div>
-              {latestEscalation?.date_due && (
+              {latestEscalation && (
                 <EditDueDateSection
                   escalationId={latestEscalation.id}
                   initialDateDue={latestEscalation.date_due}
+                  initialDeadlineMissed={latestEscalation.deadline_missed}
                 />
               )}
             </div>
