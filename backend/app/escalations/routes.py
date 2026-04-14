@@ -21,8 +21,9 @@ def edit_escalation(escalation_id):
         return jsonify({'error': 'Missing or invalid due date'}), 400
     if date_due is not None:
         escalation.date_due = date_due
-    deadline_missed = request.form.get('deadline_missed', type=bool)
-    escalation.deadline_missed = deadline_missed
+    deadline_missed = request.form.get('deadline_missed')
+    if deadline_missed is not None:
+        escalation.deadline_missed = deadline_missed.lower() == 'true'
     db.session.commit()
     return jsonify({'ok': True}), 200
 
