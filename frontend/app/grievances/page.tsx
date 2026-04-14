@@ -82,7 +82,7 @@ export default async function GrievancesPage({ searchParams }: PageProps) {
           <ol className="space-y-3">
             {openGrievances.map((grievance) => (
               <li key={grievance.id}>
-                <GrievanceRow grievance={grievance} />
+                <GrievanceCard grievance={grievance} />
               </li>
             ))}
           </ol>
@@ -98,7 +98,7 @@ export default async function GrievancesPage({ searchParams }: PageProps) {
               <ol className="space-y-3">
                 {closedGrievances.map((grievance) => (
                   <li key={grievance.id}>
-                    <GrievanceRow grievance={grievance} muted />
+                    <GrievanceCard grievance={grievance} muted />
                   </li>
                 ))}
               </ol>
@@ -114,14 +114,4 @@ export default async function GrievancesPage({ searchParams }: PageProps) {
       </div>
     </main>
   );
-}
-
-function GrievanceRow({
-  grievance,
-  muted = false,
-}: {
-  grievance: Grievance;
-  muted?: boolean;
-}) {
-  return <GrievanceCard grievance={grievance} muted={muted} />;
 }

@@ -20,7 +20,7 @@ function getCategoryClasses(category: string): string {
   );
 }
 
-export const STATUS_STRIPE_COLORS: Record<string, string> = {
+const STATUS_STRIPE_COLORS: Record<string, string> = {
   "Waiting to Schedule": "bg-accent",
   Scheduled: "bg-teal-500",
   "Waiting on Decision": "bg-red-500",
@@ -35,7 +35,7 @@ export function GrievanceCard({
   grievance: Grievance;
   muted?: boolean;
 }) {
-  const latestEscalation = grievance.escalations.at(-1) ?? null;
+  const latestEscalation = grievance.escalations.at(-1);
   const initials = getInitials(grievance.point_person);
 
   return (
@@ -44,14 +44,12 @@ export function GrievanceCard({
         className={`rounded-xl border border-border bg-card shadow-sm transition-all hover:border-primary/30 hover:shadow-md ${muted ? "opacity-60" : ""}`}
       >
         <div className="flex">
-          {/* Status stripe */}
           <div
             className={`w-1 shrink-0 rounded-l-xl ${latestEscalation ? (STATUS_STRIPE_COLORS[latestEscalation.status] ?? "bg-border") : "bg-border"}`}
             aria-hidden="true"
           />
 
           <div className="flex flex-1 flex-col gap-3 px-5 py-4">
-            {/* Top row: name + status */}
             <div className="flex flex-wrap items-start justify-between gap-2">
               <h2 className="font-subtitle text-base font-semibold text-foreground transition-colors group-hover:text-primary">
                 {grievance.name}
@@ -61,7 +59,6 @@ export function GrievanceCard({
               )}
             </div>
 
-            {/* Middle row: category + step */}
             <div className="flex flex-wrap items-center gap-2">
               <span
                 className={`inline-flex items-center rounded-md border px-2 py-0.5 text-sm font-medium ${getCategoryClasses(grievance.category)}`}
@@ -75,7 +72,6 @@ export function GrievanceCard({
               )}
             </div>
 
-            {/* Bottom row: point person + due date */}
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-medium text-secondary-foreground">
