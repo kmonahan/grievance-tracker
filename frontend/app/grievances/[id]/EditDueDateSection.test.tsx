@@ -6,7 +6,7 @@ jest.mock("~/app/grievances/editDueDateAction", () => ({
 }));
 
 jest.mock("~/app/grievances/deadlineMissedAction", () => ({
-  editDeadlineMissed: jest.fn().mockResolvedValue(undefined),
+  editDeadlineMissed: jest.fn().mockResolvedValue(null),
 }));
 
 describe("EditDueDateSection – deadline missed checkbox", () => {

@@ -20,9 +20,7 @@ export function EditDueDateSection({
   });
   const [editing, setEditing] = useState(false);
   const [currentDate, setCurrentDate] = useState(initialDateDue);
-  const [deadlineMissed, setDeadlineMissed] = useState(
-    initialDeadlineMissed ?? false,
-  );
+  const [deadlineMissed, setDeadlineMissed] = useState(initialDeadlineMissed);
   const [isDeadlinePending, startDeadlineTransition] = useTransition();
 
   useEffect(() => {
@@ -35,8 +33,10 @@ export function EditDueDateSection({
   function handleDeadlineMissedChange(e: React.ChangeEvent<HTMLInputElement>) {
     const checked = e.target.checked;
     setDeadlineMissed(checked);
+    if (editing) return;
     startDeadlineTransition(async () => {
-      await editDeadlineMissed(escalationId, checked);
+      const error = await editDeadlineMissed(escalationId, checked);
+      if (error) setDeadlineMissed(!checked);
     });
   }
 
