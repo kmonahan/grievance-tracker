@@ -57,6 +57,28 @@ describe("EscalationTimeline", () => {
     expect(screen.queryByText(/Due:/)).not.toBeInTheDocument();
   });
 
+  it("shows deadline missed indicator when deadline_missed is true and date_due is set", () => {
+    const esc = {
+      ...BASE_ESCALATION,
+      date_due: "2026-01-02",
+      deadline_missed: true,
+    };
+    render(<EscalationTimeline escalations={[esc]} />);
+    expect(screen.getByText("Deadline missed")).toBeInTheDocument();
+  });
+
+  it("does not show deadline missed indicator when deadline_missed is false", () => {
+    const esc = { ...BASE_ESCALATION, date_due: "2026-01-02" };
+    render(<EscalationTimeline escalations={[esc]} />);
+    expect(screen.queryByText("Deadline missed")).not.toBeInTheDocument();
+  });
+
+  it("does not show deadline missed indicator when there is no due date", () => {
+    const esc = { ...BASE_ESCALATION, deadline_missed: true };
+    render(<EscalationTimeline escalations={[esc]} />);
+    expect(screen.queryByText("Deadline missed")).not.toBeInTheDocument();
+  });
+
   it("renders multiple escalations in reverse chronological order", () => {
     const escalations: Escalation[] = [
       { ...BASE_ESCALATION, id: 1, date: "2025-12-01", status: "Scheduled" },
