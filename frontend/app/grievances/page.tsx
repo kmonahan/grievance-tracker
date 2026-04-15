@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { GrievanceCard } from "~/app/components/GrievanceCard";
 import { ShowClosedToggle } from "~/app/grievances/ShowClosedToggle";
+import { StepFilterView } from "~/app/grievances/StepFilterView";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
 
@@ -79,37 +79,11 @@ export default async function GrievancesPage({ searchParams }: PageProps) {
             </p>
           </div>
         ) : (
-          <ol className="space-y-3">
-            {openGrievances.map((grievance) => (
-              <li key={grievance.id}>
-                <GrievanceCard grievance={grievance} />
-              </li>
-            ))}
-          </ol>
-        )}
-
-        {/* Closed grievances */}
-        {showClosed && (
-          <section className="mt-10">
-            <h2 className="mb-4 font-subtitle text-lg font-semibold text-muted-foreground">
-              Closed ({closedGrievances.length})
-            </h2>
-            {closedGrievances.length > 0 ? (
-              <ol className="space-y-3">
-                {closedGrievances.map((grievance) => (
-                  <li key={grievance.id}>
-                    <GrievanceCard grievance={grievance} muted />
-                  </li>
-                ))}
-              </ol>
-            ) : (
-              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-10 text-center">
-                <p className="text-base text-muted-foreground">
-                  No closed grievances.
-                </p>
-              </div>
-            )}
-          </section>
+          <StepFilterView
+            openGrievances={openGrievances}
+            closedGrievances={closedGrievances}
+            showClosed={showClosed}
+          />
         )}
       </div>
     </main>

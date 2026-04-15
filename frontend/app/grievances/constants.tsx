@@ -72,7 +72,7 @@ export const STATE_SEQUENCE: StepStatus[] = [
     stepDisplay: "Step #3",
     statusEnum: "WAITING_ON_DECISION",
     statusDisplay: "Waiting on Decision",
-  }
+  },
 ];
 
 export const ALWAYS_AVAILABLE = [
