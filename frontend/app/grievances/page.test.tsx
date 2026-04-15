@@ -346,4 +346,37 @@ describe("GrievancesPage", () => {
     expect(screen.getByText("Closed (0)")).toBeInTheDocument();
     expect(screen.getByText("No closed grievances.")).toBeInTheDocument();
   });
+
+  describe("step filter", () => {
+    it("renders the step filter with an All button", async () => {
+      mockFetchWithGrievances([OPEN_GRIEVANCE]);
+      await renderPage();
+      expect(
+        screen.getByRole("button", { name: /^all$/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("renders step filter buttons for Step 1, Step 2, and Step 3", async () => {
+      mockFetchWithGrievances([OPEN_GRIEVANCE]);
+      await renderPage();
+      expect(
+        screen.getByRole("button", { name: /step 1/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /step 2/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /step 3/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("passes all grievances to the step filter view", async () => {
+      mockFetchWithGrievances([OPEN_GRIEVANCE, SCHEDULED_GRIEVANCE]);
+      await renderPage();
+      expect(screen.getByText("Unsafe Working Conditions")).toBeInTheDocument();
+      expect(
+        screen.getByText("Denial of Bereavement Leave"),
+      ).toBeInTheDocument();
+    });
+  });
 });
