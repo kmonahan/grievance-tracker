@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
 import Link from "next/link";
+import { getAccessToken } from "~/app/lib/auth";
 import { UserStatusToggle } from "./UserStatusToggle";
 
 type User = {
@@ -9,8 +9,7 @@ type User = {
 };
 
 export default async function UsersPage(): Promise<React.ReactElement> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
+  const token = await getAccessToken();
 
   const response = await fetch(`${process.env.BACKEND_URL}/users`, {
     headers: { Authorization: `Bearer ${token}` },

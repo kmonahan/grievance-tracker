@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { toggleUserStatus } from "./actions";
 
 export interface UserStatusToggleProps {
   userId: number;
@@ -16,14 +17,10 @@ export function UserStatusToggle({
   const router = useRouter();
 
   async function handleClick() {
-    const action = isActive ? "deactivate" : "reactivate";
-    await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL ?? process.env.BACKEND_URL}/users/${action}/${userId}`,
-      {
-        method: "PATCH",
-      },
-    );
-    router.refresh();
+    const { ok } = await toggleUserStatus(userId, isActive);
+    if (ok) {
+      router.refresh();
+    }
   }
 
   const isDisabled = isActive && isCurrentUser;

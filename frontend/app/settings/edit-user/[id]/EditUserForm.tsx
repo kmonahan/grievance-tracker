@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef } from "react";
 import Button from "~/app/components/ui/Button";
 import FormCard from "~/app/components/ui/FormCard";
 import FormField from "~/app/components/ui/FormField";
@@ -14,6 +14,19 @@ export default function EditUserForm({ user }: { user: User }) {
     errors: null,
     fields: {},
   });
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmRef = useRef<HTMLInputElement>(null);
+
+  function validatePasswords() {
+    const confirm = confirmRef.current;
+    const password = passwordRef.current;
+    if (!confirm || !password) return;
+    if (confirm.value !== password.value) {
+      confirm.setCustomValidity("Passwords do not match.");
+    } else {
+      confirm.setCustomValidity("");
+    }
+  }
 
   const fieldErrors: Record<string, string[]> = {};
   if (state.errors) {
@@ -47,6 +60,8 @@ export default function EditUserForm({ user }: { user: User }) {
         id="password"
         label="Password"
         type="password"
+        ref={passwordRef}
+        onChange={validatePasswords}
         defaultValue={state.fields.password}
         errors={fieldErrors.password}
       />
@@ -54,6 +69,8 @@ export default function EditUserForm({ user }: { user: User }) {
         id="confirm"
         label="Confirm password"
         type="password"
+        ref={confirmRef}
+        onChange={validatePasswords}
         defaultValue={state.fields.confirm}
         errors={fieldErrors.confirm}
       />

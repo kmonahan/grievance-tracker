@@ -9,8 +9,14 @@ jest.mock("next/headers", () => ({
   cookies: jest.fn(() => Promise.resolve({ get: mockCookiesGet })),
 }));
 
+const mockRefresh = jest.fn();
 jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(() => ({ push: jest.fn(), refresh: jest.fn() })),
+  useRouter: jest.fn(() => ({ push: jest.fn(), refresh: mockRefresh })),
+}));
+
+const mockToggleUserStatus = jest.fn();
+jest.mock("./actions", () => ({
+  toggleUserStatus: (...args: unknown[]) => mockToggleUserStatus(...args),
 }));
 
 const ACTIVE_USER = { id: 1, name: "Alice Smith", is_active: true };
@@ -32,6 +38,7 @@ beforeEach(() => {
   process.env.BACKEND_URL = "http://localhost:8000";
   jest.clearAllMocks();
   mockCookiesGet.mockReturnValue({ value: "test-access-token" });
+  mockToggleUserStatus.mockResolvedValue({ ok: true });
 });
 
 describe("UsersPage", () => {
@@ -112,18 +119,36 @@ describe("UserStatusToggle – active user", () => {
     ).toBeInTheDocument();
   });
 
-  it("sends a PATCH request to /users/deactivate/<id> when clicked", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
+  it("calls toggleUserStatus with userId and isActive=true when clicked", async () => {
     render(
       <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
     );
     fireEvent.click(screen.getByRole("button", { name: /deactivate/i }));
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        "http://localhost:8000/users/deactivate/1",
-        expect.objectContaining({ method: "PATCH" }),
-      );
+      expect(mockToggleUserStatus).toHaveBeenCalledWith(1, true);
     });
+  });
+
+  it("refreshes the router after a successful deactivate", async () => {
+    render(
+      <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /deactivate/i }));
+    await waitFor(() => {
+      expect(mockRefresh).toHaveBeenCalled();
+    });
+  });
+
+  it("does not refresh the router when deactivate fails", async () => {
+    mockToggleUserStatus.mockResolvedValueOnce({ ok: false });
+    render(
+      <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /deactivate/i }));
+    await waitFor(() => {
+      expect(mockToggleUserStatus).toHaveBeenCalled();
+    });
+    expect(mockRefresh).not.toHaveBeenCalled();
   });
 
   it("disables the 'Deactivate' button when the user is the current user", () => {
@@ -144,17 +169,13 @@ describe("UserStatusToggle – inactive user", () => {
     ).toBeInTheDocument();
   });
 
-  it("sends a PATCH request to /users/reactivate/<id> when clicked", async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({ ok: true });
+  it("calls toggleUserStatus with userId and isActive=false when clicked", async () => {
     render(
       <UserStatusToggle userId={2} isActive={false} isCurrentUser={false} />,
     );
     fireEvent.click(screen.getByRole("button", { name: /reactivate/i }));
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
-        "http://localhost:8000/users/reactivate/2",
-        expect.objectContaining({ method: "PATCH" }),
-      );
+      expect(mockToggleUserStatus).toHaveBeenCalledWith(2, false);
     });
   });
 

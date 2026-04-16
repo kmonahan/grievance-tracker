@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { getAccessToken } from "~/app/lib/auth";
 import EditUserForm from "./EditUserForm";
 
 export default async function EditUserPage({
@@ -8,14 +8,13 @@ export default async function EditUserPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
+  const token = await getAccessToken();
 
   const response = await fetch(`${process.env.BACKEND_URL}/users/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!response?.ok) {
+  if (!response.ok) {
     notFound();
   }
 

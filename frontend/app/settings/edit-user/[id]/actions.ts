@@ -1,8 +1,8 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getAccessToken } from "~/app/lib/auth";
 
 export type EditUserState = {
   error: string | null;
@@ -15,8 +15,7 @@ export async function editUser(
   _prevState: EditUserState,
   formData: FormData,
 ): Promise<EditUserState> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
+  const token = await getAccessToken();
 
   const response = await fetch(`${process.env.BACKEND_URL}/users/edit/${id}`, {
     method: "PATCH",
