@@ -179,6 +179,21 @@ class TestUser:
             assert token.is_active == False
 
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_user(self, _mock_verify_jwt, client):
+        res = client.get("/users/1")
+        assert res.status_code == 200
+        assert res.json == {
+            'id': 1,
+            'name': 'Walter Reuther',
+            'is_active': True
+        }
+
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_invalid_user(self, _mock_verify_jwt, client):
+        res = client.get("/users/999")
+        assert res.status_code == 404
+
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_edit_user(self, _mock_verify_jwt, client, set_passwords):
         res = client.patch('/users/edit/1', data={
             'email': 'wreuther@example.com',

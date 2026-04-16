@@ -83,6 +83,12 @@ def refresh():
     _store_token(access_token, current_user.id)
     return jsonify(access_token=access_token)
 
+@bp.route('/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get(user_id):
+    user = db.get_or_404(User, user_id)
+    return jsonify(user.to_dict()), 200
+
 @bp.route('/edit/<int:user_id>', methods=['PATCH'])
 @jwt_required()
 def edit(user_id):
