@@ -1,4 +1,21 @@
-import type { OptionStyle, StepStatus } from "~/app/grievances/types";
+import type {
+  Grievance,
+  OptionStyle,
+  StepStatus,
+} from "~/app/grievances/types";
+
+export const CLOSED_STATUSES = new Set(["Resolved", "Denied", "Withdrawn"]);
+
+export function isClosed(grievance: Grievance): boolean {
+  const latest = grievance.escalations.at(-1);
+  return !!latest && CLOSED_STATUSES.has(latest.status);
+}
+
+export const FILTER_STEPS = [
+  { label: "Step 1", value: "Step #1" },
+  { label: "Step 2", value: "Step #2" },
+  { label: "Step 3", value: "Step #3" },
+];
 
 export const STEP_DISPLAY_TO_ENUM: Record<string, string> = {
   "Step #1": "ONE",
