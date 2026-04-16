@@ -39,5 +39,5 @@ export async function editUser(
   }
 
   updateTag("users");
-  redirect("/settings");
+  redirect("/settings/users");
 }
