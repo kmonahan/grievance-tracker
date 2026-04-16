@@ -18,3 +18,9 @@ class User(db.Model):
             'name': self.name,
             'is_active': self.is_active
         }
+
+    def to_dict_full(self):
+        return {
+            **self.to_dict(),
+            'email': self.email
+        }

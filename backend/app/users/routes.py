@@ -87,7 +87,7 @@ def refresh():
 @jwt_required()
 def get(user_id):
     user = db.get_or_404(User, user_id)
-    return jsonify(user.to_dict()), 200
+    return jsonify(user.to_dict_full()), 200
 
 @bp.route('/edit/<int:user_id>', methods=['PATCH'])
 @jwt_required()

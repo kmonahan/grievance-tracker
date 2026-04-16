@@ -12,8 +12,13 @@ from users.model import User
 class TestUser:
     @pytest.mark.usefixtures("app")
     def test_to_json(self):
-        user = User(id=1, name="A. Phillip Randolph", is_active=True)
+        user = User(id=1, name="A. Phillip Randolph", is_active=True, email='aprandolph@example.com')
         assert user.to_dict() == {'id': 1, 'name': 'A. Phillip Randolph', 'is_active': True}
+
+    @pytest.mark.usefixtures("app")
+    def test_to_json_full(self):
+        user = User(id=1, name="A. Phillip Randolph", is_active=True, email='aprandolph@example.com')
+        assert user.to_dict_full() == {'id': 1, 'name': 'A. Phillip Randolph', 'is_active': True, 'email': 'aprandolph@example.com'}
 
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_get_all(self, _mock_verify_jwt, client):
@@ -185,6 +190,7 @@ class TestUser:
         assert res.json == {
             'id': 1,
             'name': 'Walter Reuther',
+            'email': 'wreuther@example.com',
             'is_active': True
         }
 
