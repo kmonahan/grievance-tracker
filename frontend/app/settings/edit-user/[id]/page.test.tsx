@@ -194,8 +194,9 @@ describe("EditUserPage", () => {
 
   it("calls notFound when the user is not found", async () => {
     mockFetchNotFound();
-    const jsx = await EditUserPage({ params: Promise.resolve({ id: "999" }) });
-    await expect(render(jsx)).rejects.toThrow("NEXT_NOT_FOUND");
+    await expect(
+      EditUserPage({ params: Promise.resolve({ id: "999" }) }),
+    ).rejects.toThrow("NEXT_NOT_FOUND");
     expect(mockNotFound).toHaveBeenCalled();
   });
 
