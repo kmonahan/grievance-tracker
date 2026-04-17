@@ -37,7 +37,7 @@ class TestEscalation:
 
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_mark_deadline_as_missed(self, _mock_verify_jwt, client, app):
-        res = client.post("/escalations/edit/1", data={'deadline_missed': 'missed'})
+        res = client.post("/escalations/edit/1", data={'deadline_missed': 'true'})
         assert res.status_code == 200
         with app.app_context():
             escalation_from_db = Escalation.query.filter_by(id=1).first()
