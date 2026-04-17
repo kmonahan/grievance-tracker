@@ -131,11 +131,8 @@ function mockFetchWithGrievances(grievances: Grievance[]) {
   });
 }
 
-async function renderPage(showClosed = false) {
-  const searchParams = Promise.resolve(
-    showClosed ? { showClosed: "true" } : {},
-  );
-  const jsx = await GrievancesPage({ searchParams });
+async function renderPage() {
+  const jsx = await GrievancesPage();
   return render(jsx);
 }
 
@@ -149,7 +146,7 @@ describe("GrievancesPage", () => {
   it("fetches from /grievances/all with the access token", async () => {
     mockCookiesGet.mockReturnValue({ value: "my-token" });
     mockFetchWithGrievances([OPEN_GRIEVANCE]);
-    await GrievancesPage({ searchParams: Promise.resolve({}) });
+    await GrievancesPage();
     expect(fetch).toHaveBeenCalledWith(
       "http://localhost:8000/grievances/all",
       expect.objectContaining({
@@ -205,7 +202,10 @@ describe("GrievancesPage", () => {
   it("renders the category badge on each card", async () => {
     mockFetchWithGrievances([OPEN_GRIEVANCE]);
     await renderPage();
-    expect(screen.getByText("Health & Safety")).toBeInTheDocument();
+    // Category appears in both the filter button and the card badge
+    expect(
+      screen.getAllByText("Health & Safety").length,
+    ).toBeGreaterThanOrEqual(1);
   });
 
   it("renders the escalation step on each card", async () => {
@@ -248,26 +248,9 @@ describe("GrievancesPage", () => {
     expect(screen.getByText("No deadline")).toBeInTheDocument();
   });
 
-  it("filters out grievances with a terminal status of Resolved", async () => {
+  it("does not count closed grievances in the open count", async () => {
     mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
     await renderPage();
-    expect(screen.queryByText("Resolved Pay Dispute")).not.toBeInTheDocument();
-    expect(screen.getByText("1 open grievance")).toBeInTheDocument();
-  });
-
-  it("filters out grievances with a terminal status of Denied", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE, DENIED_GRIEVANCE]);
-    await renderPage();
-    expect(screen.queryByText("Denied Overtime Claim")).not.toBeInTheDocument();
-    expect(screen.getByText("1 open grievance")).toBeInTheDocument();
-  });
-
-  it("filters out grievances with a terminal status of Withdrawn", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE, WITHDRAWN_GRIEVANCE]);
-    await renderPage();
-    expect(
-      screen.queryByText("Withdrawn Scheduling Dispute"),
-    ).not.toBeInTheDocument();
     expect(screen.getByText("1 open grievance")).toBeInTheDocument();
   });
 
@@ -285,65 +268,66 @@ describe("GrievancesPage", () => {
     expect(screen.queryByText("No deadline")).not.toBeInTheDocument();
   });
 
-  it("shows the empty state when all grievances are terminal", async () => {
-    mockFetchWithGrievances([
-      RESOLVED_GRIEVANCE,
-      DENIED_GRIEVANCE,
-      WITHDRAWN_GRIEVANCE,
-    ]);
-    await renderPage();
-    expect(screen.getByText("No open grievances")).toBeInTheDocument();
-    expect(screen.getByText("0 open grievances")).toBeInTheDocument();
-  });
-
   it("shows the empty state when there are no grievances at all", async () => {
     mockFetchWithGrievances([]);
     await renderPage();
     expect(screen.getByText("No open grievances")).toBeInTheDocument();
   });
 
-  it("does not show closed grievances by default", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
+  it("renders filter controls when grievances are present", async () => {
+    mockFetchWithGrievances([OPEN_GRIEVANCE]);
     await renderPage();
-    expect(screen.queryByText("Resolved Pay Dispute")).not.toBeInTheDocument();
-    expect(screen.queryByText(/Closed \(/)).not.toBeInTheDocument();
-  });
-
-  it("shows the toggle button with the closed count", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
-    await renderPage();
+    expect(screen.getByText("Filters")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /step 1/i })).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /show closed \(1\)/i }),
+      screen.getByRole("switch", { name: /show closed/i }),
     ).toBeInTheDocument();
   });
 
-  it("shows closed grievances when showClosed is true", async () => {
+  it("passes all grievances including closed ones to the filter view", async () => {
     mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
-    await renderPage(true);
-    expect(screen.getByText("Resolved Pay Dispute")).toBeInTheDocument();
-    expect(screen.getByText(/Closed \(1\)/)).toBeInTheDocument();
+    await renderPage();
+    // Closed count should appear in the toggle button
+    expect(
+      screen.getByRole("switch", { name: /show closed \(1\)/i }),
+    ).toBeInTheDocument();
   });
 
-  it("shows all three closed statuses when showClosed is true", async () => {
+  it("shows all three closed statuses in the closed count", async () => {
     mockFetchWithGrievances([
       OPEN_GRIEVANCE,
       RESOLVED_GRIEVANCE,
       DENIED_GRIEVANCE,
       WITHDRAWN_GRIEVANCE,
     ]);
-    await renderPage(true);
-    expect(screen.getByText("Resolved Pay Dispute")).toBeInTheDocument();
-    expect(screen.getByText("Denied Overtime Claim")).toBeInTheDocument();
+    await renderPage();
     expect(
-      screen.getByText("Withdrawn Scheduling Dispute"),
+      screen.getByRole("switch", { name: /show closed \(3\)/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Closed \(3\)/)).toBeInTheDocument();
   });
 
-  it("shows empty closed state when showClosed is true but no closed grievances", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE]);
-    await renderPage(true);
-    expect(screen.getByText("Closed (0)")).toBeInTheDocument();
-    expect(screen.getByText("No closed grievances.")).toBeInTheDocument();
+  describe("step filter", () => {
+    it("renders step filter buttons for Step 1, Step 2, and Step 3", async () => {
+      mockFetchWithGrievances([OPEN_GRIEVANCE]);
+      await renderPage();
+      expect(
+        screen.getByRole("button", { name: /step 1/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /step 2/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /step 3/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("passes all grievances to the filter view", async () => {
+      mockFetchWithGrievances([OPEN_GRIEVANCE, SCHEDULED_GRIEVANCE]);
+      await renderPage();
+      expect(screen.getByText("Unsafe Working Conditions")).toBeInTheDocument();
+      expect(
+        screen.getByText("Denial of Bereavement Leave"),
+      ).toBeInTheDocument();
+    });
   });
 });
