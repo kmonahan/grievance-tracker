@@ -91,6 +91,7 @@ export default async function EditGrievancePage({
       }}
       cancelHref={`/grievances/${id}`}
       title="Edit Grievance"
+      grievanceId={id}
     />
   );
 }
