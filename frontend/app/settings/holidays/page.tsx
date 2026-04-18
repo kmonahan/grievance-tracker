@@ -1,13 +1,13 @@
-import {getAccessToken} from "~/app/lib/auth";
+import { getAccessToken } from "~/app/lib/auth";
 import AddHolidayButton from "./AddHolidayButton";
-import type {Holiday} from "./HolidayRow";
+import type { Holiday } from "./HolidayRow";
 import HolidayRow from "./HolidayRow";
 
 export default async function HolidaysPage(): Promise<React.ReactElement> {
   const token = await getAccessToken();
 
   const response = await fetch(`${process.env.BACKEND_URL}/holidays`, {
-    headers: {Authorization: `Bearer ${token}`},
+    headers: { Authorization: `Bearer ${token}` },
   });
 
   const holidays: Holiday[] = await response.json();
@@ -26,11 +26,11 @@ export default async function HolidaysPage(): Promise<React.ReactElement> {
         ) : (
           <ul className="space-y-3">
             {holidays.map((holiday) => (
-              <HolidayRow key={holiday.id} holiday={holiday}/>
+              <HolidayRow key={holiday.id} holiday={holiday} />
             ))}
           </ul>
         )}
-        <AddHolidayButton/>
+        <AddHolidayButton />
       </div>
     </main>
   );

@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/grievances", label: "Grievances" },
   { href: "/grievances/create", label: "Add Grievance" },
+  { href: "/settings", label: "Settings" },
 ];
 
 const linkClassName =
