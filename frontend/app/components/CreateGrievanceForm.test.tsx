@@ -3,6 +3,10 @@ import { useActionState } from "react";
 import type { PointPerson } from "~/app/grievances/create/page";
 import CreateGrievanceForm from "./CreateGrievanceForm";
 
+jest.mock("~/app/grievances/deleteAction", () => ({
+  deleteGrievance: jest.fn().mockResolvedValue(undefined),
+}));
+
 jest.mock("next/link", () => {
   return function MockLink({
     href,
@@ -255,9 +259,11 @@ describe("CreateGrievanceForm", () => {
       />,
     );
     fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
-    fireEvent.click(
-      screen.getByRole("button", { name: "Close", hidden: true }),
-    );
+    const closeButtons = screen.getAllByRole("button", {
+      name: "Close",
+      hidden: true,
+    });
+    fireEvent.click(closeButtons[closeButtons.length - 1]);
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
   });
 
@@ -834,6 +840,117 @@ describe("CreateGrievanceForm", () => {
           screen.getByRole("button", { name: "Submit" }),
         ).not.toBeDisabled();
       });
+    });
+  });
+
+  describe("delete grievance", () => {
+    it("does not render a delete button when grievanceId is not provided", () => {
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(
+        screen.queryByRole("button", { name: /delete/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("renders a delete button when grievanceId is provided", () => {
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+          grievanceId="42"
+        />,
+      );
+      expect(
+        screen.getByRole("button", { name: /delete/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("opens a confirmation dialog when the delete button is clicked", () => {
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+          grievanceId="42"
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+      expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
+    });
+
+    it("does not open a dialog before the delete button is clicked", () => {
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+          grievanceId="42"
+        />,
+      );
+      expect(HTMLDialogElement.prototype.showModal).not.toHaveBeenCalled();
+    });
+
+    it("closes the confirmation dialog without deleting when cancel is clicked", () => {
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+          grievanceId="42"
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+      fireEvent.click(
+        screen.getByRole("button", { name: /cancel/i, hidden: true }),
+      );
+      expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
+    });
+
+    it("does not call deleteGrievance when cancel is clicked", async () => {
+      const { deleteGrievance } = await import("~/app/grievances/deleteAction");
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+          grievanceId="42"
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+      fireEvent.click(
+        screen.getByRole("button", { name: /cancel/i, hidden: true }),
+      );
+      expect(deleteGrievance).not.toHaveBeenCalled();
+    });
+
+    it("calls deleteGrievance with the grievanceId when confirmed", async () => {
+      const { deleteGrievance } = await import("~/app/grievances/deleteAction");
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+          grievanceId="42"
+        />,
+      );
+      fireEvent.click(screen.getByRole("button", { name: /delete/i }));
+      fireEvent.click(
+        screen.getByRole("button", { name: /confirm/i, hidden: true }),
+      );
+      expect(deleteGrievance).toHaveBeenCalledWith("42");
     });
   });
 });

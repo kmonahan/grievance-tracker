@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { addCategory } from "~/app/categories/actions";
 import Button from "~/app/components/ui/Button";
 import FormCard from "~/app/components/ui/FormCard";
@@ -9,6 +9,7 @@ import FormField from "~/app/components/ui/FormField";
 import FormSelect from "~/app/components/ui/FormSelect";
 import Modal from "~/app/components/ui/Modal";
 import { type AddGrievanceState, addGrievance } from "~/app/grievances/actions";
+import { deleteGrievance } from "~/app/grievances/deleteAction";
 
 type Category = {
   id: number;
@@ -36,6 +37,7 @@ export default function CreateGrievanceForm({
   initialValues,
   cancelHref,
   title = "Create New Grievance",
+  grievanceId,
 }: {
   categories: Category[];
   pointPersons: PointPerson[];
@@ -51,12 +53,15 @@ export default function CreateGrievanceForm({
   };
   cancelHref?: string;
   title?: string;
+  grievanceId?: string;
 }) {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState(
     initialValues?.category_id ?? "",
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const [grievanceState, grievanceAction] = useActionState<
     AddGrievanceState,
@@ -179,7 +184,61 @@ export default function CreateGrievanceForm({
             Cancel
           </Link>
         )}
+        {grievanceId && (
+          <button
+            type="button"
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="inline-flex items-center justify-center w-full h-11 rounded-md border border-destructive px-4 py-2 font-subtitle font-semibold text-lg text-destructive hover:bg-destructive/10 transition-colors"
+          >
+            Delete
+          </button>
+        )}
       </FormCard>
+      <Modal
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
+        <div className="flex flex-col gap-6 py-6">
+          <div className="px-6 pb-6 space-y-1">
+            <h2 className="font-semibold font-subtitle text-3xl text-center">
+              Delete Grievance
+            </h2>
+            <p className="text-center text-muted-foreground">
+              Are you sure you want to delete this grievance? This action cannot
+              be undone.
+            </p>
+            {deleteError && (
+              <p className="text-destructive text-lg text-center">
+                {deleteError}
+              </p>
+            )}
+          </div>
+          <div className="px-6 flex gap-4">
+            <button
+              type="button"
+              onClick={() => setIsDeleteModalOpen(false)}
+              className="flex-1 h-11 rounded-md border border-input px-4 py-2 font-subtitle font-semibold text-lg text-foreground hover:bg-muted transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!grievanceId) return;
+                setDeleteError(null);
+                startTransition(() => {
+                  deleteGrievance(grievanceId).catch(() => {
+                    setDeleteError("Failed to delete grievance.");
+                  });
+                });
+              }}
+              className="flex-1 h-11 rounded-md bg-destructive px-4 py-2 font-subtitle font-semibold text-lg text-neutral-0 hover:bg-destructive/90 transition-colors"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      </Modal>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="flex flex-col gap-6 py-6">
           <div className="px-6 pb-6 space-y-1">
