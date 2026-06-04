@@ -47,18 +47,13 @@ export default async function UsersPage(): Promise<React.ReactElement> {
                   aria-hidden="true"
                 />
                 <div className="min-w-0">
-                  {user.is_active ? (
-                    <Link
-                      href={`/settings/edit-user/${user.id}`}
-                      className="font-subtitle font-semibold text-primary hover:text-accent transition-colors truncate block"
-                    >
-                      {user.name}
-                    </Link>
-                  ) : (
-                    <span className="font-subtitle font-semibold text-muted-foreground truncate block">
-                      {user.name}
-                    </span>
-                  )}
+                  <span
+                    className={`font-subtitle font-semibold truncate block ${
+                      user.is_active ? "text-primary" : "text-muted-foreground"
+                    }`}
+                  >
+                    {user.name}
+                  </span>
                   <span
                     className={`text-sm font-body ${
                       user.is_active
@@ -71,11 +66,19 @@ export default async function UsersPage(): Promise<React.ReactElement> {
                 </div>
               </div>
 
-              <UserStatusToggle
-                userId={user.id}
-                isActive={user.is_active}
-                isCurrentUser={user.id === currentUserId}
-              />
+              <div className="flex items-center gap-2 shrink-0">
+                <Link
+                  href={`/settings/edit-user/${user.id}`}
+                  className="rounded-lg px-4 py-2 text-sm font-subtitle font-semibold border-2 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground transition-all"
+                >
+                  Edit
+                </Link>
+                <UserStatusToggle
+                  userId={user.id}
+                  isActive={user.is_active}
+                  isCurrentUser={user.id === currentUserId}
+                />
+              </div>
             </li>
           ))}
         </ul>
