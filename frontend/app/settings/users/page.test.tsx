@@ -79,14 +79,15 @@ describe("UsersPage", () => {
     expect(screen.getByText(/inactive/i)).toBeInTheDocument();
   });
 
-  it("links active user's name to the edit form", async () => {
+  it("does not link the active user's name to the edit form", async () => {
     mockFetchUsers([ACTIVE_USER]);
     await renderPage();
-    const link = screen.getByRole("link", { name: "Alice Smith" });
-    expect(link).toHaveAttribute("href", "/settings/edit-user/1");
+    const nameEl = screen.getByText("Alice Smith");
+    expect(nameEl.tagName.toLowerCase()).not.toBe("a");
+    expect(nameEl.closest("a")).toBeNull();
   });
 
-  it("does not link inactive user's name to the edit form", async () => {
+  it("does not link the inactive user's name to the edit form", async () => {
     mockFetchUsers([INACTIVE_USER]);
     await renderPage();
     const nameEl = screen.getByText("Bob Jones");
@@ -94,10 +95,30 @@ describe("UsersPage", () => {
     expect(nameEl.closest("a")).toBeNull();
   });
 
+  it("renders an Edit button for each user", async () => {
+    mockFetchUsers([ACTIVE_USER, INACTIVE_USER]);
+    await renderPage();
+    const editLinks = screen.getAllByRole("link", { name: /edit/i });
+    expect(editLinks).toHaveLength(2);
+  });
+
+  it("Edit button for active user links to /settings/edit-user/[id]", async () => {
+    mockFetchUsers([ACTIVE_USER]);
+    await renderPage();
+    const editLink = screen.getByRole("link", { name: /edit/i });
+    expect(editLink).toHaveAttribute("href", "/settings/edit-user/1");
+  });
+
+  it("Edit button for inactive user links to /settings/edit-user/[id]", async () => {
+    mockFetchUsers([INACTIVE_USER]);
+    await renderPage();
+    const editLink = screen.getByRole("link", { name: /edit/i });
+    expect(editLink).toHaveAttribute("href", "/settings/edit-user/2");
+  });
+
   it("renders a toggle for each user", async () => {
     mockFetchUsers([ACTIVE_USER, INACTIVE_USER]);
     await renderPage();
-    // Each user should have a toggle button
     const toggleButtons = screen.getAllByRole("button");
     expect(toggleButtons.length).toBeGreaterThanOrEqual(2);
   });
