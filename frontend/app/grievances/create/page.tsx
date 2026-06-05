@@ -56,7 +56,7 @@ export default async function CreateGrievance() {
   return (
     <CreateGrievanceForm
       categories={categories}
-      pointPersons={pointPersons ?? []}
+      pointPersons={(pointPersons ?? []).filter((p) => p.id !== 1)}
       defaultPointPersonId={currentUser?.id ?? null}
       pointPersonsError={
         pointPersons === null ? "Failed to load user list." : null

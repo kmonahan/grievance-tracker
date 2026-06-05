@@ -13,8 +13,10 @@ export function UserStatusToggle({
   userId,
   isActive,
   isCurrentUser,
-}: UserStatusToggleProps): React.ReactElement {
+}: UserStatusToggleProps): React.ReactElement | null {
   const router = useRouter();
+
+  if (userId === 1) return null;
 
   async function handleClick() {
     const { ok } = await toggleUserStatus(userId, isActive);

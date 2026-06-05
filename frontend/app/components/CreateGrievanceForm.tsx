@@ -167,11 +167,13 @@ export default function CreateGrievanceForm({
           errors={fieldErrors?.point_person_id}
         >
           <option value=""></option>
-          {pointPersons.map((person) => (
-            <option key={person.id} value={person.id}>
-              {person.name}
-            </option>
-          ))}
+          {pointPersons
+            .filter((person) => person.id !== 1)
+            .map((person) => (
+              <option key={person.id} value={person.id}>
+                {person.name}
+              </option>
+            ))}
         </FormSelect>
         <Button type="submit" disabled={isDisabled}>
           Submit
