@@ -60,8 +60,9 @@ function buildOptions(grievance: Grievance): StepStatus[] {
     }
   }
 
-  // Previous state (second-to-last escalation) goes last
-  if (grievance.escalations.length >= 2) {
+  // Previous state (second-to-last escalation) goes last, but only when the
+  // current state is part of the normal progression (not a terminal status).
+  if (currentIdx !== -1 && grievance.escalations.length >= 2) {
     options.push(
       toStepStatus(grievance.escalations[grievance.escalations.length - 2]),
     );
