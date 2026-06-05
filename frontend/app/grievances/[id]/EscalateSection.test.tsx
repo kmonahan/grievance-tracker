@@ -229,6 +229,80 @@ describe("EscalateSection – always-available options", () => {
     const fieldset = screen.getByRole("group", { name: /select new status/i });
     expect(within(fieldset).queryByText("Withdrawn")).not.toBeInTheDocument();
   });
+
+  it("does not show Denied as an option when current status is Denied", () => {
+    const grievance = makeGrievance([{ step: "Step #1", status: "Denied" }]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).queryByText("Denied")).not.toBeInTheDocument();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Terminal-status escalation options
+// ---------------------------------------------------------------------------
+
+describe("EscalateSection – terminal status escalation options", () => {
+  it("shows Withdrawn, Resolved, and In Abeyance but not Denied when current status is Denied (single escalation)", () => {
+    const grievance = makeGrievance([{ step: "Step #1", status: "Denied" }]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).queryByText("Denied")).not.toBeInTheDocument();
+    expect(within(fieldset).getByText("Withdrawn")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Resolved")).toBeInTheDocument();
+    expect(within(fieldset).getByText("In Abeyance")).toBeInTheDocument();
+  });
+
+  it("does not show Denied as an option when current status is Denied with a prior escalation", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "Denied" },
+    ]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).queryByText("Denied")).not.toBeInTheDocument();
+    expect(within(fieldset).getByText("Withdrawn")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Resolved")).toBeInTheDocument();
+    expect(within(fieldset).getByText("In Abeyance")).toBeInTheDocument();
+  });
+
+  it("shows Withdrawn, Denied, and In Abeyance but not Resolved when current status is Resolved", () => {
+    const grievance = makeGrievance([{ step: "Step #1", status: "Resolved" }]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).queryByText("Resolved")).not.toBeInTheDocument();
+    expect(within(fieldset).getByText("Withdrawn")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Denied")).toBeInTheDocument();
+    expect(within(fieldset).getByText("In Abeyance")).toBeInTheDocument();
+  });
+
+  it("shows Resolved, Denied, and In Abeyance but not Withdrawn when current status is Withdrawn", () => {
+    const grievance = makeGrievance([{ step: "Step #1", status: "Withdrawn" }]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).queryByText("Withdrawn")).not.toBeInTheDocument();
+    expect(within(fieldset).getByText("Resolved")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Denied")).toBeInTheDocument();
+    expect(within(fieldset).getByText("In Abeyance")).toBeInTheDocument();
+  });
+
+  it("shows Resolved, Denied, and Withdrawn but not In Abeyance when current status is In Abeyance", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "In Abeyance" },
+    ]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).queryByText("In Abeyance")).not.toBeInTheDocument();
+    expect(within(fieldset).getByText("Resolved")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Denied")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Withdrawn")).toBeInTheDocument();
+  });
 });
 
 // ---------------------------------------------------------------------------
