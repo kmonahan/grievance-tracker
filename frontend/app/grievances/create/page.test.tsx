@@ -51,11 +51,11 @@ const mockCategories = [
 ];
 
 const mockPointPersons = [
-  { id: 1, name: "Walter Reuther", isActive: true },
-  { id: 2, name: "Cesar Chavez", isActive: true },
+  { id: 3, name: "Walter Reuther", isActive: true },
+  { id: 2, name: "Dolores Huerta", isActive: true },
 ];
 
-const mockCurrentUser = { id: 2, name: "Cesar Chavez", isActive: true };
+const mockCurrentUser = { id: 2, name: "Dolores Huerta", isActive: true };
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -171,7 +171,7 @@ describe("CreateGrievance page - Point Persons", () => {
   it("passes point persons to the form", async () => {
     render(await CreateGrievance());
     expect(screen.getByText("Walter Reuther")).toBeInTheDocument();
-    expect(screen.getByText("Cesar Chavez")).toBeInTheDocument();
+    expect(screen.getByText("Dolores Huerta")).toBeInTheDocument();
   });
 
   it("fetches the current user from the /users/me endpoint", async () => {
@@ -237,6 +237,49 @@ describe("CreateGrievance page - Point Persons", () => {
     });
     render(await CreateGrievance());
     expect(screen.queryByText("Walter Reuther")).not.toBeInTheDocument();
-    expect(screen.queryByText("Cesar Chavez")).not.toBeInTheDocument();
+    expect(screen.queryByText("Dolores Huerta")).not.toBeInTheDocument();
+  });
+});
+
+describe("CreateGrievance page – administrator filtering", () => {
+  const mockAdmin = { id: 1, name: "Administrator", isActive: true };
+  const mockNonAdminUsers = [
+    { id: 2, name: "Walter Reuther", isActive: true },
+    { id: 3, name: "Dolores Huerta", isActive: true },
+  ];
+
+  beforeEach(() => {
+    global.fetch = jest.fn().mockImplementation((url: string) => {
+      if (url.includes("/users/active")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              users: [mockAdmin, ...mockNonAdminUsers],
+            }),
+        });
+      }
+      if (url.includes("/users/me")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockCurrentUser),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ categories: mockCategories }),
+      });
+    });
+  });
+
+  it("does not pass the administrator (id=1) as a point person to the form", async () => {
+    render(await CreateGrievance());
+    expect(screen.queryByText("Administrator")).not.toBeInTheDocument();
+  });
+
+  it("still passes non-administrator users as point persons when admin is in the response", async () => {
+    render(await CreateGrievance());
+    expect(screen.getByText("Walter Reuther")).toBeInTheDocument();
+    expect(screen.getByText("Dolores Huerta")).toBeInTheDocument();
   });
 });

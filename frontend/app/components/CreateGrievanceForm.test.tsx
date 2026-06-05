@@ -46,9 +46,9 @@ const mockCategories = [
 ];
 
 const mockPointPersonsObjects: PointPerson[] = [
-  { id: 1, name: "Walter Reuther", isActive: true },
-  { id: 2, name: "Cesar Chavez", isActive: true },
-  { id: 3, name: "Clara Lemlich", isActive: true },
+  { id: 2, name: "Walter Reuther", isActive: true },
+  { id: 3, name: "Dolores Huerta", isActive: true },
+  { id: 4, name: "Clara Lemlich", isActive: true },
 ];
 
 const grievanceInitialState: {
@@ -355,7 +355,7 @@ describe("CreateGrievanceForm", () => {
         screen.getByRole("option", { name: "Walter Reuther" }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("option", { name: "Cesar Chavez" }),
+        screen.getByRole("option", { name: "Dolores Huerta" }),
       ).toBeInTheDocument();
       expect(
         screen.getByRole("option", { name: "Clara Lemlich" }),
@@ -386,6 +386,49 @@ describe("CreateGrievanceForm", () => {
         />,
       );
       expect(screen.getByLabelText("Point Person")).toHaveValue("");
+    });
+
+    it("does not render the administrator (id=1) as a Point Person option", () => {
+      const pointPersonsWithAdmin: PointPerson[] = [
+        { id: 1, name: "Administrator", isActive: true },
+        { id: 2, name: "Walter Reuther", isActive: true },
+        { id: 3, name: "Dolores Huerta", isActive: true },
+      ];
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={pointPersonsWithAdmin}
+          defaultPointPersonId={null}
+          pointPersonsError={null}
+          userId={2}
+        />,
+      );
+      expect(
+        screen.queryByRole("option", { name: "Administrator" }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("still renders non-administrator users as Point Person options when admin is in the list", () => {
+      const pointPersonsWithAdmin: PointPerson[] = [
+        { id: 1, name: "Administrator", isActive: true },
+        { id: 2, name: "Walter Reuther", isActive: true },
+        { id: 3, name: "Dolores Huerta", isActive: true },
+      ];
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={pointPersonsWithAdmin}
+          defaultPointPersonId={null}
+          pointPersonsError={null}
+          userId={2}
+        />,
+      );
+      expect(
+        screen.getByRole("option", { name: "Walter Reuther" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Dolores Huerta" }),
+      ).toBeInTheDocument();
     });
   });
 

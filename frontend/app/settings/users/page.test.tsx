@@ -19,7 +19,7 @@ jest.mock("./actions", () => ({
   toggleUserStatus: (...args: unknown[]) => mockToggleUserStatus(...args),
 }));
 
-const ACTIVE_USER = { id: 1, name: "Alice Smith", is_active: true };
+const ACTIVE_USER = { id: 3, name: "Alice Smith", is_active: true };
 const INACTIVE_USER = { id: 2, name: "Bob Jones", is_active: false };
 
 function mockFetchUsers(users: (typeof ACTIVE_USER)[]) {
@@ -106,7 +106,7 @@ describe("UsersPage", () => {
     mockFetchUsers([ACTIVE_USER]);
     await renderPage();
     const editLink = screen.getByRole("link", { name: /edit/i });
-    expect(editLink).toHaveAttribute("href", "/settings/edit-user/1");
+    expect(editLink).toHaveAttribute("href", "/settings/edit-user/3");
   });
 
   it("Edit button for inactive user links to /settings/edit-user/[id]", async () => {
@@ -130,10 +130,55 @@ describe("UsersPage", () => {
   });
 });
 
+describe("UsersPage – administrator account (id=1)", () => {
+  it("does not render a Deactivate button for the administrator", async () => {
+    const ADMIN_USER = { id: 1, name: "Administrator", is_active: true };
+    mockFetchUsers([ADMIN_USER]);
+    await renderPage();
+    expect(
+      screen.queryByRole("button", { name: /deactivate/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders a Deactivate button for a non-administrator active user", async () => {
+    const REGULAR_USER = { id: 2, name: "Alice Smith", is_active: true };
+    mockFetchUsers([REGULAR_USER]);
+    await renderPage();
+    expect(
+      screen.getByRole("button", { name: /deactivate/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("still renders the Edit button for the administrator", async () => {
+    const ADMIN_USER = { id: 1, name: "Administrator", is_active: true };
+    mockFetchUsers([ADMIN_USER]);
+    await renderPage();
+    expect(screen.getByRole("link", { name: /edit/i })).toBeInTheDocument();
+  });
+});
+
+describe("UserStatusToggle – administrator account (id=1)", () => {
+  it("renders nothing for the administrator (userId=1)", () => {
+    const { container } = render(
+      <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
+    );
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("still renders for a non-administrator user (userId=2)", () => {
+    render(
+      <UserStatusToggle userId={2} isActive={true} isCurrentUser={false} />,
+    );
+    expect(
+      screen.getByRole("button", { name: /deactivate/i }),
+    ).toBeInTheDocument();
+  });
+});
+
 describe("UserStatusToggle – active user", () => {
   it("renders a 'Deactivate' button for an active user", () => {
     render(
-      <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
+      <UserStatusToggle userId={2} isActive={true} isCurrentUser={false} />,
     );
     expect(
       screen.getByRole("button", { name: /deactivate/i }),
@@ -142,17 +187,17 @@ describe("UserStatusToggle – active user", () => {
 
   it("calls toggleUserStatus with userId and isActive=true when clicked", async () => {
     render(
-      <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
+      <UserStatusToggle userId={2} isActive={true} isCurrentUser={false} />,
     );
     fireEvent.click(screen.getByRole("button", { name: /deactivate/i }));
     await waitFor(() => {
-      expect(mockToggleUserStatus).toHaveBeenCalledWith(1, true);
+      expect(mockToggleUserStatus).toHaveBeenCalledWith(2, true);
     });
   });
 
   it("refreshes the router after a successful deactivate", async () => {
     render(
-      <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
+      <UserStatusToggle userId={2} isActive={true} isCurrentUser={false} />,
     );
     fireEvent.click(screen.getByRole("button", { name: /deactivate/i }));
     await waitFor(() => {
@@ -163,7 +208,7 @@ describe("UserStatusToggle – active user", () => {
   it("does not refresh the router when deactivate fails", async () => {
     mockToggleUserStatus.mockResolvedValueOnce({ ok: false });
     render(
-      <UserStatusToggle userId={1} isActive={true} isCurrentUser={false} />,
+      <UserStatusToggle userId={2} isActive={true} isCurrentUser={false} />,
     );
     fireEvent.click(screen.getByRole("button", { name: /deactivate/i }));
     await waitFor(() => {
