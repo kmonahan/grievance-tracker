@@ -7,13 +7,14 @@ export default function RecentActivityCard({
   user,
   status,
   date,
+  grievance_id,
 }: RecentActivity) {
   const pointPersonInitials = user.name
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase())
     .join("");
   return (
-    <Link href="/grievances/1">
+    <Link href={`/grievances/${grievance_id}`}>
       <div className="group rounded-lg border border-border bg-card p-4 transition-all hover:border-accent hover:shadow-md">
         <div className="space-y-3">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
