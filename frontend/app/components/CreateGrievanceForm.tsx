@@ -176,18 +176,21 @@ export default function CreateGrievanceForm({
               </option>
             ))}
         </FormSelect>
-        <FormSelect
-          id="step"
-          label="Step"
-          name="step"
-          defaultValue={grievanceState.fields?.step ?? FILTER_STEPS[0].value}
-        >
-          {FILTER_STEPS.map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
-            </option>
-          ))}
-        </FormSelect>
+        {typeof grievanceId === "undefined" ? (
+          <FormSelect
+            id="step"
+            label="Step"
+            name="step"
+            defaultValue={grievanceState.fields?.step ?? FILTER_STEPS[0].value}
+            errors={fieldErrors?.step}
+          >
+            {FILTER_STEPS.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </FormSelect>
+        ) : null}
         <Button type="submit" disabled={isDisabled}>
           Submit
         </Button>
