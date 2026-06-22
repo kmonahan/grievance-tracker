@@ -9,6 +9,7 @@ import FormField from "~/app/components/ui/FormField";
 import FormSelect from "~/app/components/ui/FormSelect";
 import Modal from "~/app/components/ui/Modal";
 import { type AddGrievanceState, addGrievance } from "~/app/grievances/actions";
+import { FILTER_STEPS } from "~/app/grievances/constants";
 import { deleteGrievance } from "~/app/grievances/deleteAction";
 
 type Category = {
@@ -174,6 +175,18 @@ export default function CreateGrievanceForm({
                 {person.name}
               </option>
             ))}
+        </FormSelect>
+        <FormSelect
+          id="step"
+          label="Step"
+          name="step"
+          defaultValue={grievanceState.fields?.step ?? FILTER_STEPS[0].value}
+        >
+          {FILTER_STEPS.map((s) => (
+            <option key={s.value} value={s.value}>
+              {s.label}
+            </option>
+          ))}
         </FormSelect>
         <Button type="submit" disabled={isDisabled}>
           Submit
