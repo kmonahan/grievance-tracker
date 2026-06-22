@@ -535,6 +535,71 @@ describe("CreateGrievanceForm", () => {
     });
   });
 
+  describe("Step select", () => {
+    it("renders the Step select", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(screen.getByLabelText("Step")).toBeInTheDocument();
+    });
+
+    it("renders Step 1, Step 2, and Step 3 as options", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(
+        screen.getByRole("option", { name: "Step 1" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Step 2" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Step 3" }),
+      ).toBeInTheDocument();
+    });
+
+    it("defaults to Step 1", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(screen.getByLabelText("Step")).toHaveValue("Step #1");
+    });
+
+    it("preserves the step selection on submission error", () => {
+      mockBothActionStates({
+        error: "Something went wrong",
+        errors: null,
+        fields: {
+          name: "Test",
+          description: "Test desc",
+          category_id: "1",
+          point_person_id: "2",
+          step: "Step #3",
+        },
+      });
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(screen.getByLabelText("Step")).toHaveValue("Step #3");
+    });
+  });
+
   describe("form submission", () => {
     it("wires the form action to the addGrievance server action", () => {
       mockBothActionStates();

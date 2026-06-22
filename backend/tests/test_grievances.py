@@ -55,7 +55,7 @@ class TestGrievances:
             'name': ['This field is required.'],
             'category_id': ['Not a valid choice.'],
             'point_person_id': ['Not a valid choice.'],
-            'user_id': ['Not a valid choice.'],
+            'user_id': ['Not a valid choice.']
         }}
 
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
@@ -65,6 +65,7 @@ class TestGrievances:
             'category_id': 8,
             'point_person_id': 'Jane Smith',
             'user_id': 'Jane Smith',
+            'step': 'One'
         }
         res = client.post("/grievances/add", data=data)
         assert res.status_code == 400
@@ -72,6 +73,7 @@ class TestGrievances:
             'category_id': ['Not a valid choice.'],
             'point_person_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.'],
             'user_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.'],
+            'step': ['Not a valid choice.']
         }}
 
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
@@ -82,6 +84,7 @@ class TestGrievances:
             'category_id': 1,
             'point_person_id': 1,
             'user_id': 1,
+            'step': Steps.ONE.value
         }
         res = client.patch("/grievances/edit/1", data=data)
         with app.app_context():

@@ -34,6 +34,7 @@ export async function addGrievance(
         description: formData.get("description") as string,
         category_id: formData.get("category_id") as string,
         point_person_id: formData.get("point_person_id") as string,
+        step: formData.get("step") as string,
       },
     };
   }
@@ -71,6 +72,7 @@ export async function editGrievance(
         description: formData.get("description") as string,
         category_id: formData.get("category_id") as string,
         point_person_id: formData.get("point_person_id") as string,
+        step: formData.get("step") as string,
       },
     };
   }

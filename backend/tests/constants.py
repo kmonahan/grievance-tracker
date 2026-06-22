@@ -1,3 +1,5 @@
+from stages.Steps import Steps
+
 TEST_GRIEVANCE = {'id': 1, 'name': 'Test #1', 'description': 'Test description #1', 'category': 'Pay',
     'point_person': 'Walter Reuther', 'escalations': [
         {'id': 1, 'date': '2025-12-19', 'step': 'Step #1', 'status': 'Waiting to Schedule', 'date_due': '2026-01-02',
@@ -28,7 +30,7 @@ TEST_GRIEVANCE_4 = {'id': 4, 'name': 'Test #4', 'description': 'Test description
 TEST_GRIEVANCE_LIST = [TEST_GRIEVANCE, TEST_GRIEVANCE_2, TEST_GRIEVANCE_3, TEST_GRIEVANCE_4]
 
 TEST_CREATED_GRIEVANCE_PARTIAL = {'name': 'Test grievance', 'description': 'Test description', 'category_id': 4,
-    'point_person_id': 2, 'user_id': 1, }
+    'point_person_id': 2, 'user_id': 1, 'step': Steps.ONE.value}
 
 TEST_CREATED_GRIEVANCE = {'id': 5, 'name': TEST_CREATED_GRIEVANCE_PARTIAL['name'],
     'description': TEST_CREATED_GRIEVANCE_PARTIAL['description'], 'category': 'Health & Safety',

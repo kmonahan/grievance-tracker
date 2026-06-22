@@ -82,7 +82,7 @@ def create():
         )
         db.session.add(grievance)
         db.session.commit()
-        escalate_grievance(grievance=grievance, user_id=form.user_id.data, step=Steps.ONE,
+        escalate_grievance(grievance=grievance, user_id=form.user_id.data, step=Steps(form.step.data),
                            status=Statuses.WAITING_TO_SCHEDULE)
         return jsonify(grievance.to_dict()), 201
     return jsonify({'errors': form.errors}), 400

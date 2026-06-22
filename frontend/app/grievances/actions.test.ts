@@ -192,6 +192,7 @@ describe("addGrievance action", () => {
       description: "Detailed description of the issue",
       category_id: "5",
       point_person_id: "12",
+      step: "Step #2",
     });
 
     const result = await addGrievance(initialState, formData);
@@ -201,6 +202,7 @@ describe("addGrievance action", () => {
       description: "Detailed description of the issue",
       category_id: "5",
       point_person_id: "12",
+      step: "Step #2",
     });
   });
 
@@ -374,6 +376,7 @@ describe("editGrievance action", () => {
       description: "Updated description",
       category_id: "5",
       point_person_id: "12",
+      step: "Step #3",
     });
 
     const result = await editGrievance("1", initialState, formData);
@@ -383,6 +386,7 @@ describe("editGrievance action", () => {
       description: "Updated description",
       category_id: "5",
       point_person_id: "12",
+      step: "Step #3",
     });
   });
 
