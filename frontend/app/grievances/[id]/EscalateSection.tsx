@@ -32,21 +32,31 @@ function toStepStatus(escalation: {
   };
 }
 
-function buildOptions(grievance: Grievance): StepStatus[] {
-  if (grievance.escalations.length === 0) return [];
+type OptionGroups = {
+  forwardOptions: StepStatus[];
+  terminalOptions: StepStatus[];
+  previousOption: StepStatus | null;
+};
+
+function buildOptionGroups(grievance: Grievance): OptionGroups {
+  if (grievance.escalations.length === 0) {
+    return { forwardOptions: [], terminalOptions: [], previousOption: null };
+  }
 
   const current = toStepStatus(
     grievance.escalations[grievance.escalations.length - 1],
   );
-  const options: StepStatus[] = [];
+  const forwardOptions: StepStatus[] = [];
+  const terminalOptions: StepStatus[] = [];
+  let previousOption: StepStatus | null = null;
 
-  // Next option in the state machine
   const currentIdx = STATE_SEQUENCE.findIndex(
     (s) =>
       s.stepEnum === current.stepEnum && s.statusEnum === current.statusEnum,
   );
+
   if (currentIdx !== -1 && currentIdx < STATE_SEQUENCE.length - 1) {
-    options.push(STATE_SEQUENCE[currentIdx + 1]);
+    forwardOptions.push(STATE_SEQUENCE[currentIdx + 1]);
   }
 
   // When waiting to schedule, also offer skipping ahead past Scheduled
@@ -55,13 +65,13 @@ function buildOptions(grievance: Grievance): StepStatus[] {
     currentIdx !== -1 &&
     currentIdx + 2 < STATE_SEQUENCE.length
   ) {
-    options.push(STATE_SEQUENCE[currentIdx + 2]);
+    forwardOptions.push(STATE_SEQUENCE[currentIdx + 2]);
   }
 
   // Always-available terminal statuses (excluding the current)
   for (const aa of ALWAYS_AVAILABLE) {
     if (aa.statusEnum !== current.statusEnum) {
-      options.push({
+      terminalOptions.push({
         ...aa,
         stepEnum: current.stepEnum,
         stepDisplay: current.stepDisplay,
@@ -69,18 +79,188 @@ function buildOptions(grievance: Grievance): StepStatus[] {
     }
   }
 
-  // Previous state (second-to-last escalation) goes last, but only when the
-  // current state is part of the normal progression (not a terminal status).
+  // Previous state goes in its own slot, only when in normal progression
   if (currentIdx !== -1 && grievance.escalations.length >= 2) {
-    options.push(
-      toStepStatus(grievance.escalations[grievance.escalations.length - 2]),
+    previousOption = toStepStatus(
+      grievance.escalations[grievance.escalations.length - 2],
     );
   }
 
-  return options;
+  return { forwardOptions, terminalOptions, previousOption };
 }
 
 type Selected = { stepEnum: string; statusEnum: string };
+
+function isMatch(opt: StepStatus, selected: Selected | null): boolean {
+  return (
+    selected?.stepEnum === opt.stepEnum &&
+    selected?.statusEnum === opt.statusEnum
+  );
+}
+
+interface ForwardCardProps {
+  opt: StepStatus;
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+function ForwardCard({ opt, isSelected, onSelect }: ForwardCardProps) {
+  const style = STATUS_STYLES[opt.statusEnum] ?? DEFAULT_OPTION_STYLE;
+  return (
+    <label
+      className={`group relative flex cursor-pointer items-center gap-3 rounded-xl border-2 p-4 transition-all ${
+        isSelected
+          ? style.selectedClasses
+          : "border-border bg-card hover:border-muted-foreground/40 hover:shadow-sm"
+      }`}
+    >
+      <input
+        type="radio"
+        name="escalation-status"
+        value={opt.statusEnum}
+        checked={isSelected}
+        onChange={onSelect}
+        className="sr-only"
+      />
+      {style.icon && (
+        <span
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-2xl"
+          aria-hidden="true"
+        >
+          {style.icon}
+        </span>
+      )}
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span
+          className={`inline-flex items-center self-start rounded-md px-2 py-0.5 text-base font-medium ${style.badgeClasses}`}
+        >
+          {opt.statusDisplay}
+        </span>
+        <span className="text-sm text-muted-foreground">{opt.stepDisplay}</span>
+      </div>
+      {/* Forward arrow — signals progression */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        className={`size-5 shrink-0 transition-colors ${isSelected ? "text-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/70"}`}
+        aria-hidden="true"
+      >
+        <path
+          fillRule="evenodd"
+          d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
+          clipRule="evenodd"
+        />
+      </svg>
+      {isSelected && (
+        <span className="absolute right-3 top-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className="size-4 text-teal-600"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </span>
+      )}
+    </label>
+  );
+}
+
+interface TerminalPillProps {
+  opt: StepStatus;
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+function TerminalPill({ opt, isSelected, onSelect }: TerminalPillProps) {
+  const style = STATUS_STYLES[opt.statusEnum] ?? DEFAULT_OPTION_STYLE;
+  return (
+    <label
+      className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all ${
+        isSelected
+          ? `${style.selectedClasses} font-semibold`
+          : "border-border text-muted-foreground hover:border-muted-foreground/40 hover:text-foreground"
+      }`}
+    >
+      <input
+        type="radio"
+        name="escalation-status"
+        value={opt.statusEnum}
+        checked={isSelected}
+        onChange={onSelect}
+        className="sr-only"
+      />
+      {isSelected && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="size-3.5 shrink-0 text-teal-600"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      )}
+      {opt.statusDisplay}
+    </label>
+  );
+}
+
+interface GoBackOptionProps {
+  opt: StepStatus;
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+function GoBackOption({ opt, isSelected, onSelect }: GoBackOptionProps) {
+  return (
+    <label
+      className={`flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-all ${
+        isSelected
+          ? "bg-muted/60 text-foreground font-medium ring-1 ring-border"
+          : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+      }`}
+    >
+      <input
+        type="radio"
+        name="escalation-status"
+        value={opt.statusEnum}
+        checked={isSelected}
+        onChange={onSelect}
+        className="sr-only"
+      />
+      {/* Undo arrow — signals going back, not forward */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        className="size-4 shrink-0 opacity-60"
+        aria-hidden="true"
+      >
+        <path
+          fillRule="evenodd"
+          d="M7.793 2.232a.75.75 0 0 1-.025 1.06L3.622 7.25h10.003a5.375 5.375 0 0 1 0 10.75H10.75a.75.75 0 0 1 0-1.5h2.875a3.875 3.875 0 0 0 0-7.75H3.622l4.146 3.957a.75.75 0 0 1-1.036 1.085l-5.5-5.25a.75.75 0 0 1 0-1.085l5.5-5.25a.75.75 0 0 1 1.06.025Z"
+          clipRule="evenodd"
+        />
+      </svg>
+      <span>
+        Go back to <span className="font-medium">{opt.statusDisplay}</span>
+        <span className="ml-1 text-xs opacity-70">({opt.stepDisplay})</span>
+      </span>
+    </label>
+  );
+}
 
 export function EscalateSection({ grievance }: { grievance: Grievance }) {
   const [, formAction] = useActionState(escalateGrievance, { error: null });
@@ -88,7 +268,21 @@ export function EscalateSection({ grievance }: { grievance: Grievance }) {
   const [selected, setSelected] = useState<Selected | null>(null);
   const [hearingDate, setHearingDate] = useState("");
 
-  const options = buildOptions(grievance);
+  const { forwardOptions, terminalOptions, previousOption } =
+    buildOptionGroups(grievance);
+
+  const allOptions = [
+    ...forwardOptions,
+    ...terminalOptions,
+    ...(previousOption ? [previousOption] : []),
+  ];
+
+  function handleSelect(opt: StepStatus) {
+    setSelected({ stepEnum: opt.stepEnum, statusEnum: opt.statusEnum });
+    if (opt.statusEnum !== "SCHEDULED") setHearingDate("");
+  }
+
+  const hasOptions = allOptions.length > 0;
 
   return (
     <section className="border-t">
@@ -116,8 +310,8 @@ export function EscalateSection({ grievance }: { grievance: Grievance }) {
         </svg>
       </button>
 
-      {expanded && (
-        <div className="px-4 pb-5 sm:px-6 sm:pb-6">
+      {expanded && hasOptions && (
+        <div className="px-4 pb-6 sm:px-6 sm:pb-7">
           <form action={formAction}>
             <input
               type="hidden"
@@ -137,74 +331,50 @@ export function EscalateSection({ grievance }: { grievance: Grievance }) {
 
             <fieldset>
               <legend className="sr-only">Select new status</legend>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {options.map((opt) => {
-                  const isSelected =
-                    selected?.stepEnum === opt.stepEnum &&
-                    selected?.statusEnum === opt.statusEnum;
-                  const style =
-                    STATUS_STYLES[opt.statusEnum] ?? DEFAULT_OPTION_STYLE;
-                  return (
-                    <label
+
+              {/* Zone 1: Forward progression options — prominent */}
+              {forwardOptions.length > 0 && (
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {forwardOptions.map((opt) => (
+                    <ForwardCard
                       key={`${opt.stepEnum}-${opt.statusEnum}`}
-                      className={`flex flex-col cursor-pointer gap-2 rounded-xl border-2 p-4 transition-all ${
-                        isSelected
-                          ? style.selectedClasses
-                          : "border-border hover:border-muted-foreground/30 hover:bg-muted/20"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="escalation-status"
-                        value={opt.statusEnum}
-                        checked={isSelected}
-                        onChange={() => {
-                          setSelected({
-                            stepEnum: opt.stepEnum,
-                            statusEnum: opt.statusEnum,
-                          });
-                          if (opt.statusEnum !== "SCHEDULED")
-                            setHearingDate("");
-                        }}
-                        className="sr-only"
+                      opt={opt}
+                      isSelected={isMatch(opt, selected)}
+                      onSelect={() => handleSelect(opt)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Zone 2: Terminal statuses — compact secondary row */}
+              {terminalOptions.length > 0 && (
+                <div className={forwardOptions.length > 0 ? "mt-5" : ""}>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+                    Close/pause grievance
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {terminalOptions.map((opt) => (
+                      <TerminalPill
+                        key={`${opt.stepEnum}-${opt.statusEnum}`}
+                        opt={opt}
+                        isSelected={isMatch(opt, selected)}
+                        onSelect={() => handleSelect(opt)}
                       />
-                      <div className="flex flex-1 items-center gap-2">
-                        {style.icon && (
-                          <span
-                            className="flex h-10 w-10 shrink-0 items-center text-3xl"
-                            aria-hidden="true"
-                          >
-                            {style.icon}
-                          </span>
-                        )}
-                        <span
-                          className={`inline-flex items-center rounded-md px-2 py-0.5 text-base font-medium ${style.badgeClasses}`}
-                        >
-                          {opt.statusDisplay}
-                        </span>
-                        {isSelected && (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            className="size-4 text-teal-600"
-                            aria-hidden="true"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        )}
-                      </div>
-                      <div className="mt-1 text-right text-sm text-muted-foreground">
-                        {opt.stepDisplay}
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Zone 3: Go back — visually demoted, separated */}
+              {previousOption && (
+                <div className="mt-5 border-t border-dashed border-border pt-4">
+                  <GoBackOption
+                    opt={previousOption}
+                    isSelected={isMatch(previousOption, selected)}
+                    onSelect={() => handleSelect(previousOption)}
+                  />
+                </div>
+              )}
             </fieldset>
 
             {selected?.statusEnum === "SCHEDULED" && (
