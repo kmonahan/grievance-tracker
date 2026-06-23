@@ -77,7 +77,7 @@ const GRIEVANCES: Record<string, Grievance> = {
         id: 5,
         date: "2026-01-09",
         step: "Step #1",
-        status: "Waiting to File",
+        status: "Prep for Next Step",
         date_due: "2026-01-30",
         hearing_date: null,
         deadline_missed: false,
@@ -182,7 +182,7 @@ describe("GrievanceDetailPage", () => {
 
   it("renders the current status from the latest escalation", async () => {
     await renderWithId("2");
-    const badges = screen.getAllByText("Waiting to File");
+    const badges = screen.getAllByText("Prep for Next Step");
     expect(badges.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -222,7 +222,7 @@ describe("GrievanceDetailPage", () => {
     expect(screen.getByText("Waiting to Schedule")).toBeInTheDocument();
     expect(screen.getByText("Scheduled")).toBeInTheDocument();
     expect(screen.getByText("Waiting on Decision")).toBeInTheDocument();
-    expect(screen.getAllByText("Waiting to File").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Prep for Next Step").length).toBeGreaterThan(0);
   });
 
   it("renders escalation dates", async () => {

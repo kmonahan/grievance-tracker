@@ -24,7 +24,7 @@ const STATUS_STRIPE_COLORS: Record<string, string> = {
   "Waiting to Schedule": "bg-accent",
   Scheduled: "bg-teal-500",
   "Waiting on Decision": "bg-red-500",
-  "Waiting to File": "bg-plum-500",
+  "Prep for Next Step": "bg-plum-500",
   "In Abeyance": "bg-neutral-300",
 };
 
