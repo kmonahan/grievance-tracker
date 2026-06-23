@@ -5,7 +5,7 @@ class Statuses(enum.Enum):
     WAITING_TO_SCHEDULE = 'Waiting to Schedule'
     SCHEDULED = 'Scheduled'
     WAITING_ON_DECISION = 'Waiting on Decision'
-    WAITING_TO_FILE = 'Waiting to File'
+    WAITING_TO_FILE = 'Prepare for Next Step'
     RESOLVED = 'Resolved'
     DENIED = 'Denied'
     WITHDRAWN = 'Withdrawn'
