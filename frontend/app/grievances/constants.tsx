@@ -26,7 +26,7 @@ export const STEP_DISPLAY_TO_ENUM: Record<string, string> = {
 export const STATUS_DISPLAY_TO_ENUM: Record<string, string> = {
   "Waiting to Schedule": "WAITING_TO_SCHEDULE",
   Scheduled: "SCHEDULED",
-  "Prep for Next Step": "WAITING_TO_FILE",
+  "Prepare for Next Step": "WAITING_TO_FILE",
   "Waiting on Decision": "WAITING_ON_DECISION",
   Resolved: "RESOLVED",
   Denied: "DENIED",
@@ -52,7 +52,7 @@ export const STATE_SEQUENCE: StepStatus[] = [
     stepEnum: "ONE",
     stepDisplay: "Step #1",
     statusEnum: "WAITING_TO_FILE",
-    statusDisplay: "Prep for Next Step",
+    statusDisplay: "Prepare for Next Step",
   },
   {
     stepEnum: "TWO",

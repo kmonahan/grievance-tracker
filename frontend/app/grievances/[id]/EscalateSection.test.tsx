@@ -67,7 +67,7 @@ describe("EscalateSection – option ordering", () => {
     expect(within(firstLabel).getByText(/Step #1/)).toBeInTheDocument();
   });
 
-  it("shows Step #1 Prep for Next Step as the first option when at Step #1, Scheduled", () => {
+  it("shows Step #1 Prepare for Next Step as the first option when at Step #1, Scheduled", () => {
     const grievance = makeGrievance([
       { step: "Step #1", status: "Waiting to Schedule" },
       { step: "Step #1", status: "Scheduled" },
@@ -77,16 +77,16 @@ describe("EscalateSection – option ordering", () => {
     const radios = getOptionRadios();
     const firstLabel = getLabelFor(radios[0]);
     expect(
-      within(firstLabel).getByText("Prep for Next Step"),
+      within(firstLabel).getByText("Prepare for Next Step"),
     ).toBeInTheDocument();
     expect(within(firstLabel).getByText(/Step #1/)).toBeInTheDocument();
   });
 
-  it("shows Step #2 Waiting to Schedule as the first option when at Step #1, Prep for Next Step", () => {
+  it("shows Step #2 Waiting to Schedule as the first option when at Step #1, Prepare for Next Step", () => {
     const grievance = makeGrievance([
       { step: "Step #1", status: "Waiting to Schedule" },
       { step: "Step #1", status: "Scheduled" },
-      { step: "Step #1", status: "Prep for Next Step" },
+      { step: "Step #1", status: "Prepare for Next Step" },
     ]);
     renderExpanded(grievance);
 
@@ -102,7 +102,7 @@ describe("EscalateSection – option ordering", () => {
     const grievance = makeGrievance([
       { step: "Step #1", status: "Waiting to Schedule" },
       { step: "Step #1", status: "Scheduled" },
-      { step: "Step #1", status: "Prep for Next Step" },
+      { step: "Step #1", status: "Prepare for Next Step" },
       { step: "Step #2", status: "Waiting to Schedule" },
       { step: "Step #2", status: "Scheduled" },
     ]);
@@ -145,11 +145,11 @@ describe("EscalateSection – option ordering", () => {
     expect(within(lastLabel).getByText(/Step #1/)).toBeInTheDocument();
   });
 
-  it("shows Step #1 Scheduled as the last option when at Step #1, Prep for Next Step", () => {
+  it("shows Step #1 Scheduled as the last option when at Step #1, Prepare for Next Step", () => {
     const grievance = makeGrievance([
       { step: "Step #1", status: "Waiting to Schedule" },
       { step: "Step #1", status: "Scheduled" },
-      { step: "Step #1", status: "Prep for Next Step" },
+      { step: "Step #1", status: "Prepare for Next Step" },
     ]);
     renderExpanded(grievance);
 
