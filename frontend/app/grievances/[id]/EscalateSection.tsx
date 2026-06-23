@@ -49,6 +49,15 @@ function buildOptions(grievance: Grievance): StepStatus[] {
     options.push(STATE_SEQUENCE[currentIdx + 1]);
   }
 
+  // When waiting to schedule, also offer skipping ahead past Scheduled
+  if (
+    current.statusEnum === "WAITING_TO_SCHEDULE" &&
+    currentIdx !== -1 &&
+    currentIdx + 2 < STATE_SEQUENCE.length
+  ) {
+    options.push(STATE_SEQUENCE[currentIdx + 2]);
+  }
+
   // Always-available terminal statuses (excluding the current)
   for (const aa of ALWAYS_AVAILABLE) {
     if (aa.statusEnum !== current.statusEnum) {

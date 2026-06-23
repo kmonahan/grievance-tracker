@@ -222,7 +222,9 @@ describe("GrievanceDetailPage", () => {
     expect(screen.getByText("Waiting to Schedule")).toBeInTheDocument();
     expect(screen.getByText("Scheduled")).toBeInTheDocument();
     expect(screen.getByText("Waiting on Decision")).toBeInTheDocument();
-    expect(screen.getAllByText("Prepare for Next Step").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Prepare for Next Step").length).toBeGreaterThan(
+      0,
+    );
   });
 
   it("renders escalation dates", async () => {

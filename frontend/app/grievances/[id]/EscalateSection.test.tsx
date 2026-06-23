@@ -145,6 +145,57 @@ describe("EscalateSection – option ordering", () => {
     expect(within(lastLabel).getByText(/Step #1/)).toBeInTheDocument();
   });
 
+  it("shows both Scheduled and Prepare for Next Step when at WAITING_TO_SCHEDULE", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+    ]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).getByText("Scheduled")).toBeInTheDocument();
+    expect(
+      within(fieldset).getByText("Prepare for Next Step"),
+    ).toBeInTheDocument();
+  });
+
+  it("shows Scheduled as the first option and Prepare for Next Step as the second when at WAITING_TO_SCHEDULE", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+    ]);
+    renderExpanded(grievance);
+
+    const radios = getOptionRadios();
+    expect(getLabelFor(radios[0])).toHaveTextContent("Scheduled");
+    expect(getLabelFor(radios[1])).toHaveTextContent("Prepare for Next Step");
+  });
+
+  it("does not show a skip-ahead option when not at WAITING_TO_SCHEDULE", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "Scheduled" },
+    ]);
+    renderExpanded(grievance);
+
+    const radios = getOptionRadios();
+    const values = radios.map((r) => r.value);
+    // Only one WAITING_TO_FILE entry should appear (the next step), not a duplicate
+    expect(values.filter((v) => v === "WAITING_TO_FILE")).toHaveLength(1);
+  });
+
+  it("shows both Scheduled and Waiting on Decision when at Step #2 WAITING_TO_SCHEDULE", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "Scheduled" },
+      { step: "Step #1", status: "Prepare for Next Step" },
+      { step: "Step #2", status: "Waiting to Schedule" },
+    ]);
+    renderExpanded(grievance);
+
+    const radios = getOptionRadios();
+    expect(getLabelFor(radios[0])).toHaveTextContent("Scheduled");
+    expect(getLabelFor(radios[1])).toHaveTextContent("Waiting on Decision");
+  });
+
   it("shows Step #1 Scheduled as the last option when at Step #1, Prepare for Next Step", () => {
     const grievance = makeGrievance([
       { step: "Step #1", status: "Waiting to Schedule" },
