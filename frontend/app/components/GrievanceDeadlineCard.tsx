@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StatusTag } from "~/app/components/StatusTag";
 import type { Grievance } from "~/app/grievances/types";
 import { formatDate } from "~/lib/format";
 
@@ -27,9 +28,7 @@ export default function GrievanceDeadlineCard({
                 {name}
               </h3>
               {latestEscalation ? (
-                <span className="inline-flex items-center rounded-md border border-transparent bg-accent px-2 py-0.5 text-sm font-medium text-accent-foreground">
-                  {latestEscalation.status}
-                </span>
+                <StatusTag status={latestEscalation.status} />
               ) : null}
             </div>
             <div className="flex items-center gap-2 text-base">
