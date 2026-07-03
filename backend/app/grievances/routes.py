@@ -42,7 +42,9 @@ def get_grievance(grievance_id):
 def _prepare_form_choices() -> CreateGrievanceForm:
     form = CreateGrievanceForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query]
+    form.category_id.choices.append(('', ''))
     user_choices = [(p.id, p.name) for p in User.query]
+    user_choices.append(('', ''))
     form.point_person_id.choices = user_choices
     form.user_id.choices = user_choices
     form.secondary_id.choices = user_choices
