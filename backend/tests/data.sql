@@ -40,12 +40,12 @@ VALUES
     ('Clara Lemlich', 'clemlich@example.com', 'password123', TRUE),
     ('Jimmy Hoffa', 'jhoffa@example.com', 'password123', FALSE);
 
-INSERT into grievance (name, description, category_id, point_person_id, secondary_id)
+INSERT into grievance (name, description, category_id, point_person_id, secondary_id, date)
 VALUES
-    ('Test #1', 'Test description #1', 1, 1, 2),
-    ('Test #2', 'Test description #2', 1, 2, NULL),
-    ('Test #3', 'Test description #3', 2, 3, 3),
-    ('Test #4', 'Test description #4', 2, 1, 1);
+    ('Test #1', 'Test description #1', 1, 1, 2, '2025-12-19'),
+    ('Test #2', 'Test description #2', 1, 2, NULL, '2025-12-19'),
+    ('Test #3', 'Test description #3', 2, 3, 3, '2025-12-21'),
+    ('Test #4', 'Test description #4', 2, 1, 1, '2026-01-09');
 
 INSERT into escalation (date, date_due, hearing_date, step, status, grievance_id, user_id)
 VALUES

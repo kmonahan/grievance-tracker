@@ -69,13 +69,15 @@ def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses, user
 @jwt_required()
 def create():
     form = _prepare_form_choices()
+    todays_date = datetime.now()
     if form.validate_on_submit():
         grievance = Grievance(
             name=form.name.data,
             description=form.description.data,
             category_id=form.category_id.data,
             point_person_id=form.point_person_id.data,
-            secondary_id=form.secondary_id.data
+            secondary_id=form.secondary_id.data,
+            date = todays_date
         )
         db.session.add(grievance)
         db.session.commit()
