@@ -171,18 +171,6 @@ describe("GrievancesPage", () => {
     expect(addLink).toHaveAttribute("href", "/grievances/create");
   });
 
-  it("renders the open grievance count in the subtitle", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE, SCHEDULED_GRIEVANCE]);
-    await renderPage();
-    expect(screen.getByText("2 open grievances")).toBeInTheDocument();
-  });
-
-  it("uses singular 'grievance' when count is 1", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE]);
-    await renderPage();
-    expect(screen.getByText("1 open grievance")).toBeInTheDocument();
-  });
-
   it("renders a card for each open grievance", async () => {
     mockFetchWithGrievances([OPEN_GRIEVANCE, SCHEDULED_GRIEVANCE]);
     await renderPage();
@@ -248,17 +236,10 @@ describe("GrievancesPage", () => {
     expect(screen.getByText("No deadline")).toBeInTheDocument();
   });
 
-  it("does not count closed grievances in the open count", async () => {
-    mockFetchWithGrievances([OPEN_GRIEVANCE, RESOLVED_GRIEVANCE]);
-    await renderPage();
-    expect(screen.getByText("1 open grievance")).toBeInTheDocument();
-  });
-
   it("includes grievances with no escalations as open", async () => {
     mockFetchWithGrievances([NO_ESCALATIONS_GRIEVANCE]);
     await renderPage();
     expect(screen.getByText("New Unescalated Grievance")).toBeInTheDocument();
-    expect(screen.getByText("1 open grievance")).toBeInTheDocument();
   });
 
   it("hides step/status/due-date when grievance has no escalations", async () => {

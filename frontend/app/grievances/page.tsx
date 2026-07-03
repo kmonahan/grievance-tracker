@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { isClosed } from "~/app/grievances/constants";
 import { GrievanceFilterView } from "~/app/grievances/GrievanceFilterView";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
@@ -12,8 +11,6 @@ export default async function GrievancesPage() {
   });
   const { grievances } = (await response.json()) as { grievances: Grievance[] };
 
-  const openCount = grievances.filter((g) => !isClosed(g)).length;
-
   return (
     <main className="w-full mx-auto px-5 md:px-6 py-8">
       <div className="mx-auto w-full max-w-4xl">
@@ -22,9 +19,6 @@ export default async function GrievancesPage() {
             <h1 className="font-title text-4xl font-bold text-primary">
               All Grievances
             </h1>
-            <p className="mt-1 font-subtitle text-base text-muted-foreground">
-              {openCount} open grievance{openCount !== 1 ? "s" : ""}
-            </p>
           </div>
           <Link
             href="/grievances/create"

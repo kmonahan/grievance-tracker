@@ -87,6 +87,14 @@ export function GrievanceFilterView({
     setMissedDeadlineOnly(false);
   }
 
+  const countLabel = showClosed
+    ? `${filteredOpen.length + filteredClosed.length} total grievance${
+        filteredOpen.length + filteredClosed.length === 1 ? "" : "s"
+      }`
+    : `${filteredOpen.length} open grievance${
+        filteredOpen.length === 1 ? "" : "s"
+      }`;
+
   return (
     <div>
       <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-sm">
@@ -236,6 +244,10 @@ export function GrievanceFilterView({
           </fieldset>
         </div>
       </div>
+
+      <p className="mb-3 font-subtitle text-base text-muted-foreground">
+        {countLabel}
+      </p>
 
       {filteredOpen.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-12 text-center">
