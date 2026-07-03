@@ -20,6 +20,7 @@ export type Escalation = {
 export type Grievance = {
   id: number;
   name: string;
+  date: string;
   description: string;
   category: string;
   point_person: string;
