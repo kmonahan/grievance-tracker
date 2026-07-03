@@ -7,9 +7,9 @@ class Grievance(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), unique=False, nullable=True)
     category = db.relationship('Category', back_populates='grievances')
     point_person_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=False, nullable=True)
-    point_person = db.relationship('User', back_populates='grievances')
+    point_person = db.relationship('User', back_populates='grievances', foreign_keys=point_person_id)
     secondary_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=False, nullable=True)
-    secondary = db.relationship('User', back_populates='secondary_grievances')
+    secondary = db.relationship('User', back_populates='secondary_grievances', foreign_keys=secondary_id)
     escalations = db.relationship('Escalation', back_populates='grievance', cascade='all, delete')
 
     def to_dict(self):

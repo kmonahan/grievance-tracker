@@ -19,13 +19,16 @@ class TestGrievances:
         grievance = Grievance(id=1,
                               name="Test",
                               description="Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.",
-                              point_person=User(name='Karl Marx'), )
+                              point_person=User(name='Karl Marx'),
+                              secondary=User(name='Friedrich Engels'),)
+
         assert grievance.to_dict() == {
             'id': 1,
             'name': 'Test',
             'description': 'Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.',
             'category': None,
             'point_person': 'Karl Marx',
+            'secondary': 'Friedrich Engels',
             'escalations': []
         }
 
@@ -55,6 +58,7 @@ class TestGrievances:
             'name': ['This field is required.'],
             'category_id': ['Not a valid choice.'],
             'point_person_id': ['Not a valid choice.'],
+            'secondary_id': ['Not a valid choice.'],
             'user_id': ['Not a valid choice.']
         }}
 
@@ -72,6 +76,7 @@ class TestGrievances:
         assert res.json == {'errors': {
             'category_id': ['Not a valid choice.'],
             'point_person_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.'],
+            'secondary_id': ['Not a valid choice.'],
             'user_id': ['Invalid Choice: could not coerce.', 'Not a valid choice.'],
             'step': ['Not a valid choice.']
         }}
@@ -83,6 +88,7 @@ class TestGrievances:
             'description': 'Test description is edited.',
             'category_id': 1,
             'point_person_id': 1,
+            'secondary_id': 2,
             'user_id': 1,
             'step': Steps.ONE.value
         }

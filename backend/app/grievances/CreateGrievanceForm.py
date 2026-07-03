@@ -11,5 +11,6 @@ class CreateGrievanceForm(FlaskForm):
     description = StringField()
     category_id = SelectField(coerce=int)
     point_person_id = SelectField(coerce=int)
+    secondary_id = SelectField(coerce=int)
     user_id = SelectField(coerce=int)
     step = SelectField(choices=[(s.value, s.value) for s in Steps], validators=[DataRequired()], default=Steps.ONE.value)

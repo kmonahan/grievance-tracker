@@ -45,6 +45,7 @@ def _prepare_form_choices() -> CreateGrievanceForm:
     user_choices = [(p.id, p.name) for p in User.query]
     form.point_person_id.choices = user_choices
     form.user_id.choices = user_choices
+    form.secondary_id.choices = user_choices
     return form
 
 
@@ -79,6 +80,7 @@ def create():
             description=form.description.data,
             category_id=form.category_id.data,
             point_person_id=form.point_person_id.data,
+            secondary_id=form.secondary_id.data
         )
         db.session.add(grievance)
         db.session.commit()
@@ -98,6 +100,7 @@ def update(grievance_id):
         grievance.description = form.description.data
         grievance.category_id = form.category_id.data
         grievance.point_person_id = form.point_person_id.data
+        grievance.secondary_id = form.secondary_id.data
         db.session.commit()
         return jsonify(grievance.to_dict())
     return jsonify({'errors': form.errors}), 400
