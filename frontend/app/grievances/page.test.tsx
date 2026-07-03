@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import type { Grievance } from "~/app/grievances/types";
 import GrievancesPage from "./page";
 
@@ -18,6 +18,7 @@ jest.mock("next/navigation", () => ({
 const OPEN_GRIEVANCE: Grievance = {
   id: 1,
   name: "Unsafe Working Conditions",
+  date: "2026-02-14",
   description: "Staff have reported inadequate ventilation.",
   category: "Health & Safety",
   point_person: "Maria Santos",
@@ -38,6 +39,7 @@ const OPEN_GRIEVANCE: Grievance = {
 const SCHEDULED_GRIEVANCE: Grievance = {
   id: 2,
   name: "Denial of Bereavement Leave",
+  date: "2026-01-09",
   description: "Member was denied bereavement leave.",
   category: "Leave",
   point_person: "James Okafor",
@@ -58,6 +60,7 @@ const SCHEDULED_GRIEVANCE: Grievance = {
 const RESOLVED_GRIEVANCE: Grievance = {
   id: 3,
   name: "Resolved Pay Dispute",
+  date: "2025-11-01",
   description: "Pay dispute that was resolved.",
   category: "Pay",
   point_person: "Sam Lee",
@@ -78,6 +81,7 @@ const RESOLVED_GRIEVANCE: Grievance = {
 const DENIED_GRIEVANCE: Grievance = {
   id: 4,
   name: "Denied Overtime Claim",
+  date: "2025-10-15",
   description: "Overtime claim that was denied.",
   category: "Pay",
   point_person: "Alex Kim",
@@ -98,6 +102,7 @@ const DENIED_GRIEVANCE: Grievance = {
 const WITHDRAWN_GRIEVANCE: Grievance = {
   id: 5,
   name: "Withdrawn Scheduling Dispute",
+  date: "2025-09-20",
   description: "Scheduling dispute that was withdrawn.",
   category: "Scheduling",
   point_person: "Pat Brown",
@@ -118,16 +123,30 @@ const WITHDRAWN_GRIEVANCE: Grievance = {
 const NO_ESCALATIONS_GRIEVANCE: Grievance = {
   id: 6,
   name: "New Unescalated Grievance",
+  date: "2026-03-01",
   description: "A brand new grievance with no escalations yet.",
   category: "Workload",
   point_person: "Dana White",
   escalations: [],
 };
 
+const MOCK_POINT_PERSONS = [
+  { id: 2, name: "Maria Santos", isActive: true },
+  { id: 3, name: "James Okafor", isActive: true },
+];
+
 function mockFetchWithGrievances(grievances: Grievance[]) {
-  (fetch as jest.Mock).mockResolvedValueOnce({
-    ok: true,
-    json: async () => ({ grievances }),
+  (fetch as jest.Mock).mockImplementation((url: string) => {
+    if (url.includes("/users/active")) {
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({ users: MOCK_POINT_PERSONS }),
+      });
+    }
+    return Promise.resolve({
+      ok: true,
+      json: async () => ({ grievances }),
+    });
   });
 }
 
@@ -211,7 +230,8 @@ describe("GrievancesPage", () => {
   it("renders the point person name on each card", async () => {
     mockFetchWithGrievances([OPEN_GRIEVANCE]);
     await renderPage();
-    expect(screen.getByText("Maria Santos")).toBeInTheDocument();
+    const list = screen.getByRole("list");
+    expect(within(list).getByText("Maria Santos")).toBeInTheDocument();
   });
 
   it("renders the due date when present", async () => {
@@ -309,6 +329,46 @@ describe("GrievancesPage", () => {
       expect(
         screen.getByText("Denial of Bereavement Leave"),
       ).toBeInTheDocument();
+    });
+  });
+
+  describe("point person filter", () => {
+    it("fetches point persons from the /users/active endpoint", async () => {
+      mockFetchWithGrievances([OPEN_GRIEVANCE]);
+      await renderPage();
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringContaining("/users/active"),
+        expect.any(Object),
+      );
+    });
+
+    it("renders a point person select populated from /users/active", async () => {
+      mockFetchWithGrievances([OPEN_GRIEVANCE]);
+      await renderPage();
+      const select = screen.getByRole("combobox", { name: /point person/i });
+      expect(
+        within(select).getByRole("option", { name: "Maria Santos" }),
+      ).toBeInTheDocument();
+      expect(
+        within(select).getByRole("option", { name: "James Okafor" }),
+      ).toBeInTheDocument();
+    });
+
+    it("renders no point person options when the fetch fails", async () => {
+      (fetch as jest.Mock).mockImplementation((url: string) => {
+        if (url.includes("/users/active")) {
+          return Promise.resolve({ ok: false });
+        }
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({ grievances: [OPEN_GRIEVANCE] }),
+        });
+      });
+      await renderPage();
+      const select = screen.getByRole("combobox", { name: /point person/i });
+      expect(
+        within(select).queryByRole("option", { name: "Maria Santos" }),
+      ).not.toBeInTheDocument();
     });
   });
 });

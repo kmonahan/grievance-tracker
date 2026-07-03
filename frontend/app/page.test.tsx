@@ -12,6 +12,7 @@ jest.mock("next/headers", () => ({
 const UPCOMING_GRIEVANCE: Grievance = {
   id: 1,
   name: "Test Grievance",
+  date: "2025-12-19",
   description: "Test description",
   category: "Pay",
   point_person: "Walter Reuther",

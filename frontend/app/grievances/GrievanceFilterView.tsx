@@ -25,18 +25,29 @@ function hasAnyMissedDeadline(grievance: Grievance): boolean {
   return grievance.escalations.some((e) => e.deadline_missed);
 }
 
+export interface PointPersonOption {
+  id: number;
+  name: string;
+  isActive: boolean;
+}
+
 interface GrievanceFilterViewProps {
   grievances: Grievance[];
+  pointPersons?: PointPersonOption[];
 }
 
 export function GrievanceFilterView({
   grievances,
+  pointPersons = [],
 }: GrievanceFilterViewProps): React.ReactElement {
   const currentYear = new Date().getFullYear();
 
   const [showClosed, setShowClosed] = useState(false);
   const [activeStep, setActiveStep] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activePointPerson, setActivePointPerson] = useState<string | null>(
+    null,
+  );
   const [currentYearOnly, setCurrentYearOnly] = useState(false);
   const [missedDeadlineOnly, setMissedDeadlineOnly] = useState(false);
 
@@ -62,6 +73,8 @@ export function GrievanceFilterView({
       if (activeStep !== null && getLatestStep(g) !== activeStep) return false;
       if (activeCategory !== null && g.category !== activeCategory)
         return false;
+      if (activePointPerson !== null && g.point_person !== activePointPerson)
+        return false;
       if (currentYearOnly && getFiledYear(g) !== currentYear) return false;
       if (missedDeadlineOnly && !hasAnyMissedDeadline(g)) return false;
       return true;
@@ -74,6 +87,7 @@ export function GrievanceFilterView({
   const activeFilterCount = [
     activeStep !== null,
     activeCategory !== null,
+    activePointPerson !== null,
     currentYearOnly,
     missedDeadlineOnly,
   ].filter(Boolean).length;
@@ -81,6 +95,7 @@ export function GrievanceFilterView({
   function clearAllFilters() {
     setActiveStep(null);
     setActiveCategory(null);
+    setActivePointPerson(null);
     setCurrentYearOnly(false);
     setMissedDeadlineOnly(false);
   }
@@ -189,6 +204,31 @@ export function GrievanceFilterView({
               </div>
             </fieldset>
           )}
+
+          <fieldset className="border-0 p-0 m-0">
+            <label
+              htmlFor="point-person-filter"
+              className="mb-1.5 block font-subtitle text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+            >
+              Point person
+            </label>
+            <select
+              id="point-person-filter"
+              value={activePointPerson ?? ""}
+              onChange={(e) => {
+                const nextValue = e.target.value;
+                setActivePointPerson(nextValue === "" ? null : nextValue);
+              }}
+              className="rounded-lg border border-border bg-card px-3 py-1.5 font-subtitle text-sm text-foreground"
+            >
+              <option value="">All</option>
+              {pointPersons.map((person) => (
+                <option key={person.id} value={person.name}>
+                  {person.name}
+                </option>
+              ))}
+            </select>
+          </fieldset>
 
           <fieldset className="border-0 p-0 m-0">
             <legend className="sr-only">Additional filters</legend>
