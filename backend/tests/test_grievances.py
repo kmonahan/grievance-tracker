@@ -148,3 +148,12 @@ class TestGrievances:
         res = client.get("/grievances/1")
         assert res.status_code == 200
         assert res.json == TEST_GRIEVANCE
+
+    @freeze_time(datetime.datetime(2026, 7, 3))
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_year_total(self, _mock_verify_jwt, client):
+        res = client.get('/grievances/year-total')
+        assert res.status_code == 200
+        assert res.json == {
+            'year_total': 1
+        }
