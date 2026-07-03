@@ -26,6 +26,7 @@ export async function addGrievance(
 
   if (!response.ok) {
     const data = await response.json();
+    const secondaryId = formData.get("secondary_id");
     return {
       error: data.error ?? "An error occurred. Please try again.",
       errors: data.errors ?? null,
@@ -35,6 +36,7 @@ export async function addGrievance(
         category_id: formData.get("category_id") as string,
         point_person_id: formData.get("point_person_id") as string,
         step: formData.get("step") as string,
+        ...(secondaryId !== null && { secondary_id: secondaryId as string }),
       },
     };
   }
@@ -64,6 +66,7 @@ export async function editGrievance(
 
   if (!response.ok) {
     const data = await response.json();
+    const secondaryId = formData.get("secondary_id");
     return {
       error: data.error ?? "An error occurred. Please try again.",
       errors: data.errors ?? null,
@@ -73,6 +76,7 @@ export async function editGrievance(
         category_id: formData.get("category_id") as string,
         point_person_id: formData.get("point_person_id") as string,
         step: formData.get("step") as string,
+        ...(secondaryId !== null && { secondary_id: secondaryId as string }),
       },
     };
   }

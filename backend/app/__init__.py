@@ -1,8 +1,7 @@
 from flask import Flask
 
 from config import Config
-from extensions import db, jwt
-
+from extensions import db, jwt, migrate
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -11,6 +10,7 @@ def create_app(config_class=Config):
     # Register extensions
     db.init_app(app)
     jwt.init_app(app)
+    migrate.init_app(app, db)
 
     # Register database tables
     from categories.model import Category

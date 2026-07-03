@@ -351,15 +351,13 @@ describe("CreateGrievanceForm", () => {
           userId={1}
         />,
       );
-      expect(
-        screen.getByRole("option", { name: "Walter Reuther" }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("option", { name: "Dolores Huerta" }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("option", { name: "Clara Lemlich" }),
-      ).toBeInTheDocument();
+      const pointPersonSelect = screen.getByLabelText("Point Person");
+      const options = Array.from(
+        pointPersonSelect.querySelectorAll("option"),
+      ).map((o) => o.textContent);
+      expect(options).toContain("Walter Reuther");
+      expect(options).toContain("Dolores Huerta");
+      expect(options).toContain("Clara Lemlich");
     });
 
     it("pre-selects the current user as the default point person", () => {
@@ -423,12 +421,12 @@ describe("CreateGrievanceForm", () => {
           userId={2}
         />,
       );
-      expect(
-        screen.getByRole("option", { name: "Walter Reuther" }),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole("option", { name: "Dolores Huerta" }),
-      ).toBeInTheDocument();
+      const pointPersonSelect = screen.getByLabelText("Point Person");
+      const options = Array.from(
+        pointPersonSelect.querySelectorAll("option"),
+      ).map((o) => o.textContent);
+      expect(options).toContain("Walter Reuther");
+      expect(options).toContain("Dolores Huerta");
     });
   });
 
@@ -948,6 +946,113 @@ describe("CreateGrievanceForm", () => {
           screen.getByRole("button", { name: "Submit" }),
         ).not.toBeDisabled();
       });
+    });
+  });
+
+  describe("Secondary Person field", () => {
+    it("renders the Secondary Person select", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(screen.getByLabelText("Secondary Person")).toBeInTheDocument();
+    });
+
+    it("renders point persons as options in the Secondary Person select", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      const secondarySelect = screen.getByLabelText("Secondary Person");
+      expect(secondarySelect).toBeInTheDocument();
+      const options = Array.from(
+        secondarySelect.querySelectorAll("option"),
+      ).map((o) => o.textContent);
+      expect(options).toContain("Walter Reuther");
+      expect(options).toContain("Dolores Huerta");
+      expect(options).toContain("Clara Lemlich");
+    });
+
+    it("does not pre-select any secondary person by default", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(screen.getByLabelText("Secondary Person")).toHaveValue("");
+    });
+
+    it("includes a secondary_id field in the form", () => {
+      mockBothActionStates();
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      const secondarySelect = screen.getByLabelText("Secondary Person");
+      expect(secondarySelect).toHaveAttribute("name", "secondary_id");
+    });
+
+    it("pre-selects the secondary person matching the initial secondary_id", () => {
+      mockBothActionStates({
+        error: null,
+        errors: null,
+        fields: { secondary_id: "3" },
+      });
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+          initialValues={{ secondary_id: "3" }}
+        />,
+      );
+      expect(screen.getByLabelText("Secondary Person")).toHaveValue("3");
+    });
+
+    it("preserves the secondary person selection on submission error", () => {
+      mockBothActionStates({
+        error: "Something went wrong",
+        errors: null,
+        fields: {
+          name: "Test",
+          description: "Test desc",
+          category_id: "1",
+          point_person_id: "2",
+          secondary_id: "3",
+        },
+      });
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={mockPointPersonsObjects}
+          userId={1}
+        />,
+      );
+      expect(screen.getByLabelText("Secondary Person")).toHaveValue("3");
+    });
+
+    it("disables the Secondary Person select when point persons fetch fails", () => {
+      render(
+        <CreateGrievanceForm
+          categories={mockCategories}
+          pointPersons={[]}
+          defaultPointPersonId={null}
+          pointPersonsError="Failed to load user list."
+          userId={1}
+        />,
+      );
+      expect(screen.getByLabelText("Secondary Person")).toBeDisabled();
     });
   });
 

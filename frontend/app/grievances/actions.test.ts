@@ -206,6 +206,19 @@ describe("addGrievance action", () => {
     });
   });
 
+  it("preserves the secondary_id field value on error", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Name is required" }),
+    });
+
+    const formData = buildFormData({ secondary_id: "8" });
+
+    const result = await addGrievance(initialState, formData);
+
+    expect(result.fields?.secondary_id).toBe("8");
+  });
+
   it("returns null errors array when server provides no field-specific errors", async () => {
     (fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
@@ -388,6 +401,19 @@ describe("editGrievance action", () => {
       point_person_id: "12",
       step: "Step #3",
     });
+  });
+
+  it("preserves the secondary_id field value on error", async () => {
+    (fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Name is required" }),
+    });
+
+    const formData = buildFormData({ secondary_id: "5" });
+
+    const result = await editGrievance("1", initialState, formData);
+
+    expect(result.fields?.secondary_id).toBe("5");
   });
 
   it("returns null errors array when server provides no field-specific errors", async () => {

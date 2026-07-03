@@ -69,6 +69,9 @@ export default async function EditGrievancePage({
   const matchedPointPerson = pointPersons?.find(
     (p) => p.name === grievance.point_person,
   );
+  const matchedSecondaryPerson = grievance.secondary
+    ? pointPersons?.find((p) => p.name === grievance.secondary)
+    : undefined;
 
   const boundEditGrievance = editGrievance.bind(null, id);
 
@@ -87,6 +90,9 @@ export default async function EditGrievancePage({
         category_id: matchedCategory ? String(matchedCategory.id) : "",
         point_person_id: matchedPointPerson
           ? String(matchedPointPerson.id)
+          : "",
+        secondary_id: matchedSecondaryPerson
+          ? String(matchedSecondaryPerson.id)
           : "",
       }}
       cancelHref={`/grievances/${id}`}

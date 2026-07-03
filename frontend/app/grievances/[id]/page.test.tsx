@@ -23,6 +23,7 @@ const GRIEVANCES: Record<string, Grievance> = {
     description: "Test description #1",
     category: "Pay",
     point_person: "Walter Reuther",
+    secondary: "Dolores Huerta",
     escalations: [
       {
         id: 1,
@@ -167,6 +168,28 @@ describe("GrievanceDetailPage", () => {
     expect(names.length).toBeGreaterThanOrEqual(1);
     const initials = screen.getAllByText("WR");
     expect(initials.length).toBeGreaterThanOrEqual(1);
+  });
+
+  describe("Secondary Person", () => {
+    it("renders the Secondary Person section label", async () => {
+      await renderWithId("1");
+      expect(screen.getByText("Secondary Person")).toBeInTheDocument();
+    });
+
+    it("renders the secondary person name", async () => {
+      await renderWithId("1");
+      expect(screen.getByText("Dolores Huerta")).toBeInTheDocument();
+    });
+
+    it("renders the secondary person's avatar initials", async () => {
+      await renderWithId("1");
+      expect(screen.getByText("DH")).toBeInTheDocument();
+    });
+
+    it("does not render the Secondary Person section when secondary is absent", async () => {
+      await renderWithId("3");
+      expect(screen.queryByText("Secondary Person")).not.toBeInTheDocument();
+    });
   });
 
   it("renders the current step from the latest escalation", async () => {
