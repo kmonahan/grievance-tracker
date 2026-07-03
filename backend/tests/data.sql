@@ -54,6 +54,7 @@ VALUES
     ('2025-12-21', NULL, '2025-12-30', 'ONE', 'SCHEDULED', 2, 2),
     ('2025-12-31', '2026-01-08', NULL, 'ONE', 'WAITING_ON_DECISION', 2, 2),
     ('2026-01-09', '2026-01-30', NULL, 'ONE', 'WAITING_TO_FILE', 2, 2),
+    ('2026-01-09', '2026-01-15', NULL, 'TWO', 'WAITING_TO_SCHEDULE', 4, 1),
     ('2026-01-10', NULL, NULL, 'TWO', 'IN_ABEYANCE', 4, 1);
 
 INSERT into holidays(date, name)

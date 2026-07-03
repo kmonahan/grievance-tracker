@@ -100,7 +100,7 @@ class TestGrievances:
             {'id': 1, 'date': '2025-12-19', 'step': 'Step #1', 'status': 'Waiting to Schedule',
                 'date_due': '2026-01-02', 'hearing_date': '2025-12-31', 'deadline_missed': False,
                 'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}},
-            {'id': 7, 'date': '2026-01-02', 'step': 'Step #1', 'status': 'Waiting to File', 'date_due': '2026-01-30',
+            {'id': 8, 'date': '2026-01-02', 'step': 'Step #1', 'status': 'Prepare for Next Step', 'date_due': '2026-01-30',
                 'hearing_date': None, 'deadline_missed': False,
                 'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}}]}
 
@@ -116,13 +116,13 @@ class TestGrievances:
         assert res.status_code == 200
         assert res.json == {'ok': True}
         with app.app_context():
-            updated_escalation = Escalation.query.filter_by(id=7).first()
+            updated_escalation = Escalation.query.filter_by(id=8).first()
             assert updated_escalation.deadline_missed is True
         res = client.post("/grievances/missed/1", data={'deadline_missed': False})
         assert res.status_code == 200
         assert res.json == {'ok': True}
         with app.app_context():
-            updated_escalation = Escalation.query.filter_by(id=7).first()
+            updated_escalation = Escalation.query.filter_by(id=8).first()
             assert updated_escalation.deadline_missed is False
 
     @freeze_time(datetime.datetime(2025, 12, 19))

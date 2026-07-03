@@ -61,7 +61,7 @@ export default async function Home() {
               href="/grievances"
               className="font-subtitle text-base font-semibold text-primary hover:text-accent transition-colors inline-flex items-center gap-2 group"
             >
-              See all grievances by deadline
+              See all grievances
               <svg
                 className="h-4 w-4 transition-transform group-hover:translate-x-1"
                 fill="none"

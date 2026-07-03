@@ -47,7 +47,7 @@ describe("Header", () => {
   it("renders the site title", async () => {
     mockCookies(false);
     render(await Header());
-    expect(screen.getByText("BPL PSA Grievance Tracker")).toBeInTheDocument();
+    expect(screen.getByText("BLU Grievance Tracker")).toBeInTheDocument();
   });
 
   describe("when logged out", () => {
