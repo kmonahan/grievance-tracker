@@ -27,6 +27,7 @@ export default async function GrievanceDetailPage({
   }
 
   const grievance: Grievance = await response.json();
+  console.log(grievance);
 
   const latestEscalation =
     grievance.escalations.length > 0
@@ -84,6 +85,19 @@ export default async function GrievanceDetailPage({
                   {grievance.point_person}
                 </dd>
               </div>
+              {grievance.secondary && (
+                <div>
+                  <dt className="font-subtitle text-base font-semibold text-teal-600">
+                    Secondary Person
+                  </dt>
+                  <dd className="mt-1 flex items-center gap-2">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-sm text-secondary-foreground">
+                      {getInitials(grievance.secondary)}
+                    </span>
+                    {grievance.secondary}
+                  </dd>
+                </div>
+              )}
               {latestEscalation && (
                 <EditDueDateSection
                   escalationId={latestEscalation.id}

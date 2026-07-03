@@ -23,6 +23,7 @@ export type Grievance = {
   description: string;
   category: string;
   point_person: string;
+  secondary?: string | null;
   escalations: Escalation[];
 };
 

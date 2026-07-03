@@ -51,6 +51,7 @@ export default function CreateGrievanceForm({
     description?: string;
     category_id?: string;
     point_person_id?: string;
+    secondary_id?: string;
   };
   cancelHref?: string;
   title?: string;
@@ -74,6 +75,7 @@ export default function CreateGrievanceForm({
       name: initialValues?.name ?? "",
       description: initialValues?.description ?? "",
       point_person_id: initialValues?.point_person_id ?? "",
+      secondary_id: initialValues?.secondary_id ?? "",
     },
   });
 
@@ -166,6 +168,22 @@ export default function CreateGrievanceForm({
           }
           disabled={isDisabled}
           errors={fieldErrors?.point_person_id}
+        >
+          <option value=""></option>
+          {pointPersons
+            .filter((person) => person.id !== 1)
+            .map((person) => (
+              <option key={person.id} value={person.id}>
+                {person.name}
+              </option>
+            ))}
+        </FormSelect>
+        <FormSelect
+          id="secondary_id"
+          label="Secondary Person"
+          defaultValue={grievanceState.fields?.secondary_id ?? ""}
+          disabled={isDisabled}
+          errors={fieldErrors?.secondary_id}
         >
           <option value=""></option>
           {pointPersons
