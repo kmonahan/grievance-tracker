@@ -28,13 +28,14 @@ class TestGrievances:
             coerce_optional_id('Jane')
 
     def test_to_json(self):
-        grievance = Grievance(id=1, name="Test",
+        grievance = Grievance(id=1, name="Test", date=datetime.datetime(2026, 7, 3),
                               description="Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.",
                               point_person=User(name='Karl Marx'), secondary=User(name='Friedrich Engels'), )
 
-        assert grievance.to_dict() == {'id': 1, 'name': 'Test',
-            'description': 'Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.',
-            'category': None, 'point_person': 'Karl Marx', 'secondary': 'Friedrich Engels', 'escalations': []}
+        assert grievance.to_dict() == {'id': 1, 'name': 'Test', 'date': '2026-07-03',
+                                       'description': 'Asperiores magni aliquid quaerat deleniti repudiandae id odit et. Ducimus et voluptas doloribus nihil ut quo architecto ut. Laudantium dolorem sint voluptatum explicabo harum. Ea optio harum temporibus qui ut. Sint voluptatem rem voluptatem quisquam ut dolores. Placeat laborum explicabo vero delectus et modi. Soluta rerum dolorem molestias est. Ipsam culpa architecto earum maxime exercitationem. Voluptatum accusantium at quo libero deserunt aut est. Quod ut aut veritatis minus ut rerum beatae.',
+                                       'category': None, 'point_person': 'Karl Marx', 'secondary': 'Friedrich Engels',
+                                       'escalations': []}
 
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_get_all(self, _mock_verify_jwt, client):
@@ -63,7 +64,7 @@ class TestGrievances:
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_create_invalid_grievance(self, _mock_verify_jwt, client):
         data = {'name': 'Test name', 'category_id': 8, 'point_person_id': 'Jane Smith', 'secondary_id': '',
-            'user_id': 'Jane Smith', 'step': 'One'}
+                'user_id': 'Jane Smith', 'step': 'One'}
         res = client.post("/grievances/add", data=data)
         assert res.status_code == 400
         assert res.json == {
@@ -73,7 +74,7 @@ class TestGrievances:
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_update_grievance(self, _mock_verify_jwt, client, app):
         data = {'name': 'Test name is edited', 'description': 'Test description is edited.', 'category_id': 1,
-            'point_person_id': 1, 'secondary_id': 2, 'user_id': 1, 'step': Steps.ONE.value}
+                'point_person_id': 1, 'secondary_id': 2, 'user_id': 1, 'step': Steps.ONE.value}
         res = client.patch("/grievances/edit/1", data=data)
         with app.app_context():
             grievance_from_db = Grievance.query.filter_by(name=data['name']).first()
@@ -98,11 +99,11 @@ class TestGrievances:
         assert res.status_code == 200
         assert res.json == {**TEST_GRIEVANCE, 'escalations': [
             {'id': 1, 'date': '2025-12-19', 'step': 'Step #1', 'status': 'Waiting to Schedule',
-                'date_due': '2026-01-02', 'hearing_date': '2025-12-31', 'deadline_missed': False,
-                'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}},
-            {'id': 8, 'date': '2026-01-02', 'step': 'Step #1', 'status': 'Prepare for Next Step', 'date_due': '2026-01-30',
-                'hearing_date': None, 'deadline_missed': False,
-                'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}}]}
+             'date_due': '2026-01-02', 'hearing_date': '2025-12-31', 'deadline_missed': False,
+             'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}},
+            {'id': 8, 'date': '2026-01-02', 'step': 'Step #1', 'status': 'Prepare for Next Step',
+             'date_due': '2026-01-30', 'hearing_date': None, 'deadline_missed': False,
+             'user': {'id': 1, 'is_active': True, 'name': 'Walter Reuther'}}]}
 
     @freeze_time(datetime.datetime(2026, 1, 2))
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
@@ -147,3 +148,12 @@ class TestGrievances:
         res = client.get("/grievances/1")
         assert res.status_code == 200
         assert res.json == TEST_GRIEVANCE
+
+    @freeze_time(datetime.datetime(2026, 7, 3))
+    @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
+    def test_get_year_total(self, _mock_verify_jwt, client):
+        res = client.get('/grievances/year-total')
+        assert res.status_code == 200
+        assert res.json == {
+            'year_total': 1
+        }

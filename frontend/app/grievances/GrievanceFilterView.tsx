@@ -18,9 +18,7 @@ function getLatestStep(grievance: Grievance): string | null {
 }
 
 function getFiledYear(grievance: Grievance): number | null {
-  const first = grievance.escalations.at(0);
-  if (!first) return null;
-  return new Date(first.date).getFullYear();
+  return new Date(grievance.date).getFullYear();
 }
 
 function hasAnyMissedDeadline(grievance: Grievance): boolean {

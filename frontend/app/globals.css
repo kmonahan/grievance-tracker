@@ -15,6 +15,7 @@
   --accent-foreground: oklch(0.99 0.01 220.083);
   --border: oklch(0.82 0 0);
   --destructive: oklch(0.357 0.143 22.791);
+  --highlight: oklch(0.276 0.114 348.596);
 }
 
 @theme inline {
@@ -110,6 +111,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-highlight: var(--highlight);
 }
 
 @layer base {

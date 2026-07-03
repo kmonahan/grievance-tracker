@@ -10,6 +10,7 @@ const LAST_YEAR_DATE = `${CURRENT_YEAR - 1}-03-01`;
 const STEP_1_OPEN: Grievance = {
   id: 1,
   name: "Unsafe Working Conditions",
+  date: '2026-04-18',
   description: "Staff have reported inadequate ventilation.",
   category: "Health & Safety",
   point_person: "Maria Santos",
@@ -30,6 +31,7 @@ const STEP_1_OPEN: Grievance = {
 const STEP_2_OPEN: Grievance = {
   id: 2,
   name: "Denial of Bereavement Leave",
+  date: '2026-04-22',
   description: "Member was denied bereavement leave.",
   category: "Leave",
   point_person: "James Okafor",
@@ -50,6 +52,7 @@ const STEP_2_OPEN: Grievance = {
 const STEP_3_OPEN: Grievance = {
   id: 3,
   name: "Seniority Violation",
+  date: '2026-04-10',
   description: "Overtime distributed out of seniority order.",
   category: "Scheduling",
   point_person: "Jordan Lee",
@@ -70,6 +73,7 @@ const STEP_3_OPEN: Grievance = {
 const STEP_1_CLOSED: Grievance = {
   id: 4,
   name: "Resolved Pay Dispute",
+  date: LAST_YEAR_DATE,
   description: "Pay dispute that was resolved.",
   category: "Pay",
   point_person: "Sam Lee",
@@ -90,6 +94,7 @@ const STEP_1_CLOSED: Grievance = {
 const STEP_2_CLOSED: Grievance = {
   id: 5,
   name: "Denied Overtime Claim",
+  date: LAST_YEAR_DATE,
   description: "Overtime claim that was denied.",
   category: "Pay",
   point_person: "Alex Kim",
@@ -110,6 +115,7 @@ const STEP_2_CLOSED: Grievance = {
 const MISSED_DEADLINE_OPEN: Grievance = {
   id: 6,
   name: "Missed Deadline Grievance",
+  date: CURRENT_YEAR_DATE,
   description: "A grievance with a missed deadline.",
   category: "Workload",
   point_person: "Pat Brown",
@@ -130,6 +136,7 @@ const MISSED_DEADLINE_OPEN: Grievance = {
 const LAST_YEAR_OPEN: Grievance = {
   id: 7,
   name: "Last Year Grievance",
+  date: LAST_YEAR_DATE,
   description: "Filed last year.",
   category: "Leave",
   point_person: "Dana White",

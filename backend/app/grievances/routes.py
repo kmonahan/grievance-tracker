@@ -69,13 +69,15 @@ def escalate_grievance(grievance: Grievance, step: Steps, status: Statuses, user
 @jwt_required()
 def create():
     form = _prepare_form_choices()
+    todays_date = datetime.now()
     if form.validate_on_submit():
         grievance = Grievance(
             name=form.name.data,
             description=form.description.data,
             category_id=form.category_id.data,
             point_person_id=form.point_person_id.data,
-            secondary_id=form.secondary_id.data
+            secondary_id=form.secondary_id.data,
+            date = todays_date
         )
         db.session.add(grievance)
         db.session.commit()
@@ -166,3 +168,11 @@ def get_upcoming():
     aliased_escalation = aliased(Escalation, subquery)
     grievances = Grievance.query.join(aliased_escalation.grievance).filter(aliased_escalation.date_due >= start_date)
     return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
+
+@bp.route('/year-total')
+@jwt_required()
+def get_year_total():
+    current_day = datetime.today()
+    current_year = current_day.replace(month=1, day=1, hour=0, minute=0, second=0)
+    total = db.session.execute(db.select(func.count()).select_from(Grievance).filter(Grievance.date >= current_year)).scalar()
+    return jsonify({'year_total': total})
