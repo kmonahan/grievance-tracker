@@ -4,7 +4,7 @@ import { Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 import Header from "./components/Header";
 
-const glacialIndifferenceBplPsa = localFont({
+const glacialIndifferenceBLU = localFont({
   src: [
     {
       path: "./fonts/glacialindifferencebplpsa-bold-webfont.woff2",
@@ -50,8 +50,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "BPL PSA Grievance Tracker",
-  description: "Grievance tracking for the BPL PSA",
+  title: "BLU Grievance Tracker",
+  description: "Grievance tracking for the Boston Librarians Union",
 };
 
 export default function RootLayout({
@@ -62,7 +62,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${glacialIndifferenceBplPsa.variable} ${lovelo.variable} ${montserrat.variable} antialiased`}
+        className={`${glacialIndifferenceBLU.variable} ${lovelo.variable} ${montserrat.variable} antialiased`}
       >
         <div className="flex flex-col min-h-screen bg-linear-to-br from-background via-muted/20 to-secondary/10 font-body">
           <Header />
