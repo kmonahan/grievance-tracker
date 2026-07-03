@@ -25,13 +25,6 @@ def get_all():
     return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
 
 
-@bp.route('/upcoming')
-@jwt_required()
-def get_upcoming():
-    start_date = request.form.get('start_date', default=datetime.today())
-    grievances = Grievance.query.join(Escalation.grievance).filter(Escalation.date_due >= start_date)
-    return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
-
 @bp.route('/<int:grievance_id>')
 @jwt_required()
 def get_grievance(grievance_id):
@@ -161,3 +154,15 @@ def get_by_step(step_key):
         return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
     except KeyError:
         return jsonify({'error': 'Missing or invalid step key'}), 400
+
+@bp.route('/upcoming')
+@jwt_required()
+def get_upcoming():
+    start_date = request.form.get('start_date', default=datetime.today())
+    subsubquery = db.session.query(Escalation, func.row_number().over(partition_by=Escalation.grievance_id,
+                                                                      order_by=desc(Escalation.date)).label(
+        "row_number")).subquery()
+    subquery = db.session.query(subsubquery).filter(subsubquery.c.row_number == 1).subquery()
+    aliased_escalation = aliased(Escalation, subquery)
+    grievances = Grievance.query.join(aliased_escalation.grievance).filter(aliased_escalation.date_due >= start_date)
+    return jsonify({'grievances': [grievance.to_dict() for grievance in grievances]})
