@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import type { Grievance } from "~/app/grievances/types";
 import { GrievanceFilterView } from "./GrievanceFilterView";
 
@@ -10,7 +10,7 @@ const LAST_YEAR_DATE = `${CURRENT_YEAR - 1}-03-01`;
 const STEP_1_OPEN: Grievance = {
   id: 1,
   name: "Unsafe Working Conditions",
-  date: '2026-04-18',
+  date: "2026-04-18",
   description: "Staff have reported inadequate ventilation.",
   category: "Health & Safety",
   point_person: "Maria Santos",
@@ -31,7 +31,7 @@ const STEP_1_OPEN: Grievance = {
 const STEP_2_OPEN: Grievance = {
   id: 2,
   name: "Denial of Bereavement Leave",
-  date: '2026-04-22',
+  date: "2026-04-22",
   description: "Member was denied bereavement leave.",
   category: "Leave",
   point_person: "James Okafor",
@@ -52,7 +52,7 @@ const STEP_2_OPEN: Grievance = {
 const STEP_3_OPEN: Grievance = {
   id: 3,
   name: "Seniority Violation",
-  date: '2026-04-10',
+  date: "2026-04-10",
   description: "Overtime distributed out of seniority order.",
   category: "Scheduling",
   point_person: "Jordan Lee",
@@ -154,8 +154,16 @@ const LAST_YEAR_OPEN: Grievance = {
   ],
 };
 
-function renderView(grievances: Grievance[]) {
-  return render(<GrievanceFilterView grievances={grievances} />);
+const POINT_PERSONS = [
+  { id: 2, name: "Maria Santos", isActive: true },
+  { id: 3, name: "James Okafor", isActive: true },
+  { id: 4, name: "Jordan Lee", isActive: true },
+];
+
+function renderView(grievances: Grievance[], pointPersons = POINT_PERSONS) {
+  return render(
+    <GrievanceFilterView grievances={grievances} pointPersons={pointPersons} />,
+  );
 }
 
 describe("GrievanceFilterView", () => {
@@ -277,6 +285,135 @@ describe("GrievanceFilterView", () => {
     });
   });
 
+  describe("point person filter", () => {
+    it("renders a point person select with an option for each provided point person", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      const select = screen.getByRole("combobox", { name: /point person/i });
+      expect(
+        within(select).getByRole("option", { name: "Maria Santos" }),
+      ).toBeInTheDocument();
+      expect(
+        within(select).getByRole("option", { name: "James Okafor" }),
+      ).toBeInTheDocument();
+      expect(
+        within(select).getByRole("option", { name: "Jordan Lee" }),
+      ).toBeInTheDocument();
+    });
+
+    it("includes an empty/all option that is selected by default", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      const select: HTMLSelectElement = screen.getByRole("combobox", {
+        name: /point person/i,
+      });
+      expect(select.value).toBe("");
+    });
+
+    it("filters grievances to the selected point person", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      fireEvent.change(
+        screen.getByRole("combobox", { name: /point person/i }),
+        {
+          target: { value: "Maria Santos" },
+        },
+      );
+      expect(screen.getByText("Unsafe Working Conditions")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Denial of Bereavement Leave"),
+      ).not.toBeInTheDocument();
+    });
+
+    it("shows all grievances again when the empty option is reselected", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      const select = screen.getByRole("combobox", { name: /point person/i });
+      fireEvent.change(select, { target: { value: "Maria Santos" } });
+      fireEvent.change(select, { target: { value: "" } });
+      expect(screen.getByText("Unsafe Working Conditions")).toBeInTheDocument();
+      expect(
+        screen.getByText("Denial of Bereavement Leave"),
+      ).toBeInTheDocument();
+    });
+
+    it("only allows a single point person to be selected at a time", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN, STEP_3_OPEN]);
+      const select: HTMLSelectElement = screen.getByRole("combobox", {
+        name: /point person/i,
+      });
+      fireEvent.change(select, { target: { value: "Maria Santos" } });
+      expect(select.value).toBe("Maria Santos");
+      fireEvent.change(select, { target: { value: "James Okafor" } });
+      expect(select.value).toBe("James Okafor");
+      expect(
+        screen.queryByText("Unsafe Working Conditions"),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByText("Denial of Bereavement Leave"),
+      ).toBeInTheDocument();
+    });
+
+    it("applies the point person filter to closed grievances too", () => {
+      renderView([
+        STEP_1_OPEN,
+        { ...STEP_1_CLOSED, point_person: "Jordan Lee" },
+        STEP_2_CLOSED,
+      ]);
+      fireEvent.click(screen.getByRole("switch", { name: /show closed/i }));
+      fireEvent.change(
+        screen.getByRole("combobox", { name: /point person/i }),
+        {
+          target: { value: "Jordan Lee" },
+        },
+      );
+      expect(screen.getByText("Resolved Pay Dispute")).toBeInTheDocument();
+      expect(
+        screen.queryByText("Denied Overtime Claim"),
+      ).not.toBeInTheDocument();
+    });
+
+    it("combines the point person filter with other active filters (AND logic)", () => {
+      renderView([STEP_1_OPEN, MISSED_DEADLINE_OPEN]);
+      fireEvent.click(screen.getByRole("button", { name: /step 1/i }));
+      fireEvent.change(
+        screen.getByRole("combobox", { name: /point person/i }),
+        {
+          target: { value: "Jordan Lee" },
+        },
+      );
+      expect(
+        screen.queryByText("Unsafe Working Conditions"),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Missed Deadline Grievance"),
+      ).not.toBeInTheDocument();
+    });
+
+    it("counts the point person filter towards the active filter count", () => {
+      renderView([STEP_1_OPEN]);
+      fireEvent.change(
+        screen.getByRole("combobox", { name: /point person/i }),
+        {
+          target: { value: "Maria Santos" },
+        },
+      );
+      expect(
+        screen.getByRole("button", { name: /clear all/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("resets the point person filter when clear all is clicked", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      const select: HTMLSelectElement = screen.getByRole("combobox", {
+        name: /point person/i,
+      });
+      fireEvent.change(select, { target: { value: "Maria Santos" } });
+      fireEvent.click(screen.getByRole("button", { name: /clear all/i }));
+      expect(select.value).toBe("");
+      expect(screen.getByText("Unsafe Working Conditions")).toBeInTheDocument();
+      expect(
+        screen.getByText("Denial of Bereavement Leave"),
+      ).toBeInTheDocument();
+    });
+  });
+
   describe("current year filter", () => {
     it("shows all grievances when the current year filter is off", () => {
       renderView([STEP_1_OPEN, LAST_YEAR_OPEN]);
@@ -316,6 +453,7 @@ describe("GrievanceFilterView", () => {
       const multiEscalation: Grievance = {
         id: 10,
         name: "Multi-Escalation Grievance",
+        date: CURRENT_YEAR_DATE,
         description: "Has multiple escalations, one with a missed deadline.",
         category: "Workload",
         point_person: "Test User",

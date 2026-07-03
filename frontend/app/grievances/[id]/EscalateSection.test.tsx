@@ -16,6 +16,7 @@ function makeGrievance(escalations: EscalationSeed[]): Grievance {
   return {
     id: 1,
     name: "Test Grievance",
+    date: "2025-12-01",
     description: "Test description",
     category: "Pay",
     point_person: "Walter Reuther",

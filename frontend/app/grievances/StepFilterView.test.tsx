@@ -11,6 +11,7 @@ jest.mock("next/navigation", () => ({
 const STEP_1_OPEN_GRIEVANCE: Grievance = {
   id: 1,
   name: "Unsafe Working Conditions",
+  date: "2026-02-14",
   description: "Staff have reported inadequate ventilation.",
   category: "Health & Safety",
   point_person: "Maria Santos",
@@ -31,6 +32,7 @@ const STEP_1_OPEN_GRIEVANCE: Grievance = {
 const STEP_2_OPEN_GRIEVANCE: Grievance = {
   id: 2,
   name: "Denial of Bereavement Leave",
+  date: "2026-01-09",
   description: "Member was denied bereavement leave.",
   category: "Leave",
   point_person: "James Okafor",
@@ -51,6 +53,7 @@ const STEP_2_OPEN_GRIEVANCE: Grievance = {
 const STEP_3_OPEN_GRIEVANCE: Grievance = {
   id: 3,
   name: "Seniority Violation",
+  date: "2026-03-05",
   description: "Overtime distributed out of seniority order.",
   category: "Scheduling",
   point_person: "Jordan Lee",
@@ -71,6 +74,7 @@ const STEP_3_OPEN_GRIEVANCE: Grievance = {
 const STEP_1_CLOSED_GRIEVANCE: Grievance = {
   id: 4,
   name: "Resolved Pay Dispute",
+  date: "2025-11-01",
   description: "Pay dispute that was resolved.",
   category: "Pay",
   point_person: "Sam Lee",
@@ -91,6 +95,7 @@ const STEP_1_CLOSED_GRIEVANCE: Grievance = {
 const STEP_2_CLOSED_GRIEVANCE: Grievance = {
   id: 5,
   name: "Denied Overtime Claim",
+  date: "2025-10-15",
   description: "Overtime claim that was denied.",
   category: "Pay",
   point_person: "Alex Kim",

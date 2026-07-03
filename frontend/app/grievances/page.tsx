@@ -1,14 +1,29 @@
 import Link from "next/link";
+import type { PointPerson } from "~/app/grievances/create/page";
 import { GrievanceFilterView } from "~/app/grievances/GrievanceFilterView";
 import type { Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
 
+export async function getPointPersons(
+  accessToken: string | undefined,
+): Promise<PointPerson[]> {
+  const response = await fetch(`${process.env.BACKEND_URL}/users/active`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!response.ok) return [];
+  const data = (await response.json()) as { users: PointPerson[] };
+  return data.users.filter((p) => p.id !== 1);
+}
+
 export default async function GrievancesPage() {
   const accessToken = await getAccessToken();
 
-  const response = await fetch(`${process.env.BACKEND_URL}/grievances/all`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const [response, pointPersons] = await Promise.all([
+    fetch(`${process.env.BACKEND_URL}/grievances/all`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    }),
+    getPointPersons(accessToken),
+  ]);
   const { grievances } = (await response.json()) as { grievances: Grievance[] };
 
   return (
@@ -47,7 +62,10 @@ export default async function GrievancesPage() {
             </p>
           </div>
         ) : (
-          <GrievanceFilterView grievances={grievances} />
+          <GrievanceFilterView
+            grievances={grievances}
+            pointPersons={pointPersons}
+          />
         )}
       </div>
     </main>

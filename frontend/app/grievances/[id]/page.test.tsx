@@ -20,6 +20,7 @@ const GRIEVANCES: Record<string, Grievance> = {
   "1": {
     id: 1,
     name: "Test #1",
+    date: "2025-12-19",
     description: "Test description #1",
     category: "Pay",
     point_person: "Walter Reuther",
@@ -40,6 +41,7 @@ const GRIEVANCES: Record<string, Grievance> = {
   "2": {
     id: 2,
     name: "Test #2",
+    date: "2025-12-19",
     description: "Test description #2",
     category: "Pay",
     point_person: "Cesar Chavez",
@@ -89,6 +91,7 @@ const GRIEVANCES: Record<string, Grievance> = {
   "3": {
     id: 3,
     name: "Test #3",
+    date: "2025-11-05",
     description: "Test description #3",
     category: "PTO",
     point_person: "Clara Lemlich",
@@ -97,6 +100,7 @@ const GRIEVANCES: Record<string, Grievance> = {
   "4": {
     id: 4,
     name: "Test #4",
+    date: "2026-01-10",
     description: "Test description #4",
     category: "PTO",
     point_person: "Walter Reuther",
