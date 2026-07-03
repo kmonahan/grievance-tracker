@@ -417,6 +417,76 @@ describe("GrievanceFilterView", () => {
     });
   });
 
+  describe("grievance count", () => {
+    it("shows the open grievance count with no filters active", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      expect(screen.getByText("2 open grievances")).toBeInTheDocument();
+    });
+
+    it("uses singular 'grievance' when the open count is 1", () => {
+      renderView([STEP_1_OPEN]);
+      expect(screen.getByText("1 open grievance")).toBeInTheDocument();
+    });
+
+    it("does not count closed grievances in the open count", () => {
+      renderView([STEP_1_OPEN, STEP_1_CLOSED]);
+      expect(screen.getByText("1 open grievance")).toBeInTheDocument();
+    });
+
+    it("updates the open count when a step filter is applied", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      fireEvent.click(screen.getByRole("button", { name: /step 1/i }));
+      expect(screen.getByText("1 open grievance")).toBeInTheDocument();
+    });
+
+    it("updates the open count when a category filter is applied", () => {
+      renderView([STEP_1_OPEN, STEP_2_OPEN]);
+      fireEvent.click(screen.getByRole("button", { name: "Health & Safety" }));
+      expect(screen.getByText("1 open grievance")).toBeInTheDocument();
+    });
+
+    it("updates the open count when combined filters are applied", () => {
+      renderView([STEP_1_OPEN, MISSED_DEADLINE_OPEN]);
+      fireEvent.click(screen.getByRole("button", { name: /step 1/i }));
+      fireEvent.click(screen.getByRole("switch", { name: /missed deadline/i }));
+      expect(screen.getByText("1 open grievance")).toBeInTheDocument();
+    });
+
+    it("shows a zero count when no grievances match the filters", () => {
+      renderView([STEP_1_OPEN]);
+      fireEvent.click(screen.getByRole("button", { name: /step 3/i }));
+      expect(screen.getByText("0 open grievances")).toBeInTheDocument();
+    });
+
+    it("switches to a total count including closed grievances when show closed is enabled", () => {
+      renderView([STEP_1_OPEN, STEP_1_CLOSED]);
+      fireEvent.click(screen.getByRole("switch", { name: /show closed/i }));
+      expect(screen.getByText("2 total grievances")).toBeInTheDocument();
+      expect(screen.queryByText(/open grievance/)).not.toBeInTheDocument();
+    });
+
+    it("uses singular 'grievance' for the total count when it is 1", () => {
+      renderView([STEP_1_CLOSED]);
+      fireEvent.click(screen.getByRole("switch", { name: /show closed/i }));
+      expect(screen.getByText("1 total grievance")).toBeInTheDocument();
+    });
+
+    it("reverts to the open-only count when show closed is toggled back off", () => {
+      renderView([STEP_1_OPEN, STEP_1_CLOSED]);
+      fireEvent.click(screen.getByRole("switch", { name: /show closed/i }));
+      fireEvent.click(screen.getByRole("switch", { name: /hide closed/i }));
+      expect(screen.getByText("1 open grievance")).toBeInTheDocument();
+    });
+
+    it("reflects filters applied to both open and closed grievances in the total count", () => {
+      renderView([STEP_1_OPEN, STEP_1_CLOSED, STEP_2_CLOSED]);
+      fireEvent.click(screen.getByRole("switch", { name: /show closed/i }));
+      fireEvent.click(screen.getByRole("button", { name: /step 1/i }));
+      // Step 1 matches STEP_1_OPEN and STEP_1_CLOSED, not STEP_2_CLOSED
+      expect(screen.getByText("2 total grievances")).toBeInTheDocument();
+    });
+  });
+
   describe("clear all filters", () => {
     it("does not show the clear all button when no filters are active", () => {
       renderView([STEP_1_OPEN]);
