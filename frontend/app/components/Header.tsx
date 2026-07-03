@@ -13,7 +13,7 @@ export default async function Header() {
           href="/"
           className="font-title text-2xl md:text-4xl lg:text-5xl text-primary font-bold tracking-tight hover:text-teal-700 transition-colors"
         >
-          BPL PSA Grievance Tracker
+          BLU Grievance Tracker
         </Link>
         {isLoggedIn && <NavMenu />}
       </div>
