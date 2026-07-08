@@ -22,5 +22,5 @@ class Grievance(db.Model):
         del grievance_dict['point_person_id']
         grievance_dict['secondary'] = self.secondary.name if self.secondary else None
         del grievance_dict['secondary_id']
-        grievance_dict['escalations'] = [escalation.to_dict() for escalation in self.escalations if self.escalations is not None]
+        grievance_dict['escalations'] = sorted([escalation.to_dict() for escalation in self.escalations if self.escalations is not None], key=lambda escalation: escalation['date'], reverse=False)
         return grievance_dict
