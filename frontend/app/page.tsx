@@ -44,9 +44,9 @@ export default async function Home() {
     <main className="w-full mx-auto px-6 py-8">
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="flex flex-col gap-8">
-          <section className="flex flex-col gap-6 bg-card text-card-foreground gap-6 rounded-xl border py-6 border-primary/20 shadow-lg">
+          <section className="flex flex-col gap-6 bg-card text-primary gap-6 rounded-xl border py-6 border-primary/20 shadow-lg">
             <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 border-b">
-              <h2 className="font-bold font-title text-3xl text-primary">
+              <h2 className="font-bold font-title text-2xl md:text-3xl uppercase text-primary">
                 Upcoming Deadlines
               </h2>
               <div className="text-muted-foreground text-base font-subtitle">
@@ -69,7 +69,7 @@ export default async function Home() {
             <footer className="mt-6 flex justify-center">
               <a
                 href="/grievances"
-                className="font-subtitle text-base font-semibold text-primary hover:text-accent transition-colors inline-flex items-center gap-2 group"
+                className="font-subtitle text-base font-semibold text-primary hover:text-hover transition-colors inline-flex items-center gap-2 group"
               >
                 See all grievances
                 <svg
@@ -90,9 +90,9 @@ export default async function Home() {
               </a>
             </footer>
           </section>
-          <section className="flex flex-col gap-6 bg-card text-card-foreground gap-6 rounded-xl border py-6 border-accent/20 shadow-lg">
+          <section className="flex flex-col gap-6 bg-card text-primary gap-6 rounded-xl border py-6 border-accent/20 shadow-lg">
             <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6">
-              <h2 className="font-bold font-title text-3xl text-highlight">
+              <h2 className="font-bold font-title text-2xl md:text-3xl uppercase text-primary">
                 Grievances Filed in {new Date().getFullYear()}
               </h2>
             </div>
@@ -101,9 +101,9 @@ export default async function Home() {
             </div>
           </section>
         </div>
-        <section className="flex flex-col gap-6 bg-card text-card-foreground gap-6 rounded-xl border py-6 border-accent/20 shadow-lg">
+        <section className="flex flex-col gap-6 bg-card text-primary gap-6 rounded-xl border py-6 border-accent/20 shadow-lg">
           <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 border-b">
-            <h2 className="font-bold font-title text-3xl text-accent">
+            <h2 className="font-bold font-title text-2xl md:text-3xl uppercase text-primary">
               Recent Activity
             </h2>
             <div className="text-muted-foreground text-base font-subtitle">

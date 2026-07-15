@@ -155,7 +155,7 @@ export default function CreateGrievanceForm({
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center text-base font-medium text-secondary hover:underline font-subtitle"
+          className="inline-flex items-center text-base font-semibold text-secondary hover:underline font-subtitle"
         >
           + Add Category
         </button>

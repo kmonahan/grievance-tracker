@@ -8,8 +8,8 @@ import type { Grievance } from "~/app/grievances/types";
 function filterButtonClass(active: boolean): string {
   return `rounded-lg border px-3 py-1.5 font-subtitle text-sm font-medium transition-colors ${
     active
-      ? "border-primary/30 bg-primary/10 text-primary"
-      : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+      ? "border-primary bg-primary text-primary-foreground"
+      : "border-border bg-card text-muted-foreground hover:border-hover hover:text-hover"
   }`;
 }
 
@@ -112,7 +112,7 @@ export function GrievanceFilterView({
     <div>
       <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border">
-          <span className="font-subtitle text-sm font-semibold text-foreground">
+          <span className="font-subtitle text-sm font-semibold text-primary uppercase">
             Filters
           </span>
           <div className="flex items-center gap-3">
@@ -120,7 +120,7 @@ export function GrievanceFilterView({
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="font-subtitle text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="font-subtitle text-sm text-muted-foreground hover:text-hover transition-colors"
               >
                 Clear all
               </button>
@@ -162,7 +162,7 @@ export function GrievanceFilterView({
 
         <div className="mt-3 flex flex-col gap-3">
           <fieldset className="border-0 p-0 m-0">
-            <legend className="mb-1.5 font-subtitle text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <legend className="mb-1.5 font-subtitle text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Step
             </legend>
             <div className="flex flex-wrap gap-2">
@@ -184,7 +184,7 @@ export function GrievanceFilterView({
 
           {categories.length > 0 && (
             <fieldset className="border-0 p-0 m-0">
-              <legend className="mb-1.5 font-subtitle text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <legend className="mb-1.5 font-subtitle text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Category
               </legend>
               <div className="flex flex-wrap gap-2">
@@ -208,7 +208,7 @@ export function GrievanceFilterView({
           <fieldset className="border-0 p-0 m-0">
             <label
               htmlFor="point-person-filter"
-              className="mb-1.5 block font-subtitle text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+              className="mb-1.5 block font-subtitle text-xs font-medium uppercase tracking-wide text-muted-foreground"
             >
               Point person
             </label>
@@ -219,7 +219,7 @@ export function GrievanceFilterView({
                 const nextValue = e.target.value;
                 setActivePointPerson(nextValue === "" ? null : nextValue);
               }}
-              className="rounded-lg border border-border bg-card px-3 py-1.5 font-subtitle text-sm text-foreground"
+              className="rounded-lg border border-border bg-card px-3 py-1.5 font-subtitle text-sm text-primary"
             >
               <option value="">All</option>
               {pointPersons.map((person) => (
@@ -283,7 +283,7 @@ export function GrievanceFilterView({
         </div>
       </div>
 
-      <p className="mb-3 font-subtitle text-base text-muted-foreground">
+      <p className="mb-3 font-subtitle text-lg text-accent-foreground font-semibold">
         {countLabel}
       </p>
 
@@ -314,7 +314,7 @@ export function GrievanceFilterView({
 
       {showClosed && (
         <section className="mt-10">
-          <h2 className="mb-4 font-subtitle text-lg font-semibold text-muted-foreground">
+          <h2 className="mb-4 font-subtitle text-lg font-semibold text-accent-foreground">
             Closed ({closedGrievances.length})
           </h2>
           {filteredClosed.length > 0 ? (

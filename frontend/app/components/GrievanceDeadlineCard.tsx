@@ -24,7 +24,7 @@ export default function GrievanceDeadlineCard({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-subtitle font-semibold text-foreground">
+              <h3 className="font-subtitle font-semibold text-primary">
                 {name}
               </h3>
               {latestEscalation ? (
@@ -32,7 +32,7 @@ export default function GrievanceDeadlineCard({
               ) : null}
             </div>
             <div className="flex items-center gap-2 text-base">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-sm text-secondary-foreground">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-xs text-foreground">
                 {pointPersonInitials}
               </span>
               <span className="text-muted-foreground">{point_person}</span>
@@ -40,7 +40,7 @@ export default function GrievanceDeadlineCard({
           </div>
           {latestEscalation?.date_due ? (
             <div className="sm:text-right">
-              <div className="font-subtitle text-base font-semibold text-accent">
+              <div className="font-subtitle text-base font-semibold text-highlight">
                 {formatDate(latestEscalation.date_due)}
               </div>
             </div>

@@ -27,7 +27,6 @@ export default async function GrievanceDetailPage({
   }
 
   const grievance: Grievance = await response.json();
-  console.log(grievance);
 
   const latestEscalation =
     grievance.escalations.length > 0
@@ -36,10 +35,10 @@ export default async function GrievanceDetailPage({
 
   return (
     <main className="w-full px-4 md:px-6 py-6 md:py-8">
-      <article className="mx-auto w-full max-w-4xl bg-card text-card-foreground rounded-xl border shadow-lg">
+      <article className="mx-auto w-full max-w-4xl bg-card text-primary rounded-xl border shadow-lg">
         <header className="border-b px-4 py-5 sm:px-6 sm:py-6">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-title text-2xl font-bold md:text-3xl">
+            <h1 className="font-title text-1xl font-bold md:text-2xl">
               {grievance.name}
             </h1>
             {latestEscalation && <StatusTag status={latestEscalation.status} />}
@@ -60,7 +59,7 @@ export default async function GrievanceDetailPage({
         <section className="border-b px-4 py-5 sm:px-6 sm:py-6">
           <dl className="grid gap-4 sm:grid-cols-2">
             <div>
-              <dt className="font-subtitle text-base font-semibold text-teal-600">
+              <dt className="font-subtitle text-base font-semibold text-purple-700">
                 Description
               </dt>
               <dd className="mt-1">{grievance.description}</dd>
@@ -68,18 +67,18 @@ export default async function GrievanceDetailPage({
             <div className="space-y-4">
               {latestEscalation?.step && (
                 <div>
-                  <dt className="font-subtitle text-base font-semibold text-teal-600">
+                  <dt className="font-subtitle text-base font-semibold text-purple-700">
                     Current Step
                   </dt>
                   <dd className="mt-1">{latestEscalation.step}</dd>
                 </div>
               )}
               <div>
-                <dt className="font-subtitle text-base font-semibold text-teal-600">
+                <dt className="font-subtitle text-base font-semibold text-purple-700">
                   Point Person
                 </dt>
                 <dd className="mt-1 flex items-center gap-2">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-sm text-secondary-foreground">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-tertiary text-xs text-tertiary-foreground">
                     {getInitials(grievance.point_person)}
                   </span>
                   {grievance.point_person}
@@ -87,11 +86,11 @@ export default async function GrievanceDetailPage({
               </div>
               {grievance.secondary && (
                 <div>
-                  <dt className="font-subtitle text-base font-semibold text-teal-600">
+                  <dt className="font-subtitle text-base font-semibold text-purple-700">
                     Secondary Person
                   </dt>
                   <dd className="mt-1 flex items-center gap-2">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-sm text-secondary-foreground">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-tertiary text-xs text-tertiary-foreground">
                       {getInitials(grievance.secondary)}
                     </span>
                     {grievance.secondary}

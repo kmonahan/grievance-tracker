@@ -5,12 +5,11 @@ import { formatDate, getInitials } from "~/lib/format";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Health & Safety": "bg-red-500/10 text-red-700 border-red-200",
-  Leave: "bg-teal-500/10 text-teal-700 border-teal-200",
-  Scheduling: "bg-amber-500/10 text-amber-800 border-amber-200",
-  "Promotion & Posting": "bg-plum-500/10 text-plum-100 border-plum-200",
-  Discipline: "bg-orange-500/10 text-orange-800 border-orange-200",
-  Workload: "bg-secondary/10 text-secondary border-secondary/20",
-  Accommodation: "bg-teal-200/30 text-teal-700 border-teal-300",
+  PTO: "bg-yellow-500/10 text-yellow-800 border-yellow-200",
+  Pay: "bg-yellow-500/10 text-yellow-800 border-yellow-200",
+  "Scheduling & Overtime": "bg-purple-500/10 text-purple-100 border-purple-200",
+  "Failure to Bargain": "bg-orange-500/10 text-orange-800 border-orange-200",
+  "Union Busting": "bg-teal-500/10 text-teal-800 border-teal-200",
 };
 
 function getCategoryClasses(category: string): string {
@@ -21,11 +20,11 @@ function getCategoryClasses(category: string): string {
 }
 
 const STATUS_STRIPE_COLORS: Record<string, string> = {
-  "Waiting to Schedule": "bg-accent",
-  Scheduled: "bg-teal-500",
+  "Waiting to Schedule": "bg-yellow-400",
+  Scheduled: "bg-purple-500",
   "Waiting on Decision": "bg-red-500",
-  "Prepare for Next Step": "bg-plum-500",
-  "In Abeyance": "bg-neutral-300",
+  "Prepare for Next Step": "bg-teal-500",
+  "In Abeyance": "bg-neutral-50",
 };
 
 export function GrievanceCard({
@@ -41,7 +40,7 @@ export function GrievanceCard({
   return (
     <Link href={`/grievances/${grievance.id}`} className="group block">
       <article
-        className={`rounded-xl border border-border bg-card shadow-sm transition-all hover:border-primary/30 hover:shadow-md ${muted ? "opacity-60" : ""}`}
+        className={`rounded-xl border border-border bg-card shadow-sm transition-all hover:border-primary/30 hover:shadow-md ${muted ? "opacity-90 saturate-50" : ""}`}
       >
         <div className="flex">
           <div
@@ -51,7 +50,7 @@ export function GrievanceCard({
 
           <div className="flex flex-1 flex-col gap-3 px-5 py-4">
             <div className="flex flex-wrap items-start justify-between gap-2">
-              <h2 className="font-subtitle text-base font-semibold text-foreground transition-colors group-hover:text-primary">
+              <h2 className="font-subtitle font-semibold text-primary text-base transition-colors group-hover:text-primary">
                 {grievance.name}
               </h2>
               {latestEscalation && (
@@ -74,7 +73,7 @@ export function GrievanceCard({
 
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-medium text-secondary-foreground">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-xs text-foreground">
                   {initials}
                 </span>
                 <span className="text-sm text-muted-foreground">
@@ -84,7 +83,7 @@ export function GrievanceCard({
 
               {latestEscalation &&
                 (latestEscalation.date_due ? (
-                  <div className="flex items-center gap-1.5 font-subtitle text-sm font-semibold text-accent">
+                  <div className="flex items-center gap-1.5 font-subtitle text-sm font-semibold text-secondary">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 16 16"
@@ -101,7 +100,7 @@ export function GrievanceCard({
                     Due {formatDate(latestEscalation.date_due)}
                   </div>
                 ) : (
-                  <span className="text-sm text-muted-foreground/50">
+                  <span className="text-sm text-muted-foreground">
                     No deadline
                   </span>
                 ))}

@@ -12,7 +12,7 @@ const navLinks = [
 ];
 
 const linkClassName =
-  "font-body text-base text-muted-foreground tracking-wide hover:text-primary transition-colors";
+  "font-body text-base text-primary font-medium tracking-wide hover:text-hover transition-colors";
 
 export default function NavMenu() {
   const [isOpen, setIsOpen] = useState(false);

@@ -16,7 +16,7 @@ export function EscalationTimeline({
           <span className="absolute -left-8 flex h-4 w-4 items-center justify-center rounded-full border-2 border-border bg-card" />
           <div className="rounded-lg border border-border bg-card p-3 sm:p-4">
             <div className="mb-2">
-              <time className="block text-sm text-teal-600 sm:text-base">
+              <time className="block text-sm text-muted-foreground sm:text-base">
                 {formatDate(esc.date)}
               </time>
               <div className="mt-1 flex flex-wrap items-center gap-2">
@@ -26,7 +26,7 @@ export function EscalationTimeline({
                 <StatusTag status={esc.status} />
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-teal-700">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-muted-foreground">
               {esc.hearing_date && (
                 <span>Hearing: {formatDate(esc.hearing_date)}</span>
               )}
@@ -54,7 +54,7 @@ export function EscalationTimeline({
                 </span>
               )}
               <span className="flex items-center gap-1">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-[10px] text-secondary-foreground">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-tertiary text-[10px] text-tertiary-foreground">
                   {getInitials(esc.user.name)}
                 </span>
                 {esc.user.name}

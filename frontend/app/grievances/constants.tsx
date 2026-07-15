@@ -101,13 +101,13 @@ export const ALWAYS_AVAILABLE = [
 
 export const STATUS_STYLES: Record<string, OptionStyle> = {
   WAITING_TO_SCHEDULE: {
-    selectedClasses: "border-blue-500 bg-blue-500/10 ring-2 ring-blue-500/30",
+    selectedClasses: "border-yellow-500 bg-yellow-500/10 ring-2 ring-yellow-500/30",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
-        className="size-5 text-blue-600"
+        className="size-5 text-yellow-600"
         aria-hidden="true"
       >
         <path
@@ -117,7 +117,7 @@ export const STATUS_STYLES: Record<string, OptionStyle> = {
         />
       </svg>
     ),
-    badgeClasses: "bg-blue-500/10 text-blue-800 border border-blue-300",
+    badgeClasses: "bg-yellow-500/10 text-yellow-800 border border-yellow-300",
   },
   SCHEDULED: {
     selectedClasses: "border-teal-500 bg-teal-500/10 ring-2 ring-teal-500/30",

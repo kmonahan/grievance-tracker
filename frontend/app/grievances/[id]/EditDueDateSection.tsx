@@ -49,14 +49,14 @@ export function EditDueDateSection({
             checked={deadlineMissed}
             onChange={handleDeadlineMissedChange}
             disabled={isDeadlinePending}
-            className="h-4 w-4 rounded border-border text-teal-600 focus:ring-teal-500"
+            className="h-4 w-4 rounded border-border text-purple-700 focus:ring-purple-700"
           />
           <span>Judah missed the deadline.</span>
         </label>
       </div>
       {currentDate && (
         <div>
-          <dt className="font-subtitle text-base font-semibold text-teal-600">
+          <dt className="font-subtitle text-base font-semibold text-purple-700">
             Upcoming Due Date
           </dt>
           {editing ? (
@@ -82,20 +82,20 @@ export function EditDueDateSection({
                     type="date"
                     defaultValue={currentDate}
                     required
-                    className="rounded-md border border-border bg-card px-3 py-1.5 text-base text-foreground shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+                    className="rounded-md border border-border bg-card px-3 py-1.5 text-base text-primary shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
                   />
                   <div className="flex items-center gap-2">
                     <button
                       type="submit"
                       disabled={isPending}
-                      className="rounded-md bg-primary px-3 py-1.5 font-subtitle text-sm font-semibold text-primary-foreground shadow transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="rounded-md bg-primary px-3 py-1.5 font-subtitle text-sm font-semibold text-primary-foreground shadow transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40 focus:border focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
                     >
                       Save
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditing(false)}
-                      className="rounded-md px-3 py-1.5 font-subtitle text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                      className="rounded-md px-3 py-1.5 font-subtitle text-sm font-semibold text-muted-foreground transition-colors hover:text-hover focus:border focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
                     >
                       Cancel
                     </button>
@@ -108,7 +108,7 @@ export function EditDueDateSection({
             </dd>
           ) : (
             <dd className="mt-1 flex items-center gap-2">
-              <span className="font-semibold text-accent">
+              <span className="font-semibold text-highlight">
                 {formatDate(currentDate)}
               </span>
               <button
