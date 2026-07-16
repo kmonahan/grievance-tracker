@@ -11,7 +11,7 @@ export default async function Header() {
       <div className="w-full mx-auto px-5 md:px-6 py-4 flex items-center justify-between">
         <Link
           href="/"
-          className="font-title text-xl md:text-3xl lg:text-5xl uppercase text-primary font-extrabold tracking-tight hover:text-hover transition-colors"
+          className="font-title text-xl md:text-3xl lg:text-5xl uppercase text-primary font-extrabold tracking-tight hover focus"
         >
           BLU Grievance Tracker
         </Link>

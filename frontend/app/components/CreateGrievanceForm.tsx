@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { addCategory } from "~/app/categories/actions";
-import Button from "~/app/components/ui/Button";
-import FormCard from "~/app/components/ui/FormCard";
-import FormField from "~/app/components/ui/FormField";
-import FormSelect from "~/app/components/ui/FormSelect";
-import Modal from "~/app/components/ui/Modal";
 import { type AddGrievanceState, addGrievance } from "~/app/grievances/actions";
 import { FILTER_STEPS } from "~/app/grievances/constants";
 import { deleteGrievance } from "~/app/grievances/deleteAction";
+import Button from "./Button";
+import FormCard from "./FormCard";
+import FormField from "./FormField";
+import FormSelect from "./FormSelect";
+import Modal from "./Modal";
 
 type Category = {
   id: number;

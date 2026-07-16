@@ -67,7 +67,8 @@
   --color-orange-50: oklch(0.95 0.026 45.749);
 
   --font-raleway: var(--font-raleway);
-  --font-helvetica: 'Helvetica Now', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-helvetica:
+    "Helvetica Now", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --font-body: var(--font-raleway);
   --font-title: var(--font-raleway);
@@ -100,5 +101,21 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .initials {
+    @apply flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-xs text-foreground;
+  }
+}
+
+@layer utilities {
+  .focus {
+    @apply focus:outline-2 focus:outline-offset-2 focus:outline-hover;
+  }
+
+  .hover {
+    @apply hover:text-hover transition-colors;
   }
 }

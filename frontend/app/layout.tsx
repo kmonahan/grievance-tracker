@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import {Raleway} from "next/font/google";
+import { Raleway } from "next/font/google";
 import Header from "./components/Header";
 
 const raleway = Raleway({
@@ -21,9 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${raleway.variable} antialiased`}
-      >
+      <body className={`${raleway.variable} antialiased`}>
         <div className="flex flex-col min-h-screen bg-linear-to-br from-background to-background-dark font-body">
           <Header />
           {children}

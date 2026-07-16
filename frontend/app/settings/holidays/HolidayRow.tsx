@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
-import Button from "~/app/components/ui/Button";
-import FormField from "~/app/components/ui/FormField";
+import Button from "../../components/Button";
+import FormField from "../../components/FormField";
 import type { HolidayState } from "./actions";
 import { deleteHoliday, editHoliday } from "./actions";
 

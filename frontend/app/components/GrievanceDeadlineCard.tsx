@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { StatusTag } from "~/app/components/StatusTag";
+import GrievanceCard from "~/app/components/ui/GrievanceCard";
 import type { Grievance } from "~/app/grievances/types";
 import { formatDate } from "~/lib/format";
 
@@ -11,42 +11,24 @@ export default function GrievanceDeadlineCard({
   point_person,
   escalations,
 }: GrievanceDeadlineCardProps) {
-  const pointPersonInitials = point_person
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase())
-    .join("");
   const latestEscalation =
     escalations.length > 0 ? escalations[escalations.length - 1] : null;
 
   return (
-    <Link href={`/grievances/${id}`}>
-      <div className="group rounded-lg border border-border bg-card p-4 transition-all hover:border-accent hover:shadow-md">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-subtitle font-semibold text-primary">
-                {name}
-              </h3>
-              {latestEscalation ? (
-                <StatusTag status={latestEscalation.status} />
-              ) : null}
-            </div>
-            <div className="flex items-center gap-2 text-base">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-xs text-foreground">
-                {pointPersonInitials}
-              </span>
-              <span className="text-muted-foreground">{point_person}</span>
-            </div>
+    <GrievanceCard
+      id={id}
+      name={name}
+      status={
+        latestEscalation ? <StatusTag status={latestEscalation.status} /> : null
+      }
+      pointPerson={point_person}
+      date={
+        latestEscalation?.date_due ? (
+          <div className="font-subtitle text-base font-semibold text-highlight">
+            {formatDate(latestEscalation.date_due)}
           </div>
-          {latestEscalation?.date_due ? (
-            <div className="sm:text-right">
-              <div className="font-subtitle text-base font-semibold text-highlight">
-                {formatDate(latestEscalation.date_due)}
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </Link>
+        ) : null
+      }
+    />
   );
 }
