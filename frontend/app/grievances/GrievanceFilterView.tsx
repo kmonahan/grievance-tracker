@@ -2,14 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { GrievanceCard } from "~/app/components/GrievanceCard";
+import FiltersGroup from "~/app/components/ui/FiltersGroup";
 import { FILTER_STEPS, isClosed } from "~/app/grievances/constants";
 import type { Grievance } from "~/app/grievances/types";
 
 function filterButtonClass(active: boolean): string {
-  return `rounded-lg border px-3 py-1.5 font-subtitle text-sm font-medium transition-colors ${
+  return `filter-button focus ${
     active
-      ? "border-primary bg-primary text-primary-foreground"
-      : "border-border bg-card text-muted-foreground hover:border-hover hover:text-hover"
+      ? "border-primary bg-selected text-selected-foreground"
+      : "border-border bg-card text-selected hover:border-hover hover:text-hover"
   }`;
 }
 
@@ -120,7 +121,7 @@ export function GrievanceFilterView({
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="font-subtitle text-sm text-muted-foreground hover:text-hover transition-colors"
+                className="font-subtitle text-sm text-muted-foreground hover focus"
               >
                 Clear all
               </button>
@@ -130,7 +131,7 @@ export function GrievanceFilterView({
               role="switch"
               aria-checked={showClosed}
               onClick={() => setShowClosed((v) => !v)}
-              className={`inline-flex items-center gap-2 ${filterButtonClass(showClosed)}`}
+              className={filterButtonClass(showClosed)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -161,48 +162,38 @@ export function GrievanceFilterView({
         </div>
 
         <div className="mt-3 flex flex-col gap-3">
-          <fieldset className="border-0 p-0 m-0">
-            <legend className="mb-1.5 font-subtitle text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Step
-            </legend>
-            <div className="flex flex-wrap gap-2">
-              {FILTER_STEPS.map((step) => (
-                <button
-                  key={step.value}
-                  type="button"
-                  aria-pressed={activeStep === step.value}
-                  onClick={() =>
-                    setActiveStep(activeStep === step.value ? null : step.value)
-                  }
-                  className={filterButtonClass(activeStep === step.value)}
-                >
-                  {step.label}
-                </button>
-              ))}
-            </div>
-          </fieldset>
+          <FiltersGroup legend="Step">
+            {FILTER_STEPS.map((step) => (
+              <button
+                key={step.value}
+                type="button"
+                aria-pressed={activeStep === step.value}
+                onClick={() =>
+                  setActiveStep(activeStep === step.value ? null : step.value)
+                }
+                className={filterButtonClass(activeStep === step.value)}
+              >
+                {step.label}
+              </button>
+            ))}
+          </FiltersGroup>
 
           {categories.length > 0 && (
-            <fieldset className="border-0 p-0 m-0">
-              <legend className="mb-1.5 font-subtitle text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Category
-              </legend>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    aria-pressed={activeCategory === cat}
-                    onClick={() =>
-                      setActiveCategory(activeCategory === cat ? null : cat)
-                    }
-                    className={filterButtonClass(activeCategory === cat)}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
+            <FiltersGroup legend="Category">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  aria-pressed={activeCategory === cat}
+                  onClick={() =>
+                    setActiveCategory(activeCategory === cat ? null : cat)
+                  }
+                  className={filterButtonClass(activeCategory === cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </FiltersGroup>
           )}
 
           <fieldset className="border-0 p-0 m-0">
@@ -230,62 +221,59 @@ export function GrievanceFilterView({
             </select>
           </fieldset>
 
-          <fieldset className="border-0 p-0 m-0">
-            <legend className="sr-only">Additional filters</legend>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                role="switch"
-                aria-checked={currentYearOnly}
-                onClick={() => setCurrentYearOnly((v) => !v)}
-                className={`inline-flex items-center gap-2 ${filterButtonClass(currentYearOnly)}`}
+          <FiltersGroup legend="Additional filters" showLegend={false}>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={currentYearOnly}
+              onClick={() => setCurrentYearOnly((v) => !v)}
+              className={filterButtonClass(currentYearOnly)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="size-4"
+                aria-hidden="true"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="size-4"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 1.75a.75.75 0 0 1 1.5 0V3h5V1.75a.75.75 0 0 1 1.5 0V3h.25A2.75 2.75 0 0 1 15 5.75v7.5A2.75 2.75 0 0 1 12.25 16H3.75A2.75 2.75 0 0 1 1 13.25v-7.5A2.75 2.75 0 0 1 3.75 3H4V1.75ZM3.75 6a1.25 1.25 0 0 0-1.25 1.25v6c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25v-6c0-.69-.56-1.25-1.25-1.25H3.75Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {currentYear} only
-              </button>
+                <path
+                  fillRule="evenodd"
+                  d="M4 1.75a.75.75 0 0 1 1.5 0V3h5V1.75a.75.75 0 0 1 1.5 0V3h.25A2.75 2.75 0 0 1 15 5.75v7.5A2.75 2.75 0 0 1 12.25 16H3.75A2.75 2.75 0 0 1 1 13.25v-7.5A2.75 2.75 0 0 1 3.75 3H4V1.75ZM3.75 6a1.25 1.25 0 0 0-1.25 1.25v6c0 .69.56 1.25 1.25 1.25h8.5c.69 0 1.25-.56 1.25-1.25v-6c0-.69-.56-1.25-1.25-1.25H3.75Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {currentYear} only
+            </button>
 
-              <button
-                type="button"
-                role="switch"
-                aria-checked={missedDeadlineOnly}
-                onClick={() => setMissedDeadlineOnly((v) => !v)}
-                className={`inline-flex items-center gap-2 ${filterButtonClass(missedDeadlineOnly)}`}
+            <button
+              type="button"
+              role="switch"
+              aria-checked={missedDeadlineOnly}
+              onClick={() => setMissedDeadlineOnly((v) => !v)}
+              className={filterButtonClass(missedDeadlineOnly)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="size-4"
+                aria-hidden="true"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="size-4"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6.701 2.25c.577-1 2.02-1 2.598 0l5.196 9a1.5 1.5 0 0 1-1.299 2.25H2.804a1.5 1.5 0 0 1-1.3-2.25l5.197-9ZM8 4a.75.75 0 0 1 .75.75v3a.75.75 0 1 1-1.5 0v-3A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Missed deadline
-              </button>
-            </div>
-          </fieldset>
+                <path
+                  fillRule="evenodd"
+                  d="M6.701 2.25c.577-1 2.02-1 2.598 0l5.196 9a1.5 1.5 0 0 1-1.299 2.25H2.804a1.5 1.5 0 0 1-1.3-2.25l5.197-9ZM8 4a.75.75 0 0 1 .75.75v3a.75.75 0 1 1-1.5 0v-3A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Missed deadline
+            </button>
+          </FiltersGroup>
         </div>
       </div>
 
-      <p className="mb-3 font-subtitle text-lg text-accent-foreground font-semibold">
+      <h2 className="mb-3 font-subtitle text-lg text-accent-foreground font-semibold">
         {countLabel}
-      </p>
+      </h2>
 
       {filteredOpen.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card py-12 text-center">

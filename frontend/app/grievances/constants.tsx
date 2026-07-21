@@ -3,8 +3,7 @@ import type {
   OptionStyle,
   StepStatus,
 } from "~/app/grievances/types";
-
-export const CLOSED_STATUSES = new Set(["Resolved", "Denied", "Withdrawn"]);
+import { CLOSED_STATUSES } from "~/app/status";
 
 export function isClosed(grievance: Grievance): boolean {
   const latest = grievance.escalations.at(-1);
@@ -21,17 +20,6 @@ export const STEP_DISPLAY_TO_ENUM: Record<string, string> = {
   "Step #1": "ONE",
   "Step #2": "TWO",
   "Step #3": "THREE",
-};
-
-export const STATUS_DISPLAY_TO_ENUM: Record<string, string> = {
-  "Waiting to Schedule": "WAITING_TO_SCHEDULE",
-  Scheduled: "SCHEDULED",
-  "Prepare for Next Step": "WAITING_TO_FILE",
-  "Waiting on Decision": "WAITING_ON_DECISION",
-  Resolved: "RESOLVED",
-  Denied: "DENIED",
-  Withdrawn: "WITHDRAWN",
-  "In Abeyance": "IN_ABEYANCE",
 };
 
 // Linear progression of non-terminal escalation states

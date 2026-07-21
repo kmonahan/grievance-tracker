@@ -35,10 +35,7 @@ export default async function GrievancesPage() {
               All Grievances
             </h1>
           </div>
-          <Link
-            href="/grievances/create"
-            className="inline-flex items-center gap-2 rounded-lg bg-tertiary px-4 py-2.5 font-subtitle text-base font-semibold text-tertiary-foreground transition-colors hover:bg-hover"
-          >
+          <Link href="/grievances/create" className="button focus-dark">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"

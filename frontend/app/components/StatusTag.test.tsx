@@ -14,7 +14,7 @@ describe("StatusTag", () => {
 
   it("applies fallback classes for unknown status", () => {
     const { container } = render(<StatusTag status="Unknown Status" />);
-    expect(container.firstChild).toHaveClass("bg-muted");
-    expect(container.firstChild).toHaveClass("text-muted-foreground");
+    expect(container.firstChild).toHaveClass("bg-neutral-50");
+    expect(container.firstChild).toHaveClass("text-neutral-800");
   });
 });

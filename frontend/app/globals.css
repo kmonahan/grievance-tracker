@@ -93,6 +93,8 @@
   --color-destructive: var(--color-red-700);
   --color-highlight: var(--color-red-500);
   --color-hover: var(--color-red-500);
+  --color-selected: var(--color-neutral-950);
+  --color-selected-foreground: var(--color-neutral-0);
 }
 
 @layer base {
@@ -108,11 +110,23 @@
   .initials {
     @apply flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-xs text-foreground;
   }
+
+  .button {
+    @apply inline-flex items-center gap-2 whitespace-nowrap rounded-lg disabled:pointer-events-none disabled:opacity-50 font-subtitle text-base font-semibold px-4 py-2.5 bg-tertiary text-tertiary-foreground transition-colors hover:bg-selected hover:text-selected-foreground;
+  }
+
+  .filter-button {
+    @apply inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 font-subtitle text-sm font-medium transition-colors;
+  }
 }
 
 @layer utilities {
   .focus {
     @apply focus:outline-2 focus:outline-offset-2 focus:outline-hover;
+  }
+
+  .focus-dark {
+    @apply focus:outline-2 focus:outline-offset-2 focus:outline-accent-foreground;
   }
 
   .hover {

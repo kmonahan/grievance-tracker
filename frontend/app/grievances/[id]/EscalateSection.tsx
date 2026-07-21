@@ -4,7 +4,6 @@ import { useActionState, useState } from "react";
 import {
   ALWAYS_AVAILABLE,
   STATE_SEQUENCE,
-  STATUS_DISPLAY_TO_ENUM,
   STATUS_STYLES,
   STEP_DISPLAY_TO_ENUM,
 } from "~/app/grievances/constants";
@@ -14,6 +13,7 @@ import type {
   OptionStyle,
   StepStatus,
 } from "~/app/grievances/types";
+import {isValidStatus, StatusDisplayToEnum} from "~/app/status";
 
 const DEFAULT_OPTION_STYLE: OptionStyle = {
   ...STATUS_STYLES.WAITING_TO_SCHEDULE,
@@ -24,10 +24,12 @@ function toStepStatus(escalation: {
   step: string;
   status: string;
 }): StepStatus {
+  const statusEntry = isValidStatus(escalation.status) && Object.entries(StatusDisplayToEnum).find(([_, val]) => val === escalation.status);
+
   return {
     stepEnum: STEP_DISPLAY_TO_ENUM[escalation.step] ?? escalation.step,
     stepDisplay: escalation.step,
-    statusEnum: STATUS_DISPLAY_TO_ENUM[escalation.status] ?? escalation.status,
+    statusEnum: statusEntry ? statusEntry[0] : escalation.status,
     statusDisplay: escalation.status,
   };
 }

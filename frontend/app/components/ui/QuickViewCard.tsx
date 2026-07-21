@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { type JSX, type PropsWithChildren } from "react";
+import type { JSX, PropsWithChildren } from "react";
 
 export interface QuickViewCardProps {
   title: string;

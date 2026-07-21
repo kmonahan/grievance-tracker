@@ -1,9 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
-import Button from "../components/Button";
 import FormCard from "../components/FormCard";
 import FormField from "../components/FormField";
+import Button from "../components/ui/Button";
 import { login } from "./actions";
 
 export default function Login() {
