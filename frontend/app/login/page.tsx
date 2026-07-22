@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import FormCard from "../components/FormCard";
+import FormCard from "../components/ui/FormCard";
 import FormField from "../components/FormField";
 import Button from "../components/ui/Button";
 import { login } from "./actions";

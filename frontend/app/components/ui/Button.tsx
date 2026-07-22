@@ -3,7 +3,7 @@ export default function Button({
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button className="button" {...props}>
+    <button className="button focus" {...props}>
       {children}
     </button>
   );
