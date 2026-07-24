@@ -1,9 +1,9 @@
 "use client";
 
 import { useActionState, useRef } from "react";
-import FormCard from "../../../components/ui/FormCard";
-import FormField from "../../../components/FormField";
 import Button from "../../../components/ui/Button";
+import FormCard from "../../../components/ui/FormCard";
+import FormField from "../../../components/ui/FormField";
 import { editUser } from "./actions";
 
 type User = { id: number; name: string; email: string; is_active: boolean };

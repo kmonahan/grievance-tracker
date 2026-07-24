@@ -1,30 +1,29 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import ForwardCard from "~/app/components/FowardCard";
+import GoBackOption from "~/app/components/GoBackOption";
+import TerminalPill from "~/app/components/TerminalPill";
+import Button from "~/app/components/ui/Button";
+import FormField from "~/app/components/ui/FormField";
 import {
   ALWAYS_AVAILABLE,
   STATE_SEQUENCE,
-  STATUS_STYLES,
   STEP_DISPLAY_TO_ENUM,
 } from "~/app/grievances/constants";
 import { escalateGrievance } from "~/app/grievances/escalateAction";
-import type {
-  Grievance,
-  OptionStyle,
-  StepStatus,
-} from "~/app/grievances/types";
-import {isValidStatus, StatusDisplayToEnum} from "~/app/status";
-
-const DEFAULT_OPTION_STYLE: OptionStyle = {
-  ...STATUS_STYLES.WAITING_TO_SCHEDULE,
-  icon: null,
-};
+import type { Grievance, StepStatus } from "~/app/grievances/types";
+import { isValidStatus, StatusDisplayToEnum } from "../status";
 
 function toStepStatus(escalation: {
   step: string;
   status: string;
 }): StepStatus {
-  const statusEntry = isValidStatus(escalation.status) && Object.entries(StatusDisplayToEnum).find(([_, val]) => val === escalation.status);
+  const statusEntry =
+    isValidStatus(escalation.status) &&
+    Object.entries(StatusDisplayToEnum).find(
+      ([_, val]) => val === escalation.status,
+    );
 
   return {
     stepEnum: STEP_DISPLAY_TO_ENUM[escalation.step] ?? escalation.step,
@@ -100,170 +99,6 @@ function isMatch(opt: StepStatus, selected: Selected | null): boolean {
   );
 }
 
-interface ForwardCardProps {
-  opt: StepStatus;
-  isSelected: boolean;
-  onSelect: () => void;
-}
-
-function ForwardCard({ opt, isSelected, onSelect }: ForwardCardProps) {
-  const style = STATUS_STYLES[opt.statusEnum] ?? DEFAULT_OPTION_STYLE;
-  return (
-    <label
-      className={`group relative flex cursor-pointer items-center gap-3 rounded-xl border-2 p-4 transition-all ${
-        isSelected
-          ? style.selectedClasses
-          : "border-border bg-card hover:border-muted-foreground/40 hover:shadow-sm"
-      }`}
-    >
-      <input
-        type="radio"
-        name="escalation-status"
-        value={opt.statusEnum}
-        checked={isSelected}
-        onChange={onSelect}
-        className="sr-only"
-      />
-      {style.icon && (
-        <span
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-2xl"
-          aria-hidden="true"
-        >
-          {style.icon}
-        </span>
-      )}
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span
-          className={`inline-flex items-center self-start rounded-md px-2 py-0.5 text-base font-medium ${style.badgeClasses}`}
-        >
-          {opt.statusDisplay}
-        </span>
-        <span className="text-sm text-muted-foreground">{opt.stepDisplay}</span>
-      </div>
-      {/* Forward arrow — signals progression */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className={`size-5 shrink-0 transition-colors ${isSelected ? "text-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/70"}`}
-        aria-hidden="true"
-      >
-        <path
-          fillRule="evenodd"
-          d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
-          clipRule="evenodd"
-        />
-      </svg>
-      {isSelected && (
-        <span className="absolute right-3 top-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="size-4 text-teal-600"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </span>
-      )}
-    </label>
-  );
-}
-
-interface TerminalPillProps {
-  opt: StepStatus;
-  isSelected: boolean;
-  onSelect: () => void;
-}
-
-function TerminalPill({ opt, isSelected, onSelect }: TerminalPillProps) {
-  const style = STATUS_STYLES[opt.statusEnum] ?? DEFAULT_OPTION_STYLE;
-  return (
-    <label
-      className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all ${
-        isSelected
-          ? `${style.selectedClasses} font-semibold`
-          : "border-border text-muted-foreground hover:border-muted-foreground/40 hover:text-foreground"
-      }`}
-    >
-      <input
-        type="radio"
-        name="escalation-status"
-        value={opt.statusEnum}
-        checked={isSelected}
-        onChange={onSelect}
-        className="sr-only"
-      />
-      {isSelected && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className="size-3.5 shrink-0 text-teal-600"
-          aria-hidden="true"
-        >
-          <path
-            fillRule="evenodd"
-            d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-            clipRule="evenodd"
-          />
-        </svg>
-      )}
-      {opt.statusDisplay}
-    </label>
-  );
-}
-
-interface GoBackOptionProps {
-  opt: StepStatus;
-  isSelected: boolean;
-  onSelect: () => void;
-}
-
-function GoBackOption({ opt, isSelected, onSelect }: GoBackOptionProps) {
-  return (
-    <label
-      className={`flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-all ${
-        isSelected
-          ? "bg-muted/60 text-foreground font-medium ring-1 ring-border"
-          : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
-      }`}
-    >
-      <input
-        type="radio"
-        name="escalation-status"
-        value={opt.statusEnum}
-        checked={isSelected}
-        onChange={onSelect}
-        className="sr-only"
-      />
-      {/* Undo arrow — signals going back, not forward */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className="size-4 shrink-0 opacity-60"
-        aria-hidden="true"
-      >
-        <path
-          fillRule="evenodd"
-          d="M7.793 2.232a.75.75 0 0 1-.025 1.06L3.622 7.25h10.003a5.375 5.375 0 0 1 0 10.75H10.75a.75.75 0 0 1 0-1.5h2.875a3.875 3.875 0 0 0 0-7.75H3.622l4.146 3.957a.75.75 0 0 1-1.036 1.085l-5.5-5.25a.75.75 0 0 1 0-1.085l5.5-5.25a.75.75 0 0 1 1.06.025Z"
-          clipRule="evenodd"
-        />
-      </svg>
-      <span>
-        Go back to <span className="font-medium">{opt.statusDisplay}</span>
-        <span className="ml-1 text-xs opacity-70">({opt.stepDisplay})</span>
-      </span>
-    </label>
-  );
-}
-
 export function EscalateSection({ grievance }: { grievance: Grievance }) {
   const [, formAction] = useActionState(escalateGrievance, { error: null });
   const [expanded, setExpanded] = useState(false);
@@ -292,10 +127,12 @@ export function EscalateSection({ grievance }: { grievance: Grievance }) {
         type="button"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
-        className="flex w-full items-center justify-between px-4 py-5 sm:px-6 transition-colors hover:bg-muted/40"
+        className="flex w-full items-center justify-between px-4 py-5 sm:px-6 transition-colors hover:bg-purple-100 focus"
       >
         <div className="flex items-center gap-2">
-          <h2 className="font-subtitle text-xl font-semibold">Escalate</h2>
+          <h2 className="font-subtitle text-lg md:text-xl font-semibold">
+            Escalate
+          </h2>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -380,40 +217,33 @@ export function EscalateSection({ grievance }: { grievance: Grievance }) {
             </fieldset>
 
             {selected?.statusEnum === "SCHEDULED" && (
-              <div className="mt-4 rounded-lg border border-teal-200 bg-teal-500/5 p-4">
-                <label
-                  htmlFor="hearing-date"
-                  className="font-subtitle text-sm font-semibold text-teal-600"
-                >
-                  Hearing Date
-                </label>
-                <input
+              <div className="mt-2">
+                <FormField
                   id="hearing-date"
-                  name="hearing_date"
+                  label="Hearing Date"
                   type="date"
+                  name="hearing_date"
                   value={hearingDate}
                   onChange={(e) => setHearingDate(e.target.value)}
-                  className="mt-2 block w-full rounded-md border border-border bg-card px-3 py-2 text-base text-foreground shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 sm:max-w-xs"
                 />
               </div>
             )}
 
             {selected && (
               <div className="mt-5 flex items-center gap-3">
-                <button
+                <Button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 font-subtitle text-base font-semibold text-primary-foreground shadow transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
                   disabled={selected.statusEnum === "SCHEDULED" && !hearingDate}
                 >
                   Submit Escalation
-                </button>
+                </Button>
                 <button
                   type="button"
                   onClick={() => {
                     setSelected(null);
                     setHearingDate("");
                   }}
-                  className="rounded-md px-4 py-2.5 font-subtitle text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                  className="rounded-md px-4 py-2.5 font-subtitle text-sm font-semibold text-muted-foreground transition-colors focus hover"
                 >
                   Clear
                 </button>

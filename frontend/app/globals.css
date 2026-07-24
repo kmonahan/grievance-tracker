@@ -22,7 +22,7 @@
   --color-purple-400: oklch(0.521 0.151 328.37);
   --color-purple-300: oklch(0.648 0.108 328.37);
   --color-purple-200: oklch(0.721 0.066 328.37);
-  --color-purple-100: oklch(0.821 0.023 328.37);
+  --color-purple-100: oklch(0.921 0.023 328.37);
   --color-purple-50: oklch(0.97 0.01 328.37);
   --color-red-900: oklch(0.202 0.075 28.306);
   --color-red-800: oklch(0.302 0.112 28.306);
@@ -78,14 +78,14 @@
   --color-background-dark: var(--color-purple-600);
   --color-foreground: var(--color-neutral-0);
   --color-card: var(--color-purple-50);
-  --color-card-foreground: var(--card-foreground);
+  --color-card-foreground: var(--color-purple-950);
   --color-primary: var(--color-purple-900);
   --color-primary-foreground: var(--color-neutral-0);
   --color-secondary: var(--color-red-500);
   --color-secondary-foreground: var(--color-neutral-0);
   --color-tertiary: var(--color-yellow-400);
   --color-tertiary-foreground: var(--color-neutral-950);
-  --color-muted: var(--color-purple-100);
+  --color-muted: var(--color-purple-50);
   --color-muted-foreground: var(--color-neutral-700);
   --color-accent: var(--color-purple-500);
   --color-accent-foreground: var(--color-neutral-0);
@@ -93,8 +93,9 @@
   --color-destructive: var(--color-red-700);
   --color-highlight: var(--color-red-500);
   --color-hover: var(--color-red-500);
-  --color-selected: var(--color-neutral-950);
+  --color-selected: var(--color-purple-900);
   --color-selected-foreground: var(--color-neutral-0);
+  --color-label: var(--color-purple-800);
 }
 
 @layer base {
@@ -118,15 +119,25 @@
   .filter-button {
     @apply inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 font-subtitle text-sm font-medium transition-colors;
   }
+
+  .label {
+    @apply text-label font-subtitle text-base font-semibold;
+  }
 }
 
 @layer utilities {
   .focus {
-    @apply focus:outline-2 focus:outline-offset-2 focus:outline-hover;
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hover;
   }
 
   .focus-dark {
-    @apply focus:outline-2 focus:outline-offset-2 focus:outline-accent-foreground;
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-foreground;
+  }
+
+  .focus-inside {
+    &:has(:focus-visible) {
+      @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hover;
+    }
   }
 
   .hover {

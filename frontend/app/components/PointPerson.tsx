@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { getInitials } from "~/lib/format";
 
 export interface PointPersonProps {
   pointPersonName: string;
@@ -7,14 +8,9 @@ export interface PointPersonProps {
 export default function PointPerson({
   pointPersonName,
 }: PointPersonProps): JSX.Element {
-  const pointPersonInitials = pointPersonName
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase())
-    .join("");
-
   return (
     <div className="flex items-center gap-2 text-base">
-      <span className="initials">{pointPersonInitials}</span>
+      <span className="initials">{getInitials(pointPersonName)}</span>
       <span className="text-muted-foreground">{pointPersonName}</span>
     </div>
   );

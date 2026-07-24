@@ -6,11 +6,11 @@ import { addCategory } from "~/app/categories/actions";
 import { type AddGrievanceState, addGrievance } from "~/app/grievances/actions";
 import { FILTER_STEPS } from "~/app/grievances/constants";
 import { deleteGrievance } from "~/app/grievances/deleteAction";
-import FormCard from "./ui/FormCard";
-import FormField from "./FormField";
 import FormSelect from "./FormSelect";
 import Modal from "./Modal";
 import Button from "./ui/Button";
+import FormCard from "./ui/FormCard";
+import FormField from "./ui/FormField";
 
 type Category = {
   id: number;

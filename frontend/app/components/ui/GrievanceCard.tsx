@@ -11,7 +11,10 @@ export interface GrievanceCardProps {
   footer?: ReactNode;
   borderColors?: string;
   isMuted?: boolean;
+  noLink?: boolean;
 }
+
+const commonCardStyles = `rounded-lg border border-border bg-card p-4 relative`;
 
 export default function GrievanceCard({
   id,
@@ -22,12 +25,10 @@ export default function GrievanceCard({
   footer,
   isMuted,
   borderColors,
+  noLink,
 }: GrievanceCardProps): JSX.Element {
-  return (
-    <Link
-      href={`/grievances/${id}`}
-      className={`block group rounded-lg border border-border bg-card p-4 transition-all hover:border-accent hover:shadow-md focus relative${isMuted ? " saturate-50 grayscale-50 opacity-95" : ""}`}
-    >
+  const cardContent = (
+    <>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -45,6 +46,17 @@ export default function GrievanceCard({
           className={`${borderColors} absolute inline-1 block-full rounded-r-xl inset-e-0 inset-bs-0`}
         ></div>
       )}
+    </>
+  );
+
+  return noLink ? (
+    <div className={commonCardStyles}>{cardContent}</div>
+  ) : (
+    <Link
+      href={`/grievances/${id}`}
+      className={`${commonCardStyles} block group transition-all hover:border-accent hover:shadow-md focus${isMuted ? " saturate-50 grayscale-50 opacity-95" : ""}`}
+    >
+      {cardContent}
     </Link>
   );
 }

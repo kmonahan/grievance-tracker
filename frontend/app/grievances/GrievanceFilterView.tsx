@@ -271,7 +271,7 @@ export function GrievanceFilterView({
         </div>
       </div>
 
-      <h2 className="mb-3 font-subtitle text-lg text-accent-foreground font-semibold">
+      <h2 className="mb-3 font-subtitle text-lg md:text-xl text-accent-foreground font-semibold">
         {countLabel}
       </h2>
 

@@ -1,8 +1,8 @@
 import { StatusTag } from "~/app/components/StatusTag";
 import GrievanceUiCard from "~/app/components/ui/GrievanceCard";
 import type { Grievance } from "~/app/grievances/types";
-import { isValidStatus, STATUS_COLORS } from "~/app/status";
 import { formatDate } from "~/lib/format";
+import { isValidStatus, STATUS_COLORS } from "../status";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Health & Safety": "bg-red-500/10 text-red-700 border-red-200",

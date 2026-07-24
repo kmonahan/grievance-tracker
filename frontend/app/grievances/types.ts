@@ -36,6 +36,11 @@ export type StepStatus = {
 };
 
 export type OptionStyle = {
+  backgroundClass: string;
+  textClass: string;
+  borderClass: string;
+  hoverClasses: string;
+  iconClass: string;
   selectedClasses: string;
   icon: ReactNode;
   badgeClasses: string;

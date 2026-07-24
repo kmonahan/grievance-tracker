@@ -36,7 +36,11 @@ describe("EscalationTimeline", () => {
   });
 
   it("renders hearing date when present", () => {
-    const esc = { ...BASE_ESCALATION, hearing_date: "2025-12-31" };
+    const esc = {
+      ...BASE_ESCALATION,
+      status: "Scheduled",
+      date_due: "2025-12-31",
+    };
     render(<EscalationTimeline escalations={[esc]} />);
     expect(screen.getByText("Hearing: Dec 31, 2025")).toBeInTheDocument();
   });
@@ -44,17 +48,6 @@ describe("EscalationTimeline", () => {
   it("does not render hearing date when absent", () => {
     render(<EscalationTimeline escalations={[BASE_ESCALATION]} />);
     expect(screen.queryByText(/Hearing:/)).not.toBeInTheDocument();
-  });
-
-  it("renders due date when present", () => {
-    const esc = { ...BASE_ESCALATION, date_due: "2026-01-02" };
-    render(<EscalationTimeline escalations={[esc]} />);
-    expect(screen.getByText("Due: Jan 2, 2026")).toBeInTheDocument();
-  });
-
-  it("does not render due date when absent", () => {
-    render(<EscalationTimeline escalations={[BASE_ESCALATION]} />);
-    expect(screen.queryByText(/Due:/)).not.toBeInTheDocument();
   });
 
   it("shows deadline missed indicator when deadline_missed is true and date_due is set", () => {

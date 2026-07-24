@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { JSX, PropsWithChildren } from "react";
+import FancyLink from "~/app/components/ui/FancyLink";
 
 export interface QuickViewCardProps {
   title: string;
@@ -31,27 +31,7 @@ export default function QuickViewCard({
       {children}
       {link ? (
         <footer className="mt-6 flex justify-center">
-          <Link
-            href={link.href}
-            className="font-subtitle text-base font-semibold text-primary hover focus inline-flex items-center gap-2 group"
-          >
-            {link.text}
-            <svg
-              className="h-4 w-4 transition-transform group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              role="presentation"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </Link>
+          <FancyLink {...link} />
         </footer>
       ) : null}
     </section>
