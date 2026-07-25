@@ -11,17 +11,17 @@ export default function FormSelect({
   errors?: string[];
 } & React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <label
         htmlFor={id}
-        className="flex items-center gap-2 text-base leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 font-subtitle"
+        className="label select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50"
       >
         {label}
       </label>
       <select
         id={id}
         name={id}
-        className="border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-lg shadow-xs transition-[color,box-shadow] outline-none cursor-pointer disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-11"
+        className="border-border w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-lg shadow-xs transition-all focus cursor-pointer disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base  aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-11"
         {...props}
       >
         {children}

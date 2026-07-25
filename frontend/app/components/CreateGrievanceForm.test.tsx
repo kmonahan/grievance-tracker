@@ -110,7 +110,7 @@ describe("CreateGrievanceForm", () => {
         userId={1}
       />,
     );
-    expect(screen.getByLabelText("Description")).toBeInTheDocument();
+    expect(screen.getByLabelText("Description/Notes")).toBeInTheDocument();
   });
 
   it("renders the Category select", () => {
@@ -213,7 +213,7 @@ describe("CreateGrievanceForm", () => {
     );
   });
 
-  it("renders the '+ Add Category' button", () => {
+  it("renders the add new category button", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
@@ -222,11 +222,11 @@ describe("CreateGrievanceForm", () => {
       />,
     );
     expect(
-      screen.getByRole("button", { name: "+ Add Category" }),
+      screen.getByRole("button", { name: "Add New" }),
     ).toBeInTheDocument();
   });
 
-  it("opens the dialog when '+ Add Category' is clicked", () => {
+  it("opens the dialog when 'Add New' is clicked", () => {
     render(
       <CreateGrievanceForm
         categories={mockCategories}
@@ -234,7 +234,7 @@ describe("CreateGrievanceForm", () => {
         userId={1}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add New" }));
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
   });
 
@@ -246,7 +246,7 @@ describe("CreateGrievanceForm", () => {
         userId={1}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add New" }));
     expect(screen.getByLabelText("Category Name")).toBeInTheDocument();
   });
 
@@ -258,7 +258,7 @@ describe("CreateGrievanceForm", () => {
         userId={1}
       />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add New" }));
     const closeButtons = screen.getAllByRole("button", {
       name: "Close",
       hidden: true,
@@ -320,7 +320,7 @@ describe("CreateGrievanceForm", () => {
     );
 
     // Open the modal first
-    fireEvent.click(screen.getByRole("button", { name: "+ Add Category" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add New" }));
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
 
     // Simulate successful creation
@@ -477,7 +477,7 @@ describe("CreateGrievanceForm", () => {
         />,
       );
       expect(screen.getByRole("textbox", { name: "Name" })).toBeDisabled();
-      expect(screen.getByLabelText("Description")).toBeDisabled();
+      expect(screen.getByLabelText("Description/Notes")).toBeDisabled();
       expect(screen.getByLabelText("Category")).toBeDisabled();
       expect(screen.getByLabelText("Point Person")).toBeDisabled();
       expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled();
@@ -703,7 +703,7 @@ describe("CreateGrievanceForm", () => {
             userId={1}
           />,
         );
-        expect(screen.getByLabelText("Description")).toHaveValue(
+        expect(screen.getByLabelText("Description/Notes")).toHaveValue(
           "Broken equipment in the workshop",
         );
       });
@@ -785,7 +785,7 @@ describe("CreateGrievanceForm", () => {
         expect(descError).toBeInTheDocument();
 
         const nameField = screen.getByRole("textbox", { name: "Name" });
-        const descField = screen.getByLabelText("Description");
+        const descField = screen.getByLabelText("Description/Notes");
 
         expect(nameField.closest(".space-y-2")).toContainElement(nameError);
         expect(nameField.closest(".space-y-2")).toContainElement(nameError2);
@@ -839,7 +839,7 @@ describe("CreateGrievanceForm", () => {
           />,
         );
         expect(screen.getByRole("textbox", { name: "Name" })).toHaveValue("AB");
-        expect(screen.getByLabelText("Description")).toHaveValue(
+        expect(screen.getByLabelText("Description/Notes")).toHaveValue(
           "A valid description",
         );
         expect(screen.getByLabelText("Category")).toHaveValue("1");
@@ -881,7 +881,7 @@ describe("CreateGrievanceForm", () => {
             initialValues={{ description: "Existing description" }}
           />,
         );
-        expect(screen.getByLabelText("Description")).toHaveValue(
+        expect(screen.getByLabelText("Description/Notes")).toHaveValue(
           "Existing description",
         );
       });
@@ -939,7 +939,7 @@ describe("CreateGrievanceForm", () => {
         expect(
           screen.getByRole("textbox", { name: "Name" }),
         ).not.toBeDisabled();
-        expect(screen.getByLabelText("Description")).not.toBeDisabled();
+        expect(screen.getByLabelText("Description/Notes")).not.toBeDisabled();
         expect(screen.getByLabelText("Category")).not.toBeDisabled();
         expect(screen.getByLabelText("Point Person")).not.toBeDisabled();
         expect(
