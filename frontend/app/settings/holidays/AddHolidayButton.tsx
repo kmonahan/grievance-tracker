@@ -32,7 +32,7 @@ export default function AddHolidayButton(): React.ReactElement {
   return (
     <form
       action={action}
-      className="space-y-4 rounded-xl border-2 border-border bg-card px-5 py-4 shadow-sm"
+      className="space-y-4 rounded-xl border-2 border-border bg-card text-primary px-5 py-4 shadow-sm"
     >
       {state.error && <p className="text-destructive text-lg">{state.error}</p>}
       <FormField

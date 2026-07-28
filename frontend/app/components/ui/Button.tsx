@@ -3,7 +3,7 @@ export default function Button({
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button className="button focus" {...props}>
+    <button className="button focus self-start" {...props}>
       {children}
     </button>
   );

@@ -221,9 +221,7 @@ describe("CreateGrievanceForm", () => {
         userId={1}
       />,
     );
-    expect(
-      screen.getByRole("button", { name: "Add New" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Add New" })).toBeInTheDocument();
   });
 
   it("opens the dialog when 'Add New' is clicked", () => {

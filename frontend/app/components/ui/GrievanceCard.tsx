@@ -32,7 +32,9 @@ export default function GrievanceCard({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-subtitle font-semibold text-primary">{name}</h3>
+            <h3 className="font-subtitle font-semibold text-primary group-hover:text-hover">
+              {name}
+            </h3>
             {status}
           </div>
           {pointPerson ? <PointPerson pointPersonName={pointPerson} /> : null}

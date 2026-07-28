@@ -22,20 +22,22 @@ export default function SettingsPage(): React.ReactElement {
   return (
     <main className="px-4 py-8 max-w-2xl mx-auto w-full">
       <div className="mb-8 flex flex-col gap-4">
-        <h1 className="font-title text-3xl text-primary">Settings</h1>
-        <ul className="space-y-3">
+        <h1 className="font-title text-3xl md:text-4xl uppercase font-bold text-primary-foreground">
+          Settings
+        </h1>
+        <ul className="flex flex-col gap-4">
           {settingsLinks.map(({ href, label, description }) => (
             <li key={href}>
               <Link
                 href={href}
-                className="flex flex-col gap-1 rounded-xl border-2 border-border bg-card px-5 py-4 shadow-sm hover:border-primary/40 hover:shadow-md transition-all"
+                className="block rounded-lg border border-border bg-card p-4 relative group transition-all hover:border-tertiary hover:shadow-md focus"
               >
-                <span className="font-subtitle font-semibold text-base text-foreground">
+                <h2 className="font-subtitle font-semibold text-lg text-primary group-hover:text-hover">
                   {label}
-                </span>
-                <span className="font-body text-sm text-muted-foreground">
+                </h2>
+                <p className="font-body text-base text-muted-foreground">
                   {description}
-                </span>
+                </p>
               </Link>
             </li>
           ))}

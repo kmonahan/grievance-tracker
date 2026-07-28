@@ -42,7 +42,7 @@ export default function HolidayRow({
 
   if (editing) {
     return (
-      <li className="rounded-xl border-2 border-border bg-card px-5 py-4 shadow-sm space-y-4">
+      <li className="rounded-lg border text-primary border-border bg-card p-4 relative">
         <form action={action} className="space-y-4">
           {state.error && (
             <p className="text-destructive text-lg">{state.error}</p>
@@ -63,13 +63,25 @@ export default function HolidayRow({
           />
           <div className="flex gap-2">
             <Button type="submit">Save</Button>
-            <Button
+            <button
               type="button"
               onClick={() => setEditing(false)}
-              className="bg-transparent border-2 border-border text-foreground hover:bg-card shadow-none hover:shadow-none"
+              className="hover focus font-semibold"
             >
               Cancel
-            </Button>
+            </button>
+          </div>
+          <div className="border-t border-dashed border-border pt-3 w-full">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+              Delete Holiday
+            </p>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="button bg-destructive text-foreground focus"
+            >
+              Delete
+            </button>
           </div>
         </form>
       </li>
@@ -88,16 +100,24 @@ export default function HolidayRow({
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="inline-flex items-center justify-center rounded-md px-3 py-1 font-subtitle text-base border-2 border-border hover:bg-card"
+          className="font-subtitle text-base font-semibold text-primary hover focus inline-flex items-center gap-2 group"
         >
           Edit
-        </button>
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="inline-flex items-center justify-center rounded-md px-3 py-1 font-subtitle text-base border-2 border-destructive text-destructive hover:bg-destructive/10"
-        >
-          Delete
+          <svg
+            className="h-4 w-4 transition-transform group-hover:translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            role="presentation"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
         </button>
       </div>
     </li>

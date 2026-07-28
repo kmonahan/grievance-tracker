@@ -127,11 +127,6 @@ describe("HolidayRow – display", () => {
     render(<HolidayRow holiday={HOLIDAY_A} />);
     expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
   });
-
-  it("renders a 'Delete' button", () => {
-    render(<HolidayRow holiday={HOLIDAY_A} />);
-    expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument();
-  });
 });
 
 describe("HolidayRow – edit flow", () => {
@@ -164,6 +159,12 @@ describe("HolidayRow – edit flow", () => {
     render(<HolidayRow holiday={HOLIDAY_A} />);
     fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
+  });
+
+  it("renders a 'Delete' button", () => {
+    render(<HolidayRow holiday={HOLIDAY_A} />);
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
+    expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument();
   });
 
   it("closes the edit form when 'Cancel' is clicked", () => {
@@ -220,6 +221,7 @@ describe("HolidayRow – edit flow", () => {
 describe("HolidayRow – delete flow", () => {
   it("calls deleteHoliday with the holiday id when 'Delete' is clicked", async () => {
     render(<HolidayRow holiday={HOLIDAY_A} />);
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     fireEvent.click(screen.getByRole("button", { name: /delete/i }));
     await waitFor(() => {
       expect(mockDeleteHoliday).toHaveBeenCalledWith(1);
@@ -228,6 +230,7 @@ describe("HolidayRow – delete flow", () => {
 
   it("refreshes the router after a successful delete", async () => {
     render(<HolidayRow holiday={HOLIDAY_A} />);
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     fireEvent.click(screen.getByRole("button", { name: /delete/i }));
     await waitFor(() => {
       expect(mockRefresh).toHaveBeenCalled();
@@ -237,6 +240,7 @@ describe("HolidayRow – delete flow", () => {
   it("does not refresh the router when delete fails", async () => {
     mockDeleteHoliday.mockResolvedValueOnce({ ok: false });
     render(<HolidayRow holiday={HOLIDAY_A} />);
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     fireEvent.click(screen.getByRole("button", { name: /delete/i }));
     await waitFor(() => {
       expect(mockDeleteHoliday).toHaveBeenCalled();

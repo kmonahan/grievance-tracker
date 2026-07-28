@@ -15,7 +15,9 @@ export default async function HolidaysPage(): Promise<React.ReactElement> {
   return (
     <main className="px-4 py-8 max-w-2xl mx-auto w-full">
       <div className="mb-8 flex flex-col gap-4">
-        <h1 className="font-title text-3xl text-primary">Holidays</h1>
+        <h1 className="font-title text-3xl md:text-4xl uppercase font-bold text-primary-foreground">
+          Holidays
+        </h1>
 
         {holidays.length === 0 ? (
           <div className="rounded-xl border-2 border-dashed border-border bg-card py-12 text-center">
