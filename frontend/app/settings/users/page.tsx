@@ -1,4 +1,4 @@
-import Link from "next/link";
+import FancyLink from "~/app/components/ui/FancyLink";
 import { getAccessToken } from "~/app/lib/auth";
 import { UserStatusToggle } from "./UserStatusToggle";
 
@@ -25,7 +25,9 @@ export default async function UsersPage(): Promise<React.ReactElement> {
   return (
     <main className="px-4 py-8 max-w-2xl mx-auto w-full">
       <div className="mb-8">
-        <h1 className="font-title text-3xl text-primary">Users</h1>
+        <h1 className="font-title text-3xl md:text-4xl uppercase font-bold text-primary-foreground">
+          Users
+        </h1>
       </div>
 
       {users.length === 0 ? (
@@ -37,15 +39,9 @@ export default async function UsersPage(): Promise<React.ReactElement> {
           {users.map((user) => (
             <li
               key={user.id}
-              className="flex items-center justify-between gap-4 rounded-xl border-2 border-border bg-card px-5 py-4 shadow-sm"
+              className={`flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 relative`}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div
-                  className={`size-2 rounded-full shrink-0 ${
-                    user.is_active ? "bg-accent" : "bg-border"
-                  }`}
-                  aria-hidden="true"
-                />
                 <div className="min-w-0">
                   <span
                     className={`font-subtitle font-semibold truncate block ${
@@ -55,10 +51,7 @@ export default async function UsersPage(): Promise<React.ReactElement> {
                     {user.name}
                   </span>
                   <span
-                    className={`text-sm font-body ${
-                      user.is_active
-                        ? "text-muted-foreground"
-                        : "text-muted-foreground/60"
+                    className={`text-sm font-body text-muted-foreground
                     }`}
                   >
                     {user.is_active ? "Active" : "Inactive"}
@@ -67,12 +60,10 @@ export default async function UsersPage(): Promise<React.ReactElement> {
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <Link
+                <FancyLink
                   href={`/settings/edit-user/${user.id}`}
-                  className="rounded-lg px-4 py-2 text-sm font-subtitle font-semibold border-2 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground transition-all"
-                >
-                  Edit
-                </Link>
+                  text="Edit"
+                />
                 <UserStatusToggle
                   userId={user.id}
                   isActive={user.is_active}

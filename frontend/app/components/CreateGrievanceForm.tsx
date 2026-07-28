@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { startTransition, useActionState, useEffect, useState } from "react";
 import { addCategory } from "~/app/categories/actions";
-import Button from "~/app/components/ui/Button";
-import FormCard from "~/app/components/ui/FormCard";
-import FormField from "~/app/components/ui/FormField";
-import FormSelect from "~/app/components/ui/FormSelect";
-import Modal from "~/app/components/ui/Modal";
 import { type AddGrievanceState, addGrievance } from "~/app/grievances/actions";
 import { FILTER_STEPS } from "~/app/grievances/constants";
 import { deleteGrievance } from "~/app/grievances/deleteAction";
+import FormSelect from "./FormSelect";
+import Modal from "./Modal";
+import Button from "./ui/Button";
+import FormCard from "./ui/FormCard";
+import FormField from "./ui/FormField";
 
 type Category = {
   id: number;
@@ -116,12 +116,9 @@ export default function CreateGrievanceForm({
           defaultValue={grievanceState.fields?.name ?? ""}
           errors={fieldErrors?.name}
         />
-        <div className="space-y-2">
-          <label
-            htmlFor="description"
-            className="flex items-center gap-2 text-base leading-none font-medium select-none font-subtitle"
-          >
-            Description
+        <div className="space-y-2 w-full">
+          <label htmlFor="description" className="label select-none">
+            Description/Notes
           </label>
           <textarea
             id="description"
@@ -129,7 +126,7 @@ export default function CreateGrievanceForm({
             rows={4}
             disabled={isDisabled}
             defaultValue={grievanceState.fields?.description ?? ""}
-            className="border-input w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-lg shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive resize-none"
+            className="border-border w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-lg shadow-xs focus transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive resize-none"
           />
           {fieldErrors?.description?.map((message) => (
             <p key={message} className="text-destructive text-lg">
@@ -137,28 +134,30 @@ export default function CreateGrievanceForm({
             </p>
           ))}
         </div>
-        <FormSelect
-          id="category_id"
-          label="Category"
-          value={grievanceState.fields?.category_id ?? selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          disabled={isDisabled}
-          errors={fieldErrors?.category_id}
-        >
-          <option value=""></option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </FormSelect>
-        <button
-          type="button"
-          onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center text-base font-medium text-secondary hover:underline font-subtitle"
-        >
-          + Add Category
-        </button>
+        <div className="w-full flex gap-2 items-end">
+          <FormSelect
+            id="category_id"
+            label="Category"
+            value={grievanceState.fields?.category_id ?? selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            disabled={isDisabled}
+            errors={fieldErrors?.category_id}
+          >
+            <option value=""></option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </FormSelect>
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="font-subtitle text-sm font-medium text-primary hover focus whitespace-nowrap"
+          >
+            Add New
+          </button>
+        </div>
         <FormSelect
           id="point_person_id"
           label="Point Person"
@@ -209,25 +208,32 @@ export default function CreateGrievanceForm({
             ))}
           </FormSelect>
         ) : null}
-        <Button type="submit" disabled={isDisabled}>
-          Submit
-        </Button>
-        {cancelHref && (
-          <Link
-            href={cancelHref}
-            className="inline-flex items-center justify-center w-full h-11 rounded-md border border-input px-4 py-2 font-subtitle font-semibold text-lg text-foreground hover:bg-muted transition-colors"
-          >
-            Cancel
-          </Link>
-        )}
+        <div className="flex flex-wrap gap-3 items-center w-full">
+          <Button type="submit" disabled={isDisabled}>
+            Submit
+          </Button>
+          {cancelHref && (
+            <Link
+              href={cancelHref}
+              className="font-subtitle font-semibold text-base hover focus"
+            >
+              Cancel
+            </Link>
+          )}
+        </div>
         {grievanceId && (
-          <button
-            type="button"
-            onClick={() => setIsDeleteModalOpen(true)}
-            className="inline-flex items-center justify-center w-full h-11 rounded-md border border-destructive px-4 py-2 font-subtitle font-semibold text-lg text-destructive hover:bg-destructive/10 transition-colors"
-          >
-            Delete
-          </button>
+          <div className="border-t border-dashed border-border pt-3 w-full">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
+              Delete Grievance
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="button bg-destructive text-foreground focus"
+            >
+              Delete
+            </button>
+          </div>
         )}
       </FormCard>
       <Modal
@@ -235,8 +241,8 @@ export default function CreateGrievanceForm({
         onClose={() => setIsDeleteModalOpen(false)}
       >
         <div className="flex flex-col gap-6 py-6">
-          <div className="px-6 pb-6 space-y-1">
-            <h2 className="font-semibold font-subtitle text-3xl text-center">
+          <div className="px-6 space-y-1">
+            <h2 className="font-bold uppercase font-subtitle text-2xl text-center text-primary">
               Delete Grievance
             </h2>
             <p className="text-center text-muted-foreground">
@@ -249,11 +255,11 @@ export default function CreateGrievanceForm({
               </p>
             )}
           </div>
-          <div className="px-6 flex gap-4">
+          <div className="px-6 flex gap-4 justify-center">
             <button
               type="button"
               onClick={() => setIsDeleteModalOpen(false)}
-              className="flex-1 h-11 rounded-md border border-input px-4 py-2 font-subtitle font-semibold text-lg text-foreground hover:bg-muted transition-colors"
+              className="button focus"
             >
               Cancel
             </button>
@@ -268,7 +274,7 @@ export default function CreateGrievanceForm({
                   });
                 });
               }}
-              className="flex-1 h-11 rounded-md bg-destructive px-4 py-2 font-subtitle font-semibold text-lg text-neutral-0 hover:bg-destructive/90 transition-colors"
+              className="button bg-destructive text-foreground focus"
             >
               Confirm
             </button>
@@ -277,8 +283,8 @@ export default function CreateGrievanceForm({
       </Modal>
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="flex flex-col gap-6 py-6">
-          <div className="px-6 pb-6 space-y-1">
-            <h2 className="font-semibold font-subtitle text-3xl text-center">
+          <div className="px-6 space-y-1">
+            <h2 className="font-bold uppercase font-subtitle text-2xl text-center text-primary">
               Add Category
             </h2>
           </div>

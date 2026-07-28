@@ -1,9 +1,9 @@
 "use client";
 
 import { useActionState, useRef } from "react";
-import Button from "~/app/components/ui/Button";
-import FormCard from "~/app/components/ui/FormCard";
-import FormField from "~/app/components/ui/FormField";
+import Button from "../components/ui/Button";
+import FormCard from "../components/ui/FormCard";
+import FormField from "../components/ui/FormField";
 import { register } from "./actions";
 
 export default function Register() {

@@ -1,52 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Montserrat } from "next/font/google";
-import localFont from "next/font/local";
+import { Raleway } from "next/font/google";
 import Header from "./components/Header";
 
-const glacialIndifferenceBLU = localFont({
-  src: [
-    {
-      path: "./fonts/glacialindifferencebplpsa-bold-webfont.woff2",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "./fonts/glacialindifferencebplpsa-italic-webfont.woff2",
-      weight: "400",
-      style: "italic",
-    },
-    {
-      path: "./fonts/glacialindifferencebplpsa-regular-webfont.woff2",
-      weight: "400",
-      style: "normal",
-    },
-  ],
-  variable: "--font-glacial",
-});
-
-const lovelo = localFont({
-  src: [
-    {
-      path: "./fonts/Lovelo-Black.woff2",
-      weight: "900",
-    },
-    {
-      path: "./fonts/Lovelo-LineBold.woff2",
-      weight: "700",
-    },
-    {
-      path: "./fonts/Lovelo-LineLight.woff2",
-      weight: "400",
-    },
-  ],
-  variable: "--font-lovelo",
-});
-
-const montserrat = Montserrat({
-  weight: ["400", "600", "700"],
+const raleway = Raleway({
+  weight: "variable",
   subsets: ["latin"],
-  variable: "--font-montserrat",
+  variable: "--font-raleway",
 });
 
 export const metadata: Metadata = {
@@ -61,10 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${glacialIndifferenceBLU.variable} ${lovelo.variable} ${montserrat.variable} antialiased`}
-      >
-        <div className="flex flex-col min-h-screen bg-linear-to-br from-background via-muted/20 to-secondary/10 font-body">
+      <body className={`${raleway.variable} antialiased`}>
+        <div className="flex flex-col min-h-screen bg-linear-to-br from-background to-background-dark font-body">
           <Header />
           {children}
         </div>

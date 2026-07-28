@@ -31,14 +31,11 @@ export default async function GrievancesPage() {
       <div className="mx-auto w-full max-w-4xl">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-title text-4xl font-bold text-primary">
+            <h1 className="font-title text-3xl md:text-4xl uppercase font-bold text-primary-foreground">
               All Grievances
             </h1>
           </div>
-          <Link
-            href="/grievances/create"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-subtitle text-base font-semibold text-primary-foreground transition-colors hover:bg-secondary"
-          >
+          <Link href="/grievances/create" className="button focus-dark">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"

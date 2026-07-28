@@ -43,22 +43,20 @@ export function EditDueDateSection({
   return (
     <>
       <div>
-        <label className="flex items-center gap-2 text-base">
+        <label className="flex items-center gap-2 text-base has-checked:font-semibold">
           <input
             type="checkbox"
             checked={deadlineMissed}
             onChange={handleDeadlineMissedChange}
             disabled={isDeadlinePending}
-            className="h-4 w-4 rounded border-border text-teal-600 focus:ring-teal-500"
+            className="h-4 w-4 rounded border-border accent-highlight"
           />
           <span>Judah missed the deadline.</span>
         </label>
       </div>
       {currentDate && (
         <div>
-          <dt className="font-subtitle text-base font-semibold text-teal-600">
-            Upcoming Due Date
-          </dt>
+          <dt className="label">Upcoming Due Date</dt>
           {editing ? (
             <dd className="mt-1">
               <form action={formAction}>
@@ -82,20 +80,20 @@ export function EditDueDateSection({
                     type="date"
                     defaultValue={currentDate}
                     required
-                    className="rounded-md border border-border bg-card px-3 py-1.5 text-base text-foreground shadow-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30"
+                    className="rounded-md border border-border bg-card px-3 py-1.5 text-base text-primary shadow-sm focus"
                   />
                   <div className="flex items-center gap-2">
                     <button
                       type="submit"
                       disabled={isPending}
-                      className="rounded-md bg-primary px-3 py-1.5 font-subtitle text-sm font-semibold text-primary-foreground shadow transition-all hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="filter-button hover focus hover:border-hover"
                     >
                       Save
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditing(false)}
-                      className="rounded-md px-3 py-1.5 font-subtitle text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                      className="font-subtitle text-sm font-medium text-primary hover focus"
                     >
                       Cancel
                     </button>
@@ -108,13 +106,13 @@ export function EditDueDateSection({
             </dd>
           ) : (
             <dd className="mt-1 flex items-center gap-2">
-              <span className="font-semibold text-accent">
+              <span className="font-semibold text-highlight">
                 {formatDate(currentDate)}
               </span>
               <button
                 type="button"
                 onClick={() => setEditing(true)}
-                className="font-subtitle text-sm font-medium text-secondary hover:underline"
+                className="font-subtitle text-sm font-medium text-primary hover focus"
               >
                 Edit
               </button>

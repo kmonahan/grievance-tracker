@@ -1,23 +1,24 @@
-const STATUS_COLORS: Record<string, string> = {
-  "Waiting to Schedule": "bg-accent text-accent-foreground",
-  Scheduled: "bg-teal-500 text-teal-0",
-  "Waiting on Decision": "bg-red-500 text-neutral-0",
-  "Prepare for Next Step": "bg-plum-500 text-neutral-0",
-  "In Abeyance": "bg-neutral-50 text-neutral-800",
-};
+import { isValidStatus, STATUS_STYLES } from "../status";
 
 export function getStatusClasses(status: string): string {
-  return STATUS_COLORS[status] ?? "bg-muted text-muted-foreground";
+  if (isValidStatus(status)) {
+    const style = STATUS_STYLES[status];
+    return `${style.backgroundClass} ${style.borderClass} ${style.textClass}`;
+  }
+  return "bg-neutral-50 text-neutral-800";
 }
 
 interface StatusTagProps {
   status: string;
+  size?: "default" | "large";
 }
 
-export function StatusTag({ status }: StatusTagProps) {
+export function StatusTag({ status, size = "default" }: StatusTagProps) {
+  const fontSize = size === "large" ? "text-base" : "text-sm";
+
   return (
     <span
-      className={`inline-flex items-center rounded-md px-2 py-0.5 text-sm font-medium ${getStatusClasses(status)}`}
+      className={`inline-flex items-center self-start rounded-md px-2 py-0.5 ${fontSize} font-medium border ${getStatusClasses(status)}`}
     >
       {status}
     </span>

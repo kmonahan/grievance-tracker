@@ -1,14 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useRef } from "react";
-import Button from "~/app/components/ui/Button";
-import FormCard from "~/app/components/ui/FormCard";
-import FormField from "~/app/components/ui/FormField";
+import Button from "../../../components/ui/Button";
+import FormCard from "../../../components/ui/FormCard";
+import FormField from "../../../components/ui/FormField";
 import { editUser } from "./actions";
 
 type User = { id: number; name: string; email: string; is_active: boolean };
 
-export default function EditUserForm({ user }: { user: User }) {
+export default function EditUserForm({
+  user,
+  cancelHref,
+}: {
+  user: User;
+  cancelHref?: string;
+}) {
   const [state, action] = useActionState(editUser.bind(null, user.id), {
     error: null,
     errors: null,
@@ -74,7 +81,17 @@ export default function EditUserForm({ user }: { user: User }) {
         defaultValue={state.fields.confirm}
         errors={fieldErrors.confirm}
       />
-      <Button type="submit">Save Changes</Button>
+      <div className="flex flex-wrap gap-3 items-center w-full">
+        <Button type="submit">Submit</Button>
+        {cancelHref && (
+          <Link
+            href={cancelHref}
+            className="font-subtitle font-semibold text-base hover focus"
+          >
+            Cancel
+          </Link>
+        )}
+      </div>
     </FormCard>
   );
 }

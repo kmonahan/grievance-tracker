@@ -20,5 +20,5 @@ export default async function EditUserPage({
 
   const user = await response.json();
 
-  return <EditUserForm user={user} />;
+  return <EditUserForm user={user} cancelHref={`/settings/users`} />;
 }

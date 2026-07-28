@@ -1,3 +1,4 @@
+import QuickViewCard from "~/app/components/ui/QuickViewCard";
 import type { Escalation, Grievance } from "~/app/grievances/types";
 import { getAccessToken } from "~/app/lib/auth";
 import GrievanceDeadlineCard from "./components/GrievanceDeadlineCard";
@@ -44,15 +45,11 @@ export default async function Home() {
     <main className="w-full mx-auto px-6 py-8">
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="flex flex-col gap-8">
-          <section className="flex flex-col gap-6 bg-card text-card-foreground gap-6 rounded-xl border py-6 border-primary/20 shadow-lg">
-            <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 border-b">
-              <h2 className="font-bold font-title text-3xl text-primary">
-                Upcoming Deadlines
-              </h2>
-              <div className="text-muted-foreground text-base font-subtitle">
-                Grievances with deadlines in the next two weeks
-              </div>
-            </div>
+          <QuickViewCard
+            title="Upcoming Deadlines"
+            description="Grievances with deadlines in the next two weeks"
+            link={{ text: "See all grievances", href: "/grievances" }}
+          >
             <div className="px-6">
               {upcoming.grievances?.length ? (
                 <ol className="mt-4 space-y-3">
@@ -66,50 +63,19 @@ export default async function Home() {
                 <p>No upcoming deadlines</p>
               )}
             </div>
-            <footer className="mt-6 flex justify-center">
-              <a
-                href="/grievances"
-                className="font-subtitle text-base font-semibold text-primary hover:text-accent transition-colors inline-flex items-center gap-2 group"
-              >
-                See all grievances
-                <svg
-                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </a>
-            </footer>
-          </section>
-          <section className="flex flex-col gap-6 bg-card text-card-foreground gap-6 rounded-xl border py-6 border-accent/20 shadow-lg">
-            <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6">
-              <h2 className="font-bold font-title text-3xl text-highlight">
-                Grievances Filed in {new Date().getFullYear()}
-              </h2>
-            </div>
+          </QuickViewCard>
+          <QuickViewCard
+            title={`Grievances Filed in ${new Date().getFullYear()}`}
+          >
             <div className="px-6 text-center font-bold font-subtitle text-8xl text-highlight">
               {yearTotal}
             </div>
-          </section>
+          </QuickViewCard>
         </div>
-        <section className="flex flex-col gap-6 bg-card text-card-foreground gap-6 rounded-xl border py-6 border-accent/20 shadow-lg">
-          <div className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 border-b">
-            <h2 className="font-bold font-title text-3xl text-accent">
-              Recent Activity
-            </h2>
-            <div className="text-muted-foreground text-base font-subtitle">
-              Changes made in the last two weeks
-            </div>
-          </div>
+        <QuickViewCard
+          title="Recent Activity"
+          description="Changes made in the last two weeks"
+        >
           <div className="px-6">
             {recent?.length ? (
               <ol className="mt-4 space-y-3">
@@ -123,7 +89,7 @@ export default async function Home() {
               <p>No recent activity</p>
             )}
           </div>
-        </section>
+        </QuickViewCard>
       </div>
     </main>
   );
