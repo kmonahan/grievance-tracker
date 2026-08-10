@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
 import pytest
@@ -148,6 +149,22 @@ class TestUser:
             assert refresh_token is not None
             assert refresh_token.is_active == True
 
+    def test_login_purges_expired_tokens(self, client, set_passwords):
+        with set_passwords.app_context():
+            expired_token = Token(user_id=1, jti='expired', is_active=True,
+                                   expires_at=datetime.now(timezone.utc) - timedelta(seconds=1))
+            db.session.add(expired_token)
+            db.session.commit()
+
+        res = client.post('/users/login', data={
+            'email': 'wreuther@example.com',
+            'password': 'password123'
+        })
+        assert res.status_code == 200
+        with set_passwords.app_context():
+            remaining = db.session.execute(db.select(Token).filter_by(jti='expired')).scalar_one_or_none()
+            assert remaining is None
+
     def test_login_wrong_password(self, client):
         res = client.post('/users/login', data={
             'email': 'wreuther@example.com',
@@ -277,7 +294,8 @@ class TestUser:
     @patch("flask_jwt_extended.view_decorators.verify_jwt_in_request")
     def test_deactivate_user(self, _mock_verify_jwt, client, app):
         with app.app_context():
-            existing_token = Token(user_id=1, jti='test', is_active=True)
+            existing_token = Token(user_id=1, jti='test', is_active=True,
+                                    expires_at=datetime.now(timezone.utc) + timedelta(hours=1))
             db.session.add(existing_token)
             db.session.commit()
 

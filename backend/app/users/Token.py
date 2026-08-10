@@ -7,3 +7,4 @@ class Token(db.Model):
     jti = db.Column(db.String(36), nullable=False, index=True)
     user_id = db.Column(db.Integer, ForeignKey("user.id"), nullable=False, index=True)
     is_active = db.Column(db.Boolean, default=True)
+    expires_at = db.Column(db.DateTime, nullable=False, index=True)

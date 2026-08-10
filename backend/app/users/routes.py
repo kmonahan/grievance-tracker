@@ -1,6 +1,8 @@
+from datetime import datetime, timezone
+
 from flask import jsonify, request
-from flask_jwt_extended import create_access_token, get_jti, get_jwt, jwt_required, create_refresh_token, \
-    current_user
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required, create_refresh_token, \
+    current_user, decode_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
@@ -31,10 +33,15 @@ def register():
         return jsonify({'errors': form.errors}), 400
 
 def _store_token(encoded_token: str, user_id: int):
-    jti = get_jti(encoded_token)
-    token = Token(jti=jti, user_id=user_id, is_active=True)
+    decoded = decode_token(encoded_token)
+    expires_at = datetime.fromtimestamp(decoded['exp'], tz=timezone.utc)
+    token = Token(jti=decoded['jti'], user_id=user_id, is_active=True, expires_at=expires_at)
     db.session.add(token)
+    _purge_expired_tokens()
     db.session.commit()
+
+def _purge_expired_tokens():
+    db.session.execute(db.delete(Token).where(Token.expires_at < datetime.now(timezone.utc)))
 
 @bp.route('/login', methods=['POST'])
 def login():
@@ -114,7 +121,7 @@ def edit(user_id):
 def deactivate(user_id):
     user = db.get_or_404(User, user_id)
     user.is_active = False
-    tokens = db.session.execute(db.select(Token).filter(Token.user_id == user.id and Token.is_active == True)).scalars()
+    tokens = db.session.execute(db.select(Token).filter(Token.user_id == user.id, Token.is_active == True)).scalars()
     for token in tokens:
         token.is_active = False
     db.session.commit()
