@@ -31,9 +31,7 @@ describe("EditDueDateSection – deadline missed checkbox", () => {
         initialDeadlineMissed={false}
       />,
     );
-    expect(
-      screen.getByLabelText("BPL missed the deadline."),
-    ).not.toBeChecked();
+    expect(screen.getByLabelText("BPL missed the deadline.")).not.toBeChecked();
   });
 
   it("renders the checkbox checked when initialDeadlineMissed is true", () => {

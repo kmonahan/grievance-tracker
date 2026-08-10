@@ -213,6 +213,96 @@ describe("EscalateSection – option ordering", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Previous status prominence when currently In Abeyance
+// ---------------------------------------------------------------------------
+
+describe("EscalateSection – previous status prominence when In Abeyance", () => {
+  it("shows the previous status as the first option, not as a Go back option, when current status is In Abeyance", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "In Abeyance" },
+    ]);
+    renderExpanded(grievance);
+
+    const radios = getOptionRadios();
+    const firstLabel = getLabelFor(radios[0]);
+    expect(
+      within(firstLabel).getByText("Waiting to Schedule"),
+    ).toBeInTheDocument();
+    expect(within(firstLabel).getByText(/Step #1/)).toBeInTheDocument();
+
+    // The demoted "Go back to ..." wording must not appear anywhere.
+    expect(screen.queryByText(/go back to/i)).not.toBeInTheDocument();
+  });
+
+  it("shows the previous status as a prominent ForwardCard-style option (not a small text-only pill) when current status is In Abeyance", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "In Abeyance" },
+    ]);
+    renderExpanded(grievance);
+
+    const radios = getOptionRadios();
+    const firstLabel = getLabelFor(radios[0]);
+
+    // ForwardCard renders a StatusTag with size="large" for the status text,
+    // and wraps the option in a bordered card rather than a plain label.
+    expect(firstLabel.className).toContain("rounded-xl");
+    expect(firstLabel.className).toContain("border-2");
+  });
+
+  it("still shows the always-available terminal options alongside the prominent previous status when In Abeyance", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "In Abeyance" },
+    ]);
+    renderExpanded(grievance);
+
+    const fieldset = screen.getByRole("group", { name: /select new status/i });
+    expect(within(fieldset).getByText("Resolved")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Denied")).toBeInTheDocument();
+    expect(within(fieldset).getByText("Withdrawn")).toBeInTheDocument();
+  });
+
+  it("submits the previous step/status enums when the prominent previous-status option is selected from In Abeyance", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "In Abeyance" },
+    ]);
+    renderExpanded(grievance);
+
+    const radios = getOptionRadios();
+    fireEvent.click(radios[0]);
+
+    expect(document.querySelector('input[name="status"]')).toHaveValue(
+      "WAITING_TO_SCHEDULE",
+    );
+    expect(document.querySelector('input[name="step"]')).toHaveValue("ONE");
+  });
+
+  it("does not show a demoted Go back option at all when current status is In Abeyance", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "Scheduled" },
+      { step: "Step #1", status: "In Abeyance" },
+    ]);
+    renderExpanded(grievance);
+
+    expect(screen.queryByText(/go back to/i)).not.toBeInTheDocument();
+  });
+
+  it("still shows the previous status as a demoted Go back option when current status is a normal in-sequence status (not In Abeyance)", () => {
+    const grievance = makeGrievance([
+      { step: "Step #1", status: "Waiting to Schedule" },
+      { step: "Step #1", status: "Scheduled" },
+    ]);
+    renderExpanded(grievance);
+
+    expect(screen.getByText(/go back to/i)).toBeInTheDocument();
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Always-available options
 // ---------------------------------------------------------------------------
 
