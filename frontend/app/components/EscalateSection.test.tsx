@@ -183,7 +183,7 @@ describe("EscalateSection – option ordering", () => {
     expect(values.filter((v) => v === "WAITING_TO_FILE")).toHaveLength(1);
   });
 
-  it("shows both Scheduled and Waiting on Decision when at Step #2 WAITING_TO_SCHEDULE", () => {
+  it("shows both Scheduled and Prepare for Next Step when at Step #2 WAITING_TO_SCHEDULE", () => {
     const grievance = makeGrievance([
       { step: "Step #1", status: "Waiting to Schedule" },
       { step: "Step #1", status: "Scheduled" },
@@ -194,7 +194,7 @@ describe("EscalateSection – option ordering", () => {
 
     const radios = getOptionRadios();
     expect(getLabelFor(radios[0])).toHaveTextContent("Scheduled");
-    expect(getLabelFor(radios[1])).toHaveTextContent("Waiting on Decision");
+    expect(getLabelFor(radios[1])).toHaveTextContent("Prepare for Next Step");
   });
 
   it("shows Step #1 Scheduled as the last option when at Step #1, Prepare for Next Step", () => {

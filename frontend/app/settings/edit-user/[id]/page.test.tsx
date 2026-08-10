@@ -93,9 +93,7 @@ describe("EditUserPage", () => {
 
   it("renders the submit button", async () => {
     await renderWithId("42");
-    expect(
-      screen.getByRole("button", { name: "Submit" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
   });
 
   it("prefills the name field with the existing user's name", async () => {
