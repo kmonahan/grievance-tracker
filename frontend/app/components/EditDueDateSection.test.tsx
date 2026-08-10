@@ -10,7 +10,7 @@ jest.mock("~/app/grievances/deadlineMissedAction", () => ({
 }));
 
 describe("EditDueDateSection – deadline missed checkbox", () => {
-  it("renders the checkbox with the label 'Judah missed the deadline.'", () => {
+  it("renders the checkbox with the label 'BPL missed the deadline.'", () => {
     render(
       <EditDueDateSection
         escalationId={4}
@@ -19,7 +19,7 @@ describe("EditDueDateSection – deadline missed checkbox", () => {
       />,
     );
     expect(
-      screen.getByLabelText("Judah missed the deadline."),
+      screen.getByLabelText("BPL missed the deadline."),
     ).toBeInTheDocument();
   });
 
@@ -32,7 +32,7 @@ describe("EditDueDateSection – deadline missed checkbox", () => {
       />,
     );
     expect(
-      screen.getByLabelText("Judah missed the deadline."),
+      screen.getByLabelText("BPL missed the deadline."),
     ).not.toBeChecked();
   });
 
@@ -44,7 +44,7 @@ describe("EditDueDateSection – deadline missed checkbox", () => {
         initialDeadlineMissed={true}
       />,
     );
-    expect(screen.getByLabelText("Judah missed the deadline.")).toBeChecked();
+    expect(screen.getByLabelText("BPL missed the deadline.")).toBeChecked();
   });
 
   it("renders the checkbox even when initialDateDue is null", () => {
@@ -56,7 +56,7 @@ describe("EditDueDateSection – deadline missed checkbox", () => {
       />,
     );
     expect(
-      screen.getByLabelText("Judah missed the deadline."),
+      screen.getByLabelText("BPL missed the deadline."),
     ).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe("EditDueDateSection – deadline missed checkbox", () => {
         initialDeadlineMissed={false}
       />,
     );
-    fireEvent.click(screen.getByLabelText("Judah missed the deadline."));
+    fireEvent.click(screen.getByLabelText("BPL missed the deadline."));
     expect(editDeadlineMissed).toHaveBeenCalledWith(4, true);
   });
 });
@@ -250,7 +250,7 @@ describe("EditDueDateSection – edit mode", () => {
         initialDeadlineMissed={false}
       />,
     );
-    fireEvent.click(screen.getByLabelText("Judah missed the deadline."));
+    fireEvent.click(screen.getByLabelText("BPL missed the deadline."));
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
     expect(
       document.querySelector('input[type="hidden"][name="deadline_missed"]'),

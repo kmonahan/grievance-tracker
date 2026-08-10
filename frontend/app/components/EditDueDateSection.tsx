@@ -51,7 +51,7 @@ export function EditDueDateSection({
             disabled={isDeadlinePending}
             className="h-4 w-4 rounded border-border accent-highlight"
           />
-          <span>Judah missed the deadline.</span>
+          <span>BPL missed the deadline.</span>
         </label>
       </div>
       {currentDate && (
