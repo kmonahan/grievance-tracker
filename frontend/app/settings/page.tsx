@@ -12,6 +12,11 @@ const settingsLinks = [
     description: "View and manage user accounts",
   },
   {
+    href: "/settings/stages",
+    label: "Stages",
+    description: "Manage due dates for grievance stages",
+  },
+  {
     href: "/register",
     label: "Register New User",
     description: "Create a new user account",
