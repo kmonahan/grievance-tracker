@@ -236,21 +236,21 @@ describe("GrievanceDetailPage", () => {
   it("renders the deadline missed checkbox when there is a latest escalation", async () => {
     await renderWithId("1");
     expect(
-      screen.getByLabelText("Judah missed the deadline."),
+      screen.getByLabelText("BPL missed the deadline."),
     ).toBeInTheDocument();
   });
 
   it("renders the deadline missed checkbox even when the latest escalation has no date_due", async () => {
     await renderWithId("4");
     expect(
-      screen.getByLabelText("Judah missed the deadline."),
+      screen.getByLabelText("BPL missed the deadline."),
     ).toBeInTheDocument();
   });
 
   it("does not render the deadline missed checkbox when there are no escalations", async () => {
     await renderWithId("3");
     expect(
-      screen.queryByLabelText("Judah missed the deadline."),
+      screen.queryByLabelText("BPL missed the deadline."),
     ).not.toBeInTheDocument();
   });
 
