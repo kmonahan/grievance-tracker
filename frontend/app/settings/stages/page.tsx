@@ -9,7 +9,9 @@ export default async function StagesPage(): Promise<React.ReactElement> {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  const stages: Stage[] = await response.json();
+  const stages = ((await response.json()) as Stage[]).sort((a, b) =>
+    `${a.step} ${a.status}`.localeCompare(`${b.step} ${b.status}`),
+  );
 
   return (
     <main className="px-4 py-8 max-w-2xl mx-auto w-full">
