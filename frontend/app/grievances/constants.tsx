@@ -57,6 +57,12 @@ export const STATE_SEQUENCE: StepStatus[] = [
     statusDisplay: "Waiting on Decision",
   },
   {
+    stepEnum: "TWO",
+    stepDisplay: "Step #2",
+    statusEnum: "WAITING_TO_FILE",
+    statusDisplay: "Prepare for Next Step",
+  },
+  {
     stepEnum: "THREE",
     stepDisplay: "Step #3",
     statusEnum: "WAITING_TO_SCHEDULE",

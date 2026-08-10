@@ -61,12 +61,14 @@ function buildOptionGroups(grievance: Grievance): OptionGroups {
   }
 
   // When waiting to schedule, also offer skipping ahead past Scheduled
-  if (
-    current.statusEnum === "WAITING_TO_SCHEDULE" &&
-    currentIdx !== -1 &&
-    currentIdx + 2 < STATE_SEQUENCE.length
-  ) {
-    forwardOptions.push(STATE_SEQUENCE[currentIdx + 2]);
+  if (current.statusEnum === "WAITING_TO_SCHEDULE" && currentIdx !== -1) {
+    const prepStep = STATE_SEQUENCE.find(
+      (s) =>
+        s.stepEnum === current.stepEnum && s.statusEnum === "WAITING_TO_FILE",
+    );
+    if (prepStep) {
+      forwardOptions.push(prepStep);
+    }
   }
 
   // Always-available terminal statuses (excluding the current)
