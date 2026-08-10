@@ -10,3 +10,11 @@ class Stage(db.Model):
     num_days = db.Column(db.Integer, nullable=True)
     day_type = db.Column(db.Enum(DayTypes), nullable=True)
     escalations = db.Relationship('Escalation', back_populates='stage', cascade='all, delete')
+
+    def to_dict(self):
+        return {
+            'step': self.step.value,
+            'status': self.status.value,
+            'num_days': self.num_days,
+            'day_type': self.day_type.value if self.day_type else None,
+        }

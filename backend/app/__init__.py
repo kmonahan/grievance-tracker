@@ -33,5 +33,7 @@ def create_app(config_class=Config):
     app.register_blueprint(holidays_bp, url_prefix='/holidays')
     from escalations import bp as escalations_bp
     app.register_blueprint(escalations_bp, url_prefix='/escalations')
+    from stages import bp as stages_bp
+    app.register_blueprint(stages_bp, url_prefix='/stages')
 
     return app
