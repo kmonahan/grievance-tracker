@@ -89,6 +89,16 @@ function buildOptionGroups(grievance: Grievance): OptionGroups {
     );
   }
 
+  // When 'In Abeyance', previous state goes in the forward slot
+  if (
+    current.statusEnum === "IN_ABEYANCE" &&
+    grievance.escalations.length >= 2
+  ) {
+    forwardOptions.push(
+      toStepStatus(grievance.escalations[grievance.escalations.length - 2]),
+    );
+  }
+
   return { forwardOptions, terminalOptions, previousOption };
 }
 
