@@ -7,7 +7,7 @@ from stages.Steps import Steps
 
 class Escalation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
     date_due = db.Column(db.Date, nullable=True)
     hearing_date = db.Column(db.Date, nullable=True)
     stage = db.relationship('Stage', back_populates='escalations', lazy=True)
