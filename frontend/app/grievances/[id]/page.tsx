@@ -80,6 +80,7 @@ export default async function GrievanceDetailPage({
               )}
               {latestEscalation && (
                 <EditDueDateSection
+                  key={latestEscalation.id}
                   escalationId={latestEscalation.id}
                   initialDateDue={latestEscalation.date_due}
                   initialDeadlineMissed={latestEscalation.deadline_missed}
